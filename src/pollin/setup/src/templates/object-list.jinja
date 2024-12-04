@@ -1,0 +1,17 @@
+{% extends "parents/base.jinja" %}
+{% block content %}
+    <h1>Übersicht</h1>
+
+    <ul class="list-group list-group-flush border">
+        {% for object in objects %}
+            <li class="list-group-item">
+                <div>
+                    <p><a href="{{ object.db.id }}">{{ object.db.baseMetadata.title }}</a></p>
+                    <p>{{ object.db.baseMetadata.description }}</p>
+                    <p>{{ object.dc.date[0] }}</p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

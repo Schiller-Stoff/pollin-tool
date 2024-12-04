@@ -1,0 +1,28 @@
+{% extends "parents/base.jinja" %}
+{% block content %}
+    <script>
+        if (window.location.href.includes("memo.person.")){
+            let matches = window.location.pathname.match(/(\d+)/);
+            window.onload = function () {
+                console.log(SaxonJS.getProcessorInfo().productName + " " +
+                SaxonJS.getProcessorInfo().productVersion + " " + SaxonJS.getProcessorInfo().releaseDate);
+                SaxonJS.transform({
+                   stylesheetLocation: "/xsl/object-rdf.sef.json",
+                   sourceLocation: `http://localhost:18085/api/v1/projects/memo/objects/memo.person.${matches[0]}/datastreams/RDF.xml/content`,
+                   logLevel: 2
+                },
+                "async");
+             }
+        }
+     </script>
+    <h1>{{ object.db.baseMetadata.title }}</h1>
+    <p>{{ object.props.entityTags }}</p>
+    <p>{{ object.dc.date[0] }}</p>
+    <p>{{ object.dc.description[0] }}</p>
+    <div id="saxonjs_container"></demo>
+
+    {% if 'material' in object.db.id %}
+            {% include "custom/material.jinja" %}
+    {% endif %}
+
+{% endblock %}
