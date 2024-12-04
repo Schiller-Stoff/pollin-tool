@@ -18,9 +18,9 @@ pollin "memo" "C:\Users\sebas\Desktop\testme" init
 
 
 # Example GAMS-SSR startup
-pollin "memo" "C:\Users\sebas\Documents\programming\gams\zimlab_memo_www" start
+pollin "memo" "C:\Users\sebas\Desktop\testme" start
 
 # alternatively set a custom host and port 
-pollin -h "http://localhost:18085/" "memo" "C:\Users\sebas\Documents\programming\gams\zimlab_memo_www" start 8080
+pollin -h "http://localhost:18085/" "memo" "C:\Users\sebas\Desktop\testme" start 8080
 
 ```
