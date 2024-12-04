@@ -8,7 +8,7 @@ Informatics: polling-concept
 ## Basic usage
 
 0. Rye setup (rye sync / rye pin)
-1. Clone or init project files
+1. Clone or init project files (zimlab under projects)
 2. Run the static site rendering
 
 
