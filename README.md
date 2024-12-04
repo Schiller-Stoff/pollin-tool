@@ -14,7 +14,7 @@ Informatics: polling-concept
 
 ```sh
 # Setup project files
-pollin "memo" "C:\Users\sebas\Desktop\testme"  init
+pollin "memo" "C:\Users\sebas\Desktop\testme" init
 
 
 # Example GAMS-SSR startup
