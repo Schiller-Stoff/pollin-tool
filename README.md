@@ -2,11 +2,25 @@
 
 Tool polls / pulls-in ("poll-in") digital objects from a GAMS5 project and performs static site rendering. 
 
+Informatics: polling-concept
 
-## Demo calls
 
-```bash
-# start with customized view template folder
-pollin memo "C:\Users\sebas\Desktop\testme" start 8080
+## Basic usage
+
+0. Rye setup (rye sync / rye pin)
+1. Clone or init project files
+2. Run the static site rendering
+
+
+```sh
+# Setup project files
+pollin init
+
+
+# Example GAMS-SSR startup
+pollin "memo" "C:\Users\sebas\Documents\programming\gams\memo_www" start
+
+# alternatively set a custom host and port 
+pollin -h "http://143.50.30.162:18085/" "memo" "C:\Users\sebas\Documents\programming\gams\memo_www" start 8080
 
 ```
