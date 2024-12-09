@@ -13,3 +13,4 @@ wheels/
 output/*
 views/*
 .idea/*
+.python-version
