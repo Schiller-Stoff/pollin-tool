@@ -7,9 +7,11 @@ Informatics: polling-concept
 
 ## Basic usage
 
-0. Rye setup (rye sync / rye pin)
-1. Clone or init project files (zimlab under projects)
-2. Run the static site rendering
+1. Clone or init project files
+2. Rye setup (https://rye.astral.sh/)
+    - Set the correct Python version (recommended: 3.12): `rye pin 3.12`
+    - Install packages: `rye sync`
+3. Run the static site rendering
 
 
 ```sh
@@ -17,10 +19,12 @@ Informatics: polling-concept
 pollin "memo" "C:\Users\sebas\Desktop\testme" init
 
 
-# Example GAMS-SSR startup
+# Example GAMS-SSR startup 
+#   Default host:port of the GAMS-API is http://localhost:18085/ 
+#   and localhost:18090 of the GAMS-SSR)
 pollin "memo" "C:\Users\sebas\Desktop\testme" start
 
-# alternatively set a custom host and port 
+# alternatively set a custom host and port of the GAMS-API and custom port for the GAMS-SSR
 pollin -h "http://localhost:18085/" "memo" "C:\Users\sebas\Desktop\testme" start 8080
 
 ```
