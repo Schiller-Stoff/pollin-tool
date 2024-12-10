@@ -15,8 +15,8 @@ Informatics: polling-concept
 ```toml
 projectAbbr = "memo" 
 projectTitle = "MEMO" 
-pr`ojectSubTitle = "Digitales Memobuch der Stadt Graz" 
-prjectDesc = "Das digitale Memobuch der Stadt Graz erinnert an Opfer des Nationalsozialismus"
+projectSubTitle = "Digitales Memobuch der Stadt Graz" 
+projectDesc = "Das digitale Memobuch der Stadt Graz erinnert an Opfer des Nationalsozialismus"
 ```
 4. Run the static site rendering
 
