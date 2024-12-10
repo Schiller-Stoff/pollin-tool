@@ -11,7 +11,14 @@ Informatics: polling-concept
 2. Rye setup (https://rye.astral.sh/)
     - Set the correct Python version (recommended: 3.12): `rye pin 3.12`
     - Install packages: `rye sync`
-3. Run the static site rendering
+3. Create a `project.toml` with your project metadata, e.g. for the "Memo" project:
+```toml
+projectAbbr = "memo" 
+projectTitle = "MEMO" 
+pr`ojectSubTitle = "Digitales Memobuch der Stadt Graz" 
+prjectDesc = "Das digitale Memobuch der Stadt Graz erinnert an Opfer des Nationalsozialismus"
+```
+4. Run the static site rendering
 
 
 ```sh
