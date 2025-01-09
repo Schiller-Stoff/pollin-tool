@@ -7,6 +7,7 @@ Informatics: polling-concept
 
 ## Basic usage
 
+0. Have a running GAM5-API (external OR external)
 1. Clone or init project files
 2. Rye setup (https://rye.astral.sh/)
     - Set the correct Python version (recommended: 3.12): `rye pin 3.12`
