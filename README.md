@@ -33,6 +33,6 @@ pollin "memo" "C:\Users\sebas\Desktop\testme" init
 pollin "memo" "C:\Users\sebas\Desktop\testme" start
 
 # alternatively set a custom host and port of the GAMS-API and custom port for the GAMS-SSR
-pollin -h "http://localhost:18085/" "memo" "C:\Users\sebas\Desktop\testme" start 8080
+pollin -h "http://localhost:18085" "memo" "C:\Users\sebas\Desktop\testme" start 8080
 
 ```
