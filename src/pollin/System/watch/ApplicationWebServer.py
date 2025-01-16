@@ -1,5 +1,6 @@
 from http.server import HTTPServer as BaseHTTPServer, SimpleHTTPRequestHandler
 import os
+import logging
 
 class ApplicationWebServer:
     """This class is responsible for starting the development web server"""
@@ -28,6 +29,19 @@ class HTTPHandler(SimpleHTTPRequestHandler):
         # disables CORS for local dev server
         self.send_header("Access-Control-Allow-Origin", "*")
         SimpleHTTPRequestHandler.end_headers(self)
+
+    def handle_one_request(self):
+        """
+        Improves logging when handling singular requests
+        """
+        try:
+            return SimpleHTTPRequestHandler.handle_one_request(self)
+        except ConnectionAbortedError:
+            logging.debug("Connection was aborted - this is normal if the client closes the connection")
+            return
+        except Exception as e:
+            logging.error(f"Error handling request: {e}")
+            return
 
 
 class HTTPServer(BaseHTTPServer):
