@@ -1,9 +1,43 @@
-from http.server import HTTPServer as BaseHTTPServer, SimpleHTTPRequestHandler
 import os
-import logging
+from aiohttp import web
 
 class ApplicationWebServer:
     """This class is responsible for starting the development web server"""
+
+    @staticmethod
+    def create_handle_directory_index(web_dir: str, port: int):
+        """
+        Higher Order function that allows to pass in arguments to created function (being called as lambda).
+        (Check docstring of built function)
+        """
+        def handle_directory_index(request):
+            """
+            Checks if incoming request url
+            """
+            # TODO add logging
+
+            requested_path = request.path
+
+            # Remove leading slash and normalize
+            relative_path = requested_path.lstrip('/')
+
+            # Check if directory exists and has index.html
+            full_path = os.path.join(web_dir, relative_path)
+
+            # Check if path is a directory
+            if os.path.isdir(full_path):
+                index_path = os.path.join(full_path, "index.html")
+                if os.path.exists(index_path):
+                    return web.FileResponse(index_path)
+
+            # Check if path is a file
+            elif os.path.exists(full_path) and os.path.isfile(full_path):
+                return web.FileResponse(full_path)
+
+            # Fall back to regular static file handling
+            raise web.HTTPNotFound()
+
+        return handle_directory_index
 
     @staticmethod
     def start(web_dir: str, port: int):
@@ -12,43 +46,14 @@ class ApplicationWebServer:
         :param web_dir:  The directory to serve
         :param port: The port to serve on
         """
-        httpd = HTTPServer(web_dir, ("", port))
-        httpd.serve_forever()
 
+        app = web.Application()
 
-class HTTPHandler(SimpleHTTPRequestHandler):
-    """This handler uses server.base_path instead of always using os.getcwd()"""
+        # next lines make sure that under /dirpath --> by default /dirpath/index.html is being served
+        handle_directory_index = ApplicationWebServer.create_handle_directory_index(web_dir, port)
+        # Handle directory index requests first
+        app.router.add_get(r'/{path:.*}', handle_directory_index)
 
-    def translate_path(self, path):
-        path = SimpleHTTPRequestHandler.translate_path(self, path)
-        relpath = os.path.relpath(path, os.getcwd())
-        fullpath = os.path.join(self.server.base_path, relpath)
-        return fullpath
-
-    def end_headers(self):
-        # disables CORS for local dev server
-        self.send_header("Access-Control-Allow-Origin", "*")
-        SimpleHTTPRequestHandler.end_headers(self)
-
-    def handle_one_request(self):
-        """
-        Improves logging when handling singular requests
-        """
-        try:
-            return SimpleHTTPRequestHandler.handle_one_request(self)
-        except ConnectionAbortedError:
-            # TODO needs the logger instance passed and not global module!
-            print("Connection was aborted - this is normal if the client closes the connection")
-            return
-        except Exception as e:
-            # TODO needs the logger instance passed and not global module!
-            print(f"Error handling request: {e}")
-            return
-
-
-class HTTPServer(BaseHTTPServer):
-    """The main server, you pass in base_path which is the path you want to serve requests from"""
-
-    def __init__(self, base_path, server_address, RequestHandlerClass=HTTPHandler):
-        self.base_path = base_path
-        BaseHTTPServer.__init__(self, server_address, RequestHandlerClass)
+        # Serve static files from the current directory
+        app.router.add_static('/', path=web_dir, show_index=True)
+        web.run_app(app, port=port)
