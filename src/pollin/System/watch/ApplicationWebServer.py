@@ -37,10 +37,12 @@ class HTTPHandler(SimpleHTTPRequestHandler):
         try:
             return SimpleHTTPRequestHandler.handle_one_request(self)
         except ConnectionAbortedError:
-            logging.debug("Connection was aborted - this is normal if the client closes the connection")
+            # TODO needs the logger instance passed and not global module!
+            print("Connection was aborted - this is normal if the client closes the connection")
             return
         except Exception as e:
-            logging.error(f"Error handling request: {e}")
+            # TODO needs the logger instance passed and not global module!
+            print(f"Error handling request: {e}")
             return
 
 
