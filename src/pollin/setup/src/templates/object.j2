@@ -1,4 +1,4 @@
-{% extends "parents/base.jinja" %}
+{% extends "parents/base.j2" %}
 {% block content %}
     <script>
         if (window.location.href.includes("memo.person.")){
@@ -22,7 +22,7 @@
     <div id="saxonjs_container"></demo>
 
     {% if 'material' in object.db.id %}
-            {% include "custom/material.jinja" %}
+            {% include "custom/material.j2" %}
     {% endif %}
 
 {% endblock %}

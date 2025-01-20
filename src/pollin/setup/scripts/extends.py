@@ -45,7 +45,7 @@
 #     """
 #
 #     # must be called first to load the template (which template? belongs to the operation?)
-#     load_template_fn("object.jinja")
+#     load_template_fn("object.j2")
 #
 #     # define correspondent location per object
 #     # TODO add logic that only certain objects are being rendered (like of type 'event')

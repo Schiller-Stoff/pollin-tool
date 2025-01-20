@@ -49,7 +49,7 @@ class ApplicationViewTemplateRenderer:
                 break
 
 
-        pages = Path(template_pages_dir).glob('*.jinja')
+        pages = Path(template_pages_dir).glob('*.j2')
         for page in pages:
             # get the relative path to the view template directory
             template_path = Path(page).relative_to(view_template_dir)

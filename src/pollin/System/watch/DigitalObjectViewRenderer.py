@@ -49,7 +49,7 @@ class DigitalObjectViewRenderer:
 
         for digital_object in data:
 
-            object_template = self.environment.get_template('object.jinja')
+            object_template = self.environment.get_template('object.j2')
             content = object_template.render(object=digital_object, project=project_metadata)
             object_id = digital_object.db["id"]
 
@@ -62,13 +62,13 @@ class DigitalObjectViewRenderer:
 
 
         # rendering of project home page
-        home_template = self.environment.get_template('project.jinja')
+        home_template = self.environment.get_template('project.j2')
         home_content = home_template.render(project=project_metadata)
         with open(Path(output_dir).joinpath("index.html"), "w", encoding="utf-8") as f:
             f.write(home_content)
 
         # TODO think about list of all objects?
-        object_list_template = self.environment.get_template('object-list.jinja')
+        object_list_template = self.environment.get_template('object-list.j2')
         object_list_content = object_list_template.render(objects=data, project=project_metadata)
         with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
             f.write(object_list_content)
