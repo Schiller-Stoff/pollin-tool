@@ -3,7 +3,7 @@ import click
 import multiprocessing
 
 from pollin.System.load.DigitalObjectService import DigitalObjectService
-from pollin.System.watch.DigitalObjectViewRenderer import DigitalObjectViewRenderer
+from pollin.System.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.load.ApplicationDataLoader import ApplicationDataLoader
 from pollin.System.setup.ApplicationFileTemplater import ApplicationFileTemplater
