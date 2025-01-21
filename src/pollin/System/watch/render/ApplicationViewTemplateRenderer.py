@@ -2,7 +2,6 @@ import logging
 import os.path
 from pathlib import Path
 import jinja2
-from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
 
@@ -35,22 +34,10 @@ class ApplicationViewTemplateRenderer:
         view_template_dir = self.app_context.get_config().project_src_view_template_dir
         project_data = self.app_context.get_app_data_store().get_project_data()
 
-
         # template names = relative path to the view template directory
         environment = jinja2.Environment(loader=jinja2.FileSystemLoader(view_template_dir))
 
         project_abbr = self.app_context.get_config().project
-
-        # the material digital object is automatically bound to the /pages/ views.
-        # TODO find first object that contains in id 'memo.material'
-        objects = self.app_context.get_app_data_store().get_objects()
-        # TODO refactor this assignment
-        material_object = DigitalObjectViewModel({}, {}, {}, {})
-        for object in objects:
-            if object.db["id"] == f'{project_abbr}.material':
-                material_object = object
-                break
-
 
         pages = Path(template_pages_dir).glob('*.j2')
         for page in pages:
@@ -63,7 +50,16 @@ class ApplicationViewTemplateRenderer:
 
             page_html = ""
             try:
-                page_html = template.render(project=project_data, object=material_object)
+                template_filename = Path(template_path).stem
+                expected_object_id = f"{project_abbr}.{template_filename}"
+                material_object = self.app_context.get_app_data_store().find_object(expected_object_id)
+                if material_object is None:
+                    # default "just render" the page
+                    page_html = template.render(project=project_data)
+                else:
+                    # additionally assign object data if pagename corresponds to object with id.
+                    page_html = template.render(project=project_data, object=material_object)
+
             except Exception as e:
                 msg = f"Failed to render page html for page template {page.name} for project {project_abbr}. Original error: {e}"
                 logging.error(msg)
