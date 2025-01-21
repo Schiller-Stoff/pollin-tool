@@ -4,6 +4,8 @@ from pathlib import Path
 import jinja2
 from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.System.init.ApplicationContext import ApplicationContext
+from pollin.System.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+
 
 class ApplicationViewTemplateRenderer:
     """
@@ -37,13 +39,14 @@ class ApplicationViewTemplateRenderer:
         # template names = relative path to the view template directory
         environment = jinja2.Environment(loader=jinja2.FileSystemLoader(view_template_dir))
 
+        project_abbr = self.app_context.get_config().project
+
         # the material digital object is automatically bound to the /pages/ views.
         # TODO find first object that contains in id 'memo.material'
         objects = self.app_context.get_app_data_store().get_objects()
         # TODO refactor this assignment
         material_object = DigitalObjectViewModel({}, {}, {}, {})
         for object in objects:
-            project_abbr = self.app_context.get_config().project
             if object.db["id"] == f'{project_abbr}.material':
                 material_object = object
                 break
@@ -58,8 +61,15 @@ class ApplicationViewTemplateRenderer:
 
             template = environment.get_template( template_path )
 
-            content = template.render(project=project_data, object=material_object)
-            output_path = Path(output_dir).joinpath(page.stem + '.html')
-            logging.info(f"Rendering {page.name} to {output_path}")
-            with open(output_path, 'w', encoding='utf-8') as f:
-                f.write(content)
+            page_html = ""
+            try:
+                page_html = template.render(project=project_data, object=material_object)
+            except Exception as e:
+                msg = f"Failed to render page html for page template {page.name} for project {project_abbr}. Original error: {e}"
+                logging.error(msg)
+                page_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
+            finally:
+                output_path = Path(output_dir).joinpath(page.stem + '.html')
+                with open(output_path, 'w', encoding='utf-8') as f:
+                    f.write(page_html)
+                    logging.info(f"Successfully wrote {page.name} to {output_path}")
