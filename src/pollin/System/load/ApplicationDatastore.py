@@ -32,6 +32,17 @@ class ApplicationDatastore:
         """
         return self.digital_objects
 
+    def find_object(self, id: str) -> DigitalObjectViewModel | None:
+        """
+        Returns given digital object instance from the internal array.
+        None if nothing has been found.
+        """
+        for digital_object in self.digital_objects:
+            if digital_object.db["id"] == id:
+                return digital_object
+
+        return None
+
     def set_objects(self, digital_objects: list[DigitalObjectViewModel]):
         """
         Sets the digital objects
