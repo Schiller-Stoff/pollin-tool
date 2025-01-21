@@ -83,12 +83,17 @@ class DigitalObjectViewRenderer:
                 f.write(project_html)
                 logging.info(f"Successfully wrote project home page {project_abbr}")
 
-        # TODO think about list of all objects?
+        # Rendering of object overview page
         object_list_template = self.environment.get_template('object-list.j2')
-        # TODO catch template rendering error
-        object_list_content = object_list_template.render(objects=data, project=project_metadata)
-        with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
-            f.write(object_list_content)
+        object_list_html = ""
+        try:
+            object_list_html = object_list_template.render(objects=data, project=project_metadata)
+        except Exception as e:
+            msg = f"Failed to render template for object-list for project {project_abbr}. Original error: {e}"
+            object_list_html = DigitalObjectViewRenderer.STATIC_SITE_RENDERING_ERROR_HTML.format(msg)
+        finally:
+            with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
+                f.write(object_list_html)
 
 
         ####
