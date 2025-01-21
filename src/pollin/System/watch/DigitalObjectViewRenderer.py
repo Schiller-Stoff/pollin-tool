@@ -27,6 +27,8 @@ class DigitalObjectViewRenderer:
     Jinja2 template that can be loaded and used to render custom views
     """
 
+    STATIC_SITE_RENDERING_ERROR_HTML = "<html><body style='padding: 1em 5em; font-family: MONOSPACE; font-size:1.2em; line-height:1.5em;'><div style='max-width: 75%'><h1 style='color: red'>POLLIN ERROR</h1> <p>Occurred at static site generation (template-rendering)</p><p>{}</p></div></body></html>"
+
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
         # jinja2 environment setup in constructor
@@ -46,6 +48,7 @@ class DigitalObjectViewRenderer:
         data = self.app_context.get_app_data_store().get_objects()
         # metadata about the project
         project_metadata = self.app_context.get_app_data_store().project_data
+        project_abbr = project_metadata["projectAbbr"]
 
         for digital_object in data:
             object_id = digital_object.db["id"]
@@ -58,7 +61,7 @@ class DigitalObjectViewRenderer:
                 msg = f"Failed to render template for object {digital_object.db['id']}. Original error: {e}"
                 logging.error(msg)
                 # TODO move error message to a static location?
-                object_html = f"<html><body style='padding: 1em 5em; font-family: MONOSPACE; font-size:1.2em; line-height:1.5em;'><div style='max-width: 75%'><h1 style='color: red'>POLLIN ERROR</h1> <p>Occurred at static site generation (template-rendering)</p><p>{msg}</p></div></body></html>"
+                object_html = DigitalObjectViewRenderer.STATIC_SITE_RENDERING_ERROR_HTML.format(msg)
             finally:
                 # writing the object html to file in any case
                 cur_object_folder = Path(output_dir).joinpath("objects").joinpath(object_id)
@@ -68,11 +71,17 @@ class DigitalObjectViewRenderer:
                     logging.info(f"Successfully wrote object {object_id} to file")
 
         # rendering of project home page
-        home_template = self.environment.get_template('project.j2')
-        # TODO catch template rendering error
-        home_content = home_template.render(project=project_metadata)
-        with open(Path(output_dir).joinpath("index.html"), "w", encoding="utf-8") as f:
-            f.write(home_content)
+        project_template = self.environment.get_template('project.j2')
+        project_html = ""
+        try:
+            project_html = project_template.render(project=project_metadata)
+        except Exception as e:
+            msg = f"Failed to render template for project {project_abbr}. Original error: {e}"
+            project_html = DigitalObjectViewRenderer.STATIC_SITE_RENDERING_ERROR_HTML.format(msg)
+        finally:
+            with open(Path(output_dir).joinpath("index.html"), "w", encoding="utf-8") as f:
+                f.write(project_html)
+                logging.info(f"Successfully wrote project home page {project_abbr}")
 
         # TODO think about list of all objects?
         object_list_template = self.environment.get_template('object-list.j2')
