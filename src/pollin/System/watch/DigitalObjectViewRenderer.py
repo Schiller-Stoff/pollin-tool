@@ -6,6 +6,8 @@ from jinja2 import Environment, Template
 
 from pollin.System.load.DigitalObjectService import DigitalObjectService
 from pollin.System.init.ApplicationContext import ApplicationContext
+from pollin.System.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+
 
 class DigitalObjectViewRenderer:
     """
@@ -27,7 +29,6 @@ class DigitalObjectViewRenderer:
     Jinja2 template that can be loaded and used to render custom views
     """
 
-    STATIC_SITE_RENDERING_ERROR_HTML = "<html><body style='padding: 1em 5em; font-family: MONOSPACE; font-size:1.2em; line-height:1.5em;'><div style='max-width: 75%'><h1 style='color: red'>POLLIN ERROR</h1> <p>Occurred at static site generation (template-rendering)</p><p>{}</p></div></body></html>"
 
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
@@ -60,8 +61,7 @@ class DigitalObjectViewRenderer:
             except Exception as e:
                 msg = f"Failed to render template for object {digital_object.db['id']}. Original error: {e}"
                 logging.error(msg)
-                # TODO move error message to a static location?
-                object_html = DigitalObjectViewRenderer.STATIC_SITE_RENDERING_ERROR_HTML.format(msg)
+                object_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
             finally:
                 # writing the object html to file in any case
                 cur_object_folder = Path(output_dir).joinpath("objects").joinpath(object_id)
@@ -77,7 +77,8 @@ class DigitalObjectViewRenderer:
             project_html = project_template.render(project=project_metadata)
         except Exception as e:
             msg = f"Failed to render template for project {project_abbr}. Original error: {e}"
-            project_html = DigitalObjectViewRenderer.STATIC_SITE_RENDERING_ERROR_HTML.format(msg)
+            logging.error(msg)
+            project_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
         finally:
             with open(Path(output_dir).joinpath("index.html"), "w", encoding="utf-8") as f:
                 f.write(project_html)
@@ -90,7 +91,8 @@ class DigitalObjectViewRenderer:
             object_list_html = object_list_template.render(objects=data, project=project_metadata)
         except Exception as e:
             msg = f"Failed to render template for object-list for project {project_abbr}. Original error: {e}"
-            object_list_html = DigitalObjectViewRenderer.STATIC_SITE_RENDERING_ERROR_HTML.format(msg)
+            logging.error(msg)
+            object_list_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
         finally:
             with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
                 f.write(object_list_html)
