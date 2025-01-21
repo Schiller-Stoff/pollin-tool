@@ -3,7 +3,7 @@ import logging
 from watchdog.events import FileSystemEventHandler
 from pollin.System.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.watch.ApplicationStaticFileRefresher import ApplicationStaticFileRefresher
+from pollin.System.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
 from pollin.System.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
 
 class ApplicationViewFileEventController(FileSystemEventHandler):
@@ -17,7 +17,7 @@ class ApplicationViewFileEventController(FileSystemEventHandler):
 
     application_view_template_render: ApplicationViewTemplateRenderer
 
-    application_static_file_refresher: ApplicationStaticFileRefresher
+    application_static_file_refresher: ApplicationStaticFileRenderer
 
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
@@ -31,7 +31,7 @@ class ApplicationViewFileEventController(FileSystemEventHandler):
         self.application_view_template_render.render()
 
         # for static files (remove and add if something changes)
-        self.application_static_file_refresher = ApplicationStaticFileRefresher(app_context)
+        self.application_static_file_refresher = ApplicationStaticFileRenderer(app_context)
         self.application_static_file_refresher.refresh()
 
         logging.info(f"Successfully rendered views. Init event of {self.__class__.__name__}")

@@ -4,7 +4,7 @@ from pathlib import Path
 from pollin.System.init.ApplicationContext import ApplicationContext
 
 
-class ApplicationStaticFileRefresher:
+class ApplicationStaticFileRenderer:
     """
     Refreshes the static files in the public directory
     """
