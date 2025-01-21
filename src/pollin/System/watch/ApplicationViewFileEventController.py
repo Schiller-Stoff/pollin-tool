@@ -6,7 +6,7 @@ from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.watch.ApplicationStaticFileRefresher import ApplicationStaticFileRefresher
 from pollin.System.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
 
-class ApplicationEventController(FileSystemEventHandler):
+class ApplicationViewFileEventController(FileSystemEventHandler):
     """
     Listens to file system events and triggers the rendering of views
     """
