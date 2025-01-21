@@ -48,27 +48,35 @@ class DigitalObjectViewRenderer:
         project_metadata = self.app_context.get_app_data_store().project_data
 
         for digital_object in data:
-
-            object_template = self.environment.get_template('object.j2')
-            content = object_template.render(object=digital_object, project=project_metadata)
             object_id = digital_object.db["id"]
+            object_template = self.environment.get_template('object.j2')
 
-            cur_object_folder = Path(output_dir).joinpath("objects").joinpath(object_id)
-            os.makedirs(cur_object_folder, exist_ok=True)
-
-            with open(cur_object_folder.joinpath("index.html"), "w", encoding="utf-8") as f:
-                f.write(content)
-                logging.info(f"Successfully wrote object {object_id} to file")
-
+            object_html = ""
+            try:
+                object_html = object_template.render(object=digital_object, project=project_metadata)
+            except Exception as e:
+                msg = f"Failed to render template for object {digital_object.db['id']}. Original error: {e}"
+                logging.error(msg)
+                # TODO move error message to a static location?
+                object_html = f"<html><body style='padding: 1em 5em; font-family: MONOSPACE; font-size:1.2em; line-height:1.5em;'><div style='max-width: 75%'><h1 style='color: red'>POLLIN ERROR</h1> <p>Occurred at static site generation (template-rendering)</p><p>{msg}</p></div></body></html>"
+            finally:
+                # writing the object html to file in any case
+                cur_object_folder = Path(output_dir).joinpath("objects").joinpath(object_id)
+                os.makedirs(cur_object_folder, exist_ok=True)
+                with open(cur_object_folder.joinpath("index.html"), "w", encoding="utf-8") as f:
+                    f.write(object_html)
+                    logging.info(f"Successfully wrote object {object_id} to file")
 
         # rendering of project home page
         home_template = self.environment.get_template('project.j2')
+        # TODO catch template rendering error
         home_content = home_template.render(project=project_metadata)
         with open(Path(output_dir).joinpath("index.html"), "w", encoding="utf-8") as f:
             f.write(home_content)
 
         # TODO think about list of all objects?
         object_list_template = self.environment.get_template('object-list.j2')
+        # TODO catch template rendering error
         object_list_content = object_list_template.render(objects=data, project=project_metadata)
         with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
             f.write(object_list_content)
