@@ -51,14 +51,19 @@ class ApplicationViewTemplateRenderer:
             page_html = ""
             try:
                 template_filename = Path(template_path).stem
-                expected_object_id = f"{project_abbr}.{template_filename}"
-                material_object = self.app_context.get_app_data_store().find_object(expected_object_id)
-                if material_object is None:
-                    # default "just render" the page
-                    page_html = template.render(project=project_data)
+                # check if jinja template starts with "memo."
+                if template_filename.startswith(f"{project_abbr}."):
+                    expected_object_id = template_filename
+                    object_to_bind = self.app_context.get_app_data_store().find_object(expected_object_id)
+                    if object_to_bind:
+                        page_html = template.render(project=project_data, object=object_to_bind)
+                    else:
+                        msg = f"Cannot find object {expected_object_id} to bind to jinja template with name {template_filename}"
+                        logging.error(msg)
+                        raise LookupError(msg)
                 else:
-                    # additionally assign object data if pagename corresponds to object with id.
-                    page_html = template.render(project=project_data, object=material_object)
+                    # just render page if not following template name convention.
+                    page_html = template.render(project=project_data)
 
             except Exception as e:
                 msg = f"Failed to render page html for page template {page.name} for project {project_abbr}. Original error: {e}"
