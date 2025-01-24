@@ -46,6 +46,7 @@ class ApplicationViewTemplateRenderer:
             # thymeleaf expects forward slashes
             template_path = str(template_path).replace(os.sep, '/')
 
+            # TODO needs error handling (e.g. reproduce if defining malformed template at import e.g. writing empty brackets {{}})
             template = environment.get_template( template_path )
 
             page_html = ""
