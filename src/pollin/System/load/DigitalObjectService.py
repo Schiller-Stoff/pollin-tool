@@ -94,6 +94,10 @@ class DigitalObjectService:
 
         index_json = []
         for digital_object in data:
+            # TODO how to combine with fulltext provided by search-json workflow?
+            # TODO in which property should this be stored? under props?
+            # TODO need to combine all dublin core description fields
+            digital_object.props["fulltext"] = digital_object.dc["description"][0].split(" ")
             index_json.append(digital_object.to_dict())
 
         json_str = json.dumps(index_json, ensure_ascii=False, indent=4)
