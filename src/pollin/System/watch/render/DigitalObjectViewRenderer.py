@@ -57,7 +57,7 @@ class DigitalObjectViewRenderer:
 
             object_html = ""
             try:
-                object_html = object_template.render(object=digital_object, project=project_metadata)
+                object_html = object_template.render(object=digital_object, project=project_metadata, env=self.app_context.get_config().ENV)
             except Exception as e:
                 msg = f"Failed to render template for object {digital_object.db['id']}. Original error: {e}"
                 logging.error(msg)
@@ -74,7 +74,7 @@ class DigitalObjectViewRenderer:
         project_template = self.environment.get_template('project.j2')
         project_html = ""
         try:
-            project_html = project_template.render(project=project_metadata)
+            project_html = project_template.render(project=project_metadata, env=self.app_context.get_config().ENV)
         except Exception as e:
             msg = f"Failed to render template for project {project_abbr}. Original error: {e}"
             logging.error(msg)
@@ -88,7 +88,7 @@ class DigitalObjectViewRenderer:
         object_list_template = self.environment.get_template('object-list.j2')
         object_list_html = ""
         try:
-            object_list_html = object_list_template.render(objects=data, project=project_metadata)
+            object_list_html = object_list_template.render(objects=data, project=project_metadata, env=self.app_context.get_config().ENV)
         except Exception as e:
             msg = f"Failed to render template for object-list for project {project_abbr}. Original error: {e}"
             logging.error(msg)
