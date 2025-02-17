@@ -44,16 +44,12 @@ class AppInitializer:
         # static directory src folder
         app_config.project_src_static_dir = app_config.project_src_dir / "static"
 
-        # scripts directory
-        app_config.project_scripts_dir = app_config.project_files_root / "scripts"
-
         # internal setup folder
         app_config.intern_setup_dir = impresources.files('pollin') / "setup"
         # internal src folder
         app_config.intern_src_dir = impresources.files('pollin') / "setup" / "src"
         # set internal template directory
         app_config.intern_template_dir = impresources.files('pollin') / "setup" / "src" /  "templates"
-
 
         # reference to public folder
         app_config.public_dir = app_config.project_files_root / "public"

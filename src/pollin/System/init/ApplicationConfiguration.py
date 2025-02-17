@@ -6,7 +6,6 @@ from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConf
 class ApplicationConfiguration:
     """
     Configuration class for the main program.
-    TODO rename to ApplicationConfiguration?
     TODO general refactoring. Fields can be none
     """
 
@@ -40,11 +39,6 @@ class ApplicationConfiguration:
     project_src_static_dir: PathLike
     """
     Points to the static directory of the project source files
-    """
-
-    project_scripts_dir: PathLike
-    """
-    Points to the scripts directory of the project source files
     """
 
     project_src_view_template_dir: PathLike
@@ -111,7 +105,6 @@ class ApplicationConfiguration:
         self.intern_src_dir = None
         self.public_dir = None
         self.intern_setup_dir = None
-        self.project_scripts_dir = None
         self.project_src_view_template_pages_dir = None
         self.project_config_json = None
         self.project_external_config = None

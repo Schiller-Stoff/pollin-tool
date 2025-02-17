@@ -97,23 +97,6 @@ class DigitalObjectViewRenderer:
             with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
                 f.write(object_list_html)
 
-
-        ####
-        #
-        # Possible extension rendering process for digital objects?
-        #
-
-        # import function from app script
-        # TODO handle hardcoded function name? (extend_object_view_fn)
-        extend_object_view_fn = self.app_context.get_app_script_importer().get_function("extend_object_view_fn")
-        if extend_object_view_fn is None:
-            logging.info("No extend_object_view_fn function found. Using default rendering process.")
-        else:
-            logging.info("Found extend_object_view_fn function")
-            # experimental custom process
-            extend_object_view_fn(data, self.activate_custom_template, self.render_view)
-
-
         ####
         # create object_index_json
         DigitalObjectService.aggregate_index_json(
