@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 
+from pollin.System.init.AppEnv import AppEnv
 from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.init.ApplicationConfiguration import ApplicationConfiguration
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
@@ -26,6 +27,9 @@ class AppInitializer:
 
         app_config.gams_host = host
         app_config.project = project
+
+        # storing same variables in ENV reference (used at runtime in templates)
+        app_config.ENV = AppEnv(GAMS_API_ORIGIN=app_config.gams_host, PROJECT_ABBR=app_config.project)
 
         # set folder locations
         app_config.project_files_root = Path(directory)

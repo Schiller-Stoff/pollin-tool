@@ -1,4 +1,6 @@
 from os import PathLike
+
+from pollin.System.init.AppEnv import AppEnv
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
 
 class ApplicationConfiguration:
@@ -16,6 +18,11 @@ class ApplicationConfiguration:
     gams_host: str | None
     """
     The host of the GAMS5 instance
+    """
+
+    ENV: AppEnv
+    """
+    Stores runtime env variables needed in the templates, e.g. set gams-api host
     """
 
     project_files_root: PathLike
