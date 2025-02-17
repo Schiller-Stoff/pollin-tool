@@ -46,11 +46,9 @@ class ApplicationViewTemplateRenderer:
             # thymeleaf expects forward slashes
             template_path = str(template_path).replace(os.sep, '/')
 
-            # TODO needs error handling (e.g. reproduce if defining malformed template at import e.g. writing empty brackets {{}})
-            template = environment.get_template( template_path )
-
             page_html = ""
             try:
+                template = environment.get_template( template_path )
                 template_filename = Path(template_path).stem
                 # check if jinja template starts with "memo."
                 if template_filename.startswith(f"{project_abbr}."):
@@ -67,7 +65,7 @@ class ApplicationViewTemplateRenderer:
                     page_html = template.render(project=project_data, env=self.app_context.get_config().ENV)
 
             except Exception as e:
-                msg = f"Failed to render page html for page template {page.name} for project {project_abbr}. Original error: {e}"
+                msg = f"Failed to render page html for page template {page.name} for project {project_abbr}. At template_path: {template_path} Original error: {e}"
                 logging.error(msg)
                 page_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
             finally:

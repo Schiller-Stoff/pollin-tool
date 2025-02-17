@@ -53,13 +53,15 @@ class DigitalObjectViewRenderer:
 
         for digital_object in data:
             object_id = digital_object.db["id"]
-            object_template = self.environment.get_template('object.j2')
+
 
             object_html = ""
+            object_template_name = 'object.j2'
             try:
+                object_template = self.environment.get_template(object_template_name)
                 object_html = object_template.render(object=digital_object, project=project_metadata, env=self.app_context.get_config().ENV)
             except Exception as e:
-                msg = f"Failed to render template for object {digital_object.db['id']}. Original error: {e}"
+                msg = f"Failed to render template {object_template_name} for object {digital_object.db['id']}. Original error: {e}"
                 logging.error(msg)
                 object_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
             finally:
@@ -71,12 +73,14 @@ class DigitalObjectViewRenderer:
                     logging.info(f"Successfully wrote object {object_id} to file")
 
         # rendering of project home page
-        project_template = self.environment.get_template('project.j2')
+
         project_html = ""
+        project_template_name = "project.j2"
         try:
+            project_template = self.environment.get_template(project_template_name)
             project_html = project_template.render(project=project_metadata, env=self.app_context.get_config().ENV)
         except Exception as e:
-            msg = f"Failed to render template for project {project_abbr}. Original error: {e}"
+            msg = f"Failed to render template {project_template_name} for project {project_abbr}. Original error: {e}"
             logging.error(msg)
             project_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
         finally:
@@ -85,12 +89,14 @@ class DigitalObjectViewRenderer:
                 logging.info(f"Successfully wrote project home page {project_abbr}")
 
         # Rendering of object overview page
-        object_list_template = self.environment.get_template('object-list.j2')
+
         object_list_html = ""
+        object_list_template_name = 'object-list.j2'
         try:
+            object_list_template = self.environment.get_template(object_list_template_name)
             object_list_html = object_list_template.render(objects=data, project=project_metadata, env=self.app_context.get_config().ENV)
         except Exception as e:
-            msg = f"Failed to render template for object-list for project {project_abbr}. Original error: {e}"
+            msg = f"Failed to render template {object_list_template_name} for object-list for project {project_abbr}. Original error: {e}"
             logging.error(msg)
             object_list_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
         finally:
