@@ -106,31 +106,3 @@ class DigitalObjectService:
         with open(json_file_path, "w", encoding="utf-8") as f:
             f.write(json_str)
             logging.info(f"Successfully wrote {json_file_path} to file")
-
-    # TODO refactor
-    @staticmethod
-    def aggregate_geo_json(output_dir: str, data: list[DigitalObjectViewModel]):
-        """
-        Creates a geo json file containing all objects with geo data (in the search.json)
-        :param output_dir: The output directory
-        :param data: list of DigitalObjects
-        :return:
-        """
-
-        geo_json_dict = {
-            "type": "FeatureCollection",
-            "features": []
-        }
-
-        index_json = geo_json_dict["features"]
-        for digital_object in data:
-            geo_feature = digital_object.to_geo_point_feature()
-            if geo_feature:
-                index_json.append(geo_feature)
-
-        json_str = json.dumps(geo_json_dict, ensure_ascii=False, indent=4)
-        json_file_path = Path(output_dir).joinpath("object_index_geo.json")
-
-        with open(json_file_path, "w", encoding="utf-8") as f:
-            f.write(json_str)
-            logging.info(f"Successfully wrote {json_file_path} to file")
