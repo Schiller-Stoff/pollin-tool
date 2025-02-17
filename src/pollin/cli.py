@@ -1,4 +1,6 @@
 import logging
+import shutil
+
 import click
 import multiprocessing
 
@@ -42,8 +44,12 @@ def start(port: int):
     Starts the static site generator (web server with rerendering of views and initial data loading etc.)
     """
     # TODO where to place this?
-    # init public project folder structure
+    # if not public folder exist -> create
     if not app_context.get_config().project_public_dir.exists():
+        app_context.get_config().project_public_dir.mkdir(parents=True)
+    # else delete complete tree and recreate
+    else:
+        shutil.rmtree(app_context.get_config().project_public_dir)
         app_context.get_config().project_public_dir.mkdir(parents=True)
 
     # encapsulates loading of project data and digital objects
@@ -51,6 +57,7 @@ def start(port: int):
         .load())
 
     web_dir = app_context.get_config().public_dir
+
     dev_server_process = multiprocessing.Process(target=ApplicationWebServer.start, args=(web_dir, port,))
 
     try:
