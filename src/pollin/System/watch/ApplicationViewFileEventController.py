@@ -49,8 +49,13 @@ class ApplicationViewFileEventController(FileSystemEventHandler):
         logging.info("Successfully rendered views - on_created event")
 
     def on_deleted(self, event):
-        self.application_view_template_render.render()
+        # deletes correspondent file
+        self.application_view_template_render.delete_output_file(event.src_path)
+
+        # deletion only performed at startup
         self.digital_object_view_renderer.render()
+
+        # will delete everything and copy again (no delete necessary)
         self.application_static_file_refresher.refresh()
-        logging.info("Successfully rendered views - on_deleted event")
+        logging.info("Successfully removed produced rendering output files - on_deleted event")
 

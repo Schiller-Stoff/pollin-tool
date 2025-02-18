@@ -22,6 +22,22 @@ class ApplicationViewTemplateRenderer:
         self.app_context = app_context
 
 
+    def delete_output_file(self, src_path: str):
+        """
+        Deletes the output file for the correspondent source file
+        :param src_path path to the source file
+        """
+
+        output_dir = self.app_context.get_config().project_public_dir
+        output_path = Path(output_dir).joinpath(Path(src_path).stem + '.html')
+
+        if os.path.exists(output_path):
+            os.remove(output_path)
+            logging.info(f"Succesfully deleted output file at {output_path}")
+        else:
+            msg = f"Failed to delete output render-file at: {output_path} for src file: {src_path}. This might lead to unexpected behaviors of the pollin tool"
+            logging.warning(msg)
+
 
     def render(self):
         """
