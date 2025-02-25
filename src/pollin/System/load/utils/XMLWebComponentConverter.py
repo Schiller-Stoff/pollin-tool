@@ -1,5 +1,4 @@
 
-
 import xml.etree.ElementTree as ET
 import re
 
@@ -25,10 +24,13 @@ class XMLWebComponentConverter:
         Returns:
             str: Transformed HTML snippet with web components
         """
+        # Dictionary to hold namespace prefixes
+        namespaces = {}
+
         def sanitize_tag(tag):
             """
             Convert XML tag to a valid web component tag name.
-            - Remove any non-alphanumeric characters
+            - Remove any namespace if present
             - Convert to lowercase
             - Ensure it starts with a letter
             """
@@ -45,6 +47,22 @@ class XMLWebComponentConverter:
 
             return f'{web_component_prefix}{sanitized}'
 
+        def extract_namespaces(elem_string):
+            """Extract namespace declarations from XML string"""
+            import re
+            ns_matches = re.findall(r'xmlns:([a-zA-Z0-9_-]+)="([^"]+)"', elem_string)
+            for prefix, uri in ns_matches:
+                namespaces[uri] = prefix
+
+        def parse_namespaced_attr(attr):
+            """Parse a namespaced attribute and return prefix:name format"""
+            if '}' in attr:
+                ns_uri, local_name = attr.split('}', 1)
+                ns_uri = ns_uri[1:]  # Remove the leading '{'
+                if ns_uri in namespaces:
+                    return f"{namespaces[ns_uri]}:{local_name}"
+            return attr
+
         def convert_element(element):
             """
             Recursively convert an XML element to a web component element
@@ -53,18 +71,20 @@ class XMLWebComponentConverter:
             web_component_tag = sanitize_tag(element.tag)
 
             # Create attributes string
-            attributes = ' '.join([
-                f'{key}="{str(value)}"'
-                for key, value in element.attrib.items()
-            ])
-            opening_tag = f"<{web_component_tag} {attributes}>" if attributes else f"<{web_component_tag}>"
+            attributes = []
+            for key, value in element.attrib.items():
+                attr_name = parse_namespaced_attr(key)
+                attributes.append(f'{attr_name}="{str(value)}"')
+
+            attr_str = ' '.join(attributes)
+            opening_tag = f"<{web_component_tag} {attr_str}>" if attr_str else f"<{web_component_tag}>"
 
             # Process child elements and text content
             children = []
 
             # Add text content before first child
             if element.text and element.text.strip():
-                children.append((element.text))
+                children.append(element.text)
 
             # Process child elements
             for child in element:
@@ -77,6 +97,19 @@ class XMLWebComponentConverter:
             # Join children and create closing tag
             content = ''.join(children)
             return f"{opening_tag}{content}</{web_component_tag}>"
+
+        # First, extract namespace declarations from the original XML string
+        extract_namespaces(xml_string)
+
+        # Add the known namespaces
+        namespaces["http://www.w3.org/1999/02/22-rdf-syntax-ns#"] = "rdf"
+        namespaces["http://www.tei-c.org/ns/1.0/"] = "tei"
+        namespaces["http://www.opengis.net/ont/gml#"] = "lido"
+        namespaces["http://purl.org/dc/elements/1.1/"] = "dc"
+
+        # Register namespaces with ElementTree
+        for uri, prefix in namespaces.items():
+            ET.register_namespace(prefix, uri)
 
         # Parse the XML
         try:
