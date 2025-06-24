@@ -106,6 +106,7 @@ class XMLWebComponentConverter:
         namespaces["http://www.tei-c.org/ns/1.0/"] = "tei"
         namespaces["http://www.opengis.net/ont/gml#"] = "lido"
         namespaces["http://purl.org/dc/elements/1.1/"] = "dc"
+        namespaces["http://www.w3.org/XML/1998/namespace"] = "xml"
 
         # Register namespaces with ElementTree
         for uri, prefix in namespaces.items():
