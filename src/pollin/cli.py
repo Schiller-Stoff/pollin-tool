@@ -28,7 +28,7 @@ def cli(host: str, directory: str, project: str):
     :param directory: Path of the view template directory
     :param project: Abbreviation of the project
     """
-    logging.basicConfig( encoding='utf-8', level=logging.DEBUG)
+    logging.basicConfig( encoding='utf-8', level=logging.INFO)
 
     # setting up the application context
     (AppInitializer(app_context)
