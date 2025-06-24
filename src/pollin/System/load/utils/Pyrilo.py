@@ -50,9 +50,13 @@ class Pyrilo:
         with urllib.request.urlopen(cur_request) as response:
             data = response.read()
             logging.debug(data)
-            json_data: List[Any] =  json.loads(data.decode('utf-8'))
-            if len(json_data) > 0:
-                objectCollector.extend(json_data)
+            json_data =  json.loads(data.decode('utf-8'))
+
+            pagination_result: List[Any] = json_data["results"]
+            pagination_result_count = len(pagination_result)
+
+            if pagination_result_count > 0:
+                objectCollector.extend(pagination_result)
                 logging.debug(f"Requesting digital objects for project {project_abbr} from {url} with pageIndex {startIndex}. Got objects: {len(json_data)}")
                 return self._collect_objects(project_abbr, startIndex + 1, objectCollector)
             else:
@@ -65,7 +69,7 @@ class Pyrilo:
 
         """
 
-        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects?style=idlist"
+        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects/ids"
         logging.info(f"Requesting digital objects for project {project_abbr} from {url}")
         with urllib.request.urlopen(url) as response:
             data = response.read()
