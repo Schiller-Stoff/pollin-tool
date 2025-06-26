@@ -146,3 +146,22 @@ class Pyrilo:
 
         logging.debug(f"fReturning now dc dict: {dc_dict}")
         return dc_dict
+
+
+    def get_project(self, project_abbr) -> dict[str, any]:
+        """
+        Retrieves a project's metadata from GAMS5-api (like description)
+        """
+
+        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}"
+        logging.info(f"Requesting {project_abbr} project's metadata from {url}")
+
+        try:
+            with urllib.request.urlopen(url) as response:
+                data = response.read()
+                logging.debug(data)
+                return json.loads(data.decode('utf-8'))
+        except HTTPError as e:
+            raise ConnectionError(f"Error while requesting project metadata from project {project_abbr} from url {url}. Error: {e}")
+
+
