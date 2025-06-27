@@ -62,21 +62,6 @@ class Pyrilo:
             else:
                 return objectCollector
 
-
-    def list_objects_ids(self, project_abbr: str) -> List[str]:
-        """
-        Retrieves an overview over all digital objects for given project.
-
-        """
-
-        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects/ids"
-        logging.info(f"Requesting digital objects for project {project_abbr} from {url}")
-        with urllib.request.urlopen(url) as response:
-            data = response.read()
-            logging.debug(data)
-            return json.loads(data.decode('utf-8'))
-
-
     def get_object(self, project_abbr: str, object_id: str) -> dict[str, any]:
         """
         Retrieves a digital object for given project and object id.
