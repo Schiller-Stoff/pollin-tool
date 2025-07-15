@@ -4,27 +4,17 @@ Tool polls / pulls-in ("poll-in") digital objects from a GAMS5 project and perfo
 
 Informatics: polling-concept
 
-
 ## Basic usage
 
-0. Have a running GAM5-API (external OR external)
+0. Have a running GAM5-API (OR external)
 1. Clone or init project files
-2. Rye setup (https://rye.astral.sh/)
-    - Set the correct Python version (recommended: 3.12): `rye pin 3.12`
-    - Install packages: `rye sync`
-3. Create a `project.toml` with your project metadata, e.g. for the "Memo" project:
-```toml
-projectAbbr = "memo" 
-projectTitle = "MEMO" 
-projectSubTitle = "Digitales Memobuch der Stadt Graz" 
-projectDesc = "Das digitale Memobuch der Stadt Graz erinnert an Opfer des Nationalsozialismus"
-```
-4. Run the static site rendering
+2. UV setup
+3. Use pyrilo from venv
 
 
 ```sh
 # Setup project files
-pollin "memo" "C:\Users\sebas\Desktop\testme" init
+pollin "memo" "C:\Users\sebas\Desktop\testme" init 
 
 
 # Example GAMS-SSR startup 
@@ -35,5 +25,7 @@ pollin "memo" "C:\Users\sebas\Desktop\testme" start
 # alternatively set a custom host and port of the GAMS-API and custom port for the GAMS-SSR
 # (demo uses arbitrary file location on system - please adapt to your machine)
 pollin -h "http://localhost:18085" "memo" "C:\Users\sebas\Documents\programming\gams\memo_www" start 8080
+
+pollin -h "http://localhost:18085" "vipa" "C:\Users\sebas\Documents\programming\gams\vipa-www" start 8080
 
 ```
