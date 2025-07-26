@@ -50,14 +50,18 @@ class DigitalObjectService:
             object_datastream_ids = object_metadata.get("datastreams", [])
             component_map = self._load_component_map(object_id, object_datastream_ids)
 
-            try:
-                search_json = pyrilo.get_search_json(project, object_id)
-                digital_object = DigitalObjectViewModel(dc_json, object_metadata, search_json, component_map)
-            except ConnectionError as e:
-                # if the search.json is not available, we can still load the object
-                logging.warning(f"Could not load search.json for object {object_id}. Error: {e}")
-                digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, component_map)
+            ###
+            # commented out SEARCH.json workflow
 
+            # try:
+            #     search_json = pyrilo.get_search_json(project, object_id)
+            #     digital_object = DigitalObjectViewModel(dc_json, object_metadata, search_json, component_map)
+            # except ConnectionError as e:
+            #     # if the search.json is not available, we can still load the object
+            #     logging.warning(f"Could not load search.json for object {object_id}. Error: {e}")
+            #     digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, component_map)
+
+            digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, component_map)
             digital_objects.append(digital_object)
 
         return digital_objects
@@ -98,11 +102,12 @@ class DigitalObjectService:
             # TODO in which property should this be stored? under props?
             # TODO need to combine all dublin core description fields
 
-            fulltext = ""
-            if digital_object.dc.get("description"):
-                fulltext = digital_object.dc.get("description")[0].split(" ")
-
-            digital_object.props["fulltext"] = fulltext
+            # SKIPPING THE FULLTEXT CREATION atm
+            # fulltext = ""
+            # if digital_object.dc.get("description"):
+            #     fulltext = digital_object.dc.get("description")[0].split(" ")
+            #
+            # digital_object.props["fulltext"] = fulltext
             index_json.append(digital_object.to_dict())
 
         json_str = json.dumps(index_json, ensure_ascii=False, indent=4)
