@@ -46,43 +46,7 @@ class DigitalObjectService:
             object_id = project_object_id
             object_metadata = pyrilo.get_object(project, object_id)
             dc_json = pyrilo.get_dublin_core(project, object_id)
-
-            object_datastream_ids = object_metadata.get("datastreams", [])
-            component_map = self._load_component_map(object_id, object_datastream_ids)
-
-            ###
-            # commented out SEARCH.json workflow
-
-            # try:
-            #     search_json = pyrilo.get_search_json(project, object_id)
-            #     digital_object = DigitalObjectViewModel(dc_json, object_metadata, search_json, component_map)
-            # except ConnectionError as e:
-            #     # if the search.json is not available, we can still load the object
-            #     logging.warning(f"Could not load search.json for object {object_id}. Error: {e}")
-            #     digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, component_map)
-
-            digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, component_map)
+            digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, {})
             digital_objects.append(digital_object)
 
         return digital_objects
-
-
-    def _load_component_map(self, object_id: str, datastreams: List[str]) -> Dict[str, str]:
-        """
-        Loads additional .xml datastreams data and converts them to web components in the form of a dictionary
-        (per dsid and mapped html)
-        :param object_id: The object id
-        :param datastreams: The list of datastream-ids
-        :return: The dictionary containing the web components. Returns empty dictionary if no datastreams are available.
-        """
-        # loads additional datastream data
-        object_datastreams: List[str] = datastreams
-        datastream_web_components = {}
-        for ds_id in object_datastreams:
-            if ds_id.endswith(".xml"):
-                project_abbr = self.app_context.get_config().project
-                source_bytes = self.app_context.get_pyrilo().get_datastream_content(project_abbr, object_id, ds_id)
-                template_accessor = ds_id.replace(".xml", "").lower()
-                datastream_web_components[template_accessor] = XMLWebComponentConverter.xml_to_webcomponent(source_bytes.decode("utf-8"), f"{project_abbr}-")
-
-        return datastream_web_components
