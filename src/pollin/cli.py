@@ -31,7 +31,8 @@ def cli():
 @click.argument("directory", required=True)
 @click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-def build(host: str, directory: str, project: str, output_path: str):
+@click.option("--mode", "-m", default="production", help="Mode of the pollin tool to run in, either 'develop' or 'production'.")
+def build(host: str, directory: str, project: str, output_path: str, mode: str):
     """
     Builds the static site generator output files to the specified location.
     :param host: The host of the GAMS5 instance
@@ -42,7 +43,14 @@ def build(host: str, directory: str, project: str, output_path: str):
 
     # setting up the application context
     (AppInitializer(app_context)
-     .configure(project, host, directory,output_path)
+     .configure(
+        project=project,
+        host=host,
+        directory=directory,
+        output_path=output_path,
+        mode=mode
+
+    )
      .init_context_beans()
      .setup()
      )
@@ -61,14 +69,21 @@ def build(host: str, directory: str, project: str, output_path: str):
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
 @click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-def start(host: str, directory: str, project: str, port: int, output_path: str):
+@click.option("--mode", "-m", default="develop", help="Mode of the pollin tool to run in, either 'develop' or 'production'.")
+def start(host: str, directory: str, project: str, port: int, output_path: str, mode: str):
     """
     Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
 
     # setting up the application context
     (AppInitializer(app_context)
-     .configure(project=project,host=host,directory=directory, output_path=output_path)
+     .configure(
+        project=project,
+        host=host,
+        directory=directory,
+        output_path=output_path,
+        mode=mode
+    )
      .init_context_beans()
      .setup()
      )

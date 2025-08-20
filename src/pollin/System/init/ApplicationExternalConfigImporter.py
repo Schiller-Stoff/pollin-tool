@@ -33,8 +33,9 @@ class ApplicationExternalConfigImporter:
 
         config_json_path = self.app_context.get_config().project_config_json
 
-        # TODO think about errors
         # load json as dictionary
         with open(config_json_path, 'r') as f:
             config_json_dict: Dict[str, Any] = json.load(f)
-            return config_json_dict
+            cur_mode = self.app_context.get_config().mode
+            # default to empty dict if mode not found
+            return config_json_dict.get(cur_mode, {})

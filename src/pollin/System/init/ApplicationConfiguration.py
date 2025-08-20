@@ -1,6 +1,8 @@
 import pathlib
 from os import PathLike
 from importlib import resources as impresources
+from typing import Literal
+
 from pollin.System.init.AppEnv import AppEnv
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
 
@@ -28,6 +30,11 @@ class ApplicationConfiguration:
     _output_path: PathLike | None = None
     """
     The output path where the build files should be placed.
+    """
+
+    mode: Literal["develop", "production"] = "develop"
+    """
+    The mode the pollin tool is running in, either 'develop' or 'production'.
     """
 
     ENV: AppEnv
@@ -144,9 +151,10 @@ class ApplicationConfiguration:
     """
 
 
-    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None):
+    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None, mode: Literal["develop", "production"] = "develop"):
         self.project = project
         self.gams_host = gams_host
         self.project_files_root = project_files_root
         self._output_path = output_path
+        self.mode = mode
 

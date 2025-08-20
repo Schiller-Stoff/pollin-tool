@@ -1,7 +1,7 @@
 import logging
 import shutil
 from pathlib import Path
-
+from typing import Literal
 from pollin.System.init.AppEnv import AppEnv
 from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.init.ApplicationConfiguration import ApplicationConfiguration
@@ -17,17 +17,20 @@ class AppInitializer:
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
 
-
-    def configure(self, project:str, host: str, directory: str, output_path: str = None):
+    def configure(self, project:str, host: str, directory: str, output_path: str = None, mode: Literal["develop", "production"] = "develop"):
         """
         Sets configuration params on the ApplicationContext
         :return:
         """
+        if mode not in ["develop", "production"]:
+            raise ValueError("Mode must be either 'develop' or 'production'")
+
         app_config = ApplicationConfiguration(
             project=project,
             gams_host=host,
             project_files_root=Path(directory),
-            output_path=Path(output_path) if output_path else None
+            output_path=Path(output_path) if output_path else None,
+            mode=mode
         )
 
         # storing same variables in ENV reference (used at runtime in templates)
@@ -42,7 +45,7 @@ class AppInitializer:
         :return:
         """
         logging.basicConfig( encoding='utf-8', level=logging.INFO)
-        logging.info("*** Starting poll-in cli")
+        logging.info("*** Starting poll-in cli in mode: %s ***", self.app_context.get_config().mode)
 
         # init datastore
         self.app_context.set_app_data_store(ApplicationDatastore())
