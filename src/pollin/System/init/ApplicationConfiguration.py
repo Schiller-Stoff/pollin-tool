@@ -138,8 +138,7 @@ class ApplicationConfiguration:
         return impresources.files('pollin') / "setup" / "src" /  "templates"
 
 
-    # TODO what to do with this?
-    project_external_config: None | ApplicationExternalConfig
+    project_external_config: ApplicationExternalConfig | None = None
     """
     Contains the external configuration of the project or None if not available
     """
@@ -150,5 +149,4 @@ class ApplicationConfiguration:
         self.gams_host = gams_host
         self.project_files_root = project_files_root
         self._output_path = output_path
-        self.project_external_config = None
 
