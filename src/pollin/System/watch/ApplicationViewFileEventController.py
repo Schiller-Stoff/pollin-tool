@@ -24,29 +24,20 @@ class ApplicationViewFileEventController(FileSystemEventHandler):
 
         # for digital objects
         self.digital_object_view_renderer = DigitalObjectViewRenderer(app_context)
-        self.digital_object_view_renderer.render()
 
         # for about.html etc.
         self.application_view_template_render = ApplicationViewTemplateRenderer(app_context)
-        self.application_view_template_render.render()
 
         # for static files (remove and add if something changes)
         self.application_static_file_refresher = ApplicationStaticFileRenderer(app_context)
-        self.application_static_file_refresher.refresh()
-
-        logging.info(f"Successfully rendered views. Init event of {self.__class__.__name__}")
 
     def on_modified(self, event):
-        self.application_view_template_render.render()
-        self.digital_object_view_renderer.render()
-        self.application_static_file_refresher.refresh()
-        logging.info("Successfully rendered views - on_modified event")
+        self.render_views()
+        logging.info("on_modified event")
 
     def on_created(self, event):
-        self.application_view_template_render.render()
-        self.digital_object_view_renderer.render()
-        self.application_static_file_refresher.refresh()
-        logging.info("Successfully rendered views - on_created event")
+        self.render_views()
+        logging.info("on_created event")
 
     def on_deleted(self, event):
         # deletes correspondent file
@@ -57,5 +48,14 @@ class ApplicationViewFileEventController(FileSystemEventHandler):
 
         # will delete everything and copy again (no delete necessary)
         self.application_static_file_refresher.refresh()
-        logging.info("Successfully removed produced rendering output files - on_deleted event")
+        logging.info("on_deleted event")
 
+
+    def render_views(self):
+        """
+        Renders the views
+        """
+        self.application_view_template_render.render()
+        self.digital_object_view_renderer.render()
+        self.application_static_file_refresher.refresh()
+        logging.info(f"Successfully rendered views. {self.__class__.__name__}")

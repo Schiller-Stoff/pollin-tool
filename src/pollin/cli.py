@@ -51,12 +51,9 @@ def build():
     (ApplicationDataLoader(app_context)
         .load())
 
-    # TODO instransparent call - maybe providing some kind of method here?
     # init should render output already
-    ApplicationViewFileEventController(app_context)
-
-
-
+    (ApplicationViewFileEventController(app_context)
+        .render_views())
 
 @cli.command(name="start", help="Starts the development process of the static site generator.")
 @click.argument("port", required=False, default=18090)

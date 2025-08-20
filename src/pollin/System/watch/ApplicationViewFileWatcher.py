@@ -21,6 +21,10 @@ class ApplicationViewFileWatcher:
         view_template_folder = app_context.get_config().project_src_dir
         # passing application context to the event controller (based on filewatching)
         event_handler = ApplicationViewFileEventController(app_context)
+        # render views at startup
+        event_handler.render_views()
+
+        # setting up the observer
         observer = Observer()
         observer.schedule(event_handler, path=view_template_folder, recursive=True)
         observer.start()
