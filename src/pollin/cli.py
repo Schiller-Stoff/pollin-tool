@@ -1,10 +1,12 @@
 import logging
 import shutil
+from pathlib import Path
 
 import click
 import multiprocessing
 
 from pollin.System.load.DigitalObjectService import DigitalObjectService
+from pollin.System.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
 from pollin.System.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.load.ApplicationDataLoader import ApplicationDataLoader
@@ -36,8 +38,43 @@ def cli(host: str, directory: str, project: str):
      .init_context_beans()
      )
 
+@cli.command(name="build", help="Builds output files to the specified location.")
+@click.argument("location", required=True)
+def build(location: str):
+    """
+    Builds the static site generator output files to the specified location.
+    :param location: The location where the output files should be placed
+    """
 
-@cli.command(name="start", help="Starts the development web server")
+    # TODO rethink this procedure here
+    # rewrite output location of configuration
+    # first set target location for the build via app context
+    app_context.get_config().public_dir = location
+    app_context.get_config().project_public_dir = Path(app_context.get_config().public_dir) / Path(app_context.get_config().project)
+    app_context.get_config().project_public_static_dir = Path(app_context.get_config().project_public_dir) / "static"
+
+    # TODO where to place this? is in a complete wrong location?
+    # (also inside the start cli call / remove existing public folder and fresh rebuild on startup)
+    # if not public folder exist -> create
+    if not app_context.get_config().project_public_dir.exists():
+        app_context.get_config().project_public_dir.mkdir(parents=True)
+    # else delete complete tree and recreate
+    else:
+        shutil.rmtree(app_context.get_config().project_public_dir)
+        app_context.get_config().project_public_dir.mkdir(parents=True)
+
+    # encapsulates loading of project data and digital objects# encapsulates loading of project data and digital objects
+    (ApplicationDataLoader(app_context)
+        .load())
+
+    # TODO instransparent call - maybe providing some kind of method here?
+    # init should render output already
+    ApplicationViewFileEventController(app_context)
+
+
+
+
+@cli.command(name="start", help="Starts the development process of the static site generator.")
 @click.argument("port", required=False, default=18090)
 def start(port: int):
     """
@@ -74,7 +111,7 @@ def start(port: int):
         dev_server_process.join()
 
 
-@cli.command(name="init", help="Initializes the project structure for GAMS5")
+@cli.command(name="init", help="Initializes the project structure required for the pollin tool.")
 def init():
     """
     Initializes the project structure for GAMS5
@@ -83,28 +120,6 @@ def init():
     ApplicationFileTemplater(app_context).setup()
 
 
-
-@cli.command(name="gen", help="Generates the output files for the web server")
-def gen():
-    """
-
-    :return:
-    """
-    # TODO this method here is somewhat outdated! (need to check at start command how to trigger the rendering)
-
-    # TODO where to place this?
-    # init public project folder structure
-    if not app_context.get_config().project_public_dir.exists():
-        app_context.get_config().project_public_dir.mkdir(parents=True)
-
-    ApplicationDataLoader.load(app_context)
-
-    # TODO where to put this logic? (package structure)
-    DigitalObjectService.aggregate_index_json(app_context.get_config().project_public_dir, app_context.get_app_data_store().get_objects())
-
-    DigitalObjectViewRenderer(app_context).render()
-
-
 cli.add_command(start)
-cli.add_command(gen)
+cli.add_command(build)
 cli.add_command(init)
