@@ -41,7 +41,7 @@ def cli(host: str, directory: str, project: str, output_path: str):
      .setup()
      )
 
-@cli.command(name="build", help="Builds output files to the specified location.")
+@cli.command(name="build", help="Builds output files once.")
 def build():
     """
     Builds the static site generator output files to the specified location.

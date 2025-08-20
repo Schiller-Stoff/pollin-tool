@@ -86,33 +86,3 @@ class DigitalObjectService:
                 datastream_web_components[template_accessor] = XMLWebComponentConverter.xml_to_webcomponent(source_bytes.decode("utf-8"), f"{project_abbr}-")
 
         return datastream_web_components
-
-    # TODO refactor
-    @staticmethod
-    def aggregate_index_json(output_dir: str, data: list[DigitalObjectViewModel]):
-        """
-        Aggregates a singular json containing data about all digital objects (used for client side searches etc.)
-        :param data: list of DigitalObjects
-        :return:
-        """
-
-        index_json = []
-        for digital_object in data:
-            # TODO how to combine with fulltext provided by search-json workflow?
-            # TODO in which property should this be stored? under props?
-            # TODO need to combine all dublin core description fields
-
-            # SKIPPING THE FULLTEXT CREATION atm
-            # fulltext = ""
-            # if digital_object.dc.get("description"):
-            #     fulltext = digital_object.dc.get("description")[0].split(" ")
-            #
-            # digital_object.props["fulltext"] = fulltext
-            index_json.append(digital_object.to_dict())
-
-        json_str = json.dumps(index_json, ensure_ascii=False, indent=4)
-        json_file_path = Path(output_dir).joinpath("object_index.json")
-
-        with open(json_file_path, "w", encoding="utf-8") as f:
-            f.write(json_str)
-            logging.info(f"Successfully wrote {json_file_path} to file")

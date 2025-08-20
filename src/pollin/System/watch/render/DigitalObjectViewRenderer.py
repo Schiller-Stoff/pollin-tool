@@ -103,14 +103,6 @@ class DigitalObjectViewRenderer:
             with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
                 f.write(object_list_html)
 
-        ####
-        # create object_index_json
-        DigitalObjectService.aggregate_index_json(
-            self.app_context.get_config().project_public_dir,
-            self.app_context.get_app_data_store().get_objects()
-        )
-
-
     def activate_custom_template(self, template_name):
         """
         Loads a custom jinja template and stores it as class variable
