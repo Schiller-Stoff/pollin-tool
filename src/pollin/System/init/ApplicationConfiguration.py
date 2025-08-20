@@ -119,32 +119,6 @@ class ApplicationConfiguration:
         """
         return pathlib.Path(self.project_files_root) / "pollin.json"
 
-    @property
-    def intern_setup_dir(self) -> PathLike:
-        """
-        Points to the internal setup directory
-        :return: PathLike
-        """
-        return impresources.files('pollin') / "setup"
-
-    @property
-    def intern_src_dir(self) -> PathLike:
-        """
-        Points to the internal source directory
-        :return: PathLike
-        """
-        return impresources.files('pollin') / "setup" / "src"
-
-    @property
-    def intern_template_dir(self) -> PathLike:
-        """
-        Always points to the intern view templates (not project files)
-        Pointer to the intern view template files (that are copied to the project structure if not available)
-        :return: PathLike
-        """
-        return impresources.files('pollin') / "setup" / "src" /  "templates"
-
-
     project_external_config: ApplicationExternalConfig | None = None
     """
     Contains the external configuration of the project or None if not available

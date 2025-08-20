@@ -1,16 +1,10 @@
 import logging
-import shutil
-from pathlib import Path
 
 import click
 import multiprocessing
-
-from pollin.System.load.DigitalObjectService import DigitalObjectService
 from pollin.System.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
-from pollin.System.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from pollin.System.init.ApplicationContext import ApplicationContext
 from pollin.System.load.ApplicationDataLoader import ApplicationDataLoader
-from pollin.System.setup.ApplicationFileTemplater import ApplicationFileTemplater
 from pollin.System.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
 from pollin.System.watch.ApplicationWebServer import ApplicationWebServer
 from pollin.System.init.AppInitializer import AppInitializer
@@ -109,15 +103,5 @@ def start(host: str, directory: str, project: str, port: int, output_path: str, 
         dev_server_process.join()
 
 
-@cli.command(name="init", help="Initializes the project structure required for the pollin tool.")
-def init():
-    """
-    Initializes the project structure for GAMS5
-    :return:
-    """
-    ApplicationFileTemplater(app_context).setup()
-
-
 cli.add_command(start)
 cli.add_command(build)
-cli.add_command(init)
