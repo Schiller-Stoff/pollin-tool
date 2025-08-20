@@ -38,6 +38,7 @@ def cli(host: str, directory: str, project: str, output_path: str):
     (AppInitializer(app_context)
      .configure(project, host, directory,output_path)
      .init_context_beans()
+     .setup()
      )
 
 @cli.command(name="build", help="Builds output files to the specified location.")
@@ -46,17 +47,6 @@ def build():
     Builds the static site generator output files to the specified location.
     :param location: The location where the output files should be placed
     """
-
-    # TODO where to place this? is in a complete wrong location?
-    # (also inside the start cli call / remove existing public folder and fresh rebuild on startup)
-    # if not public folder exist -> create
-    if not app_context.get_config().project_public_dir.exists():
-        app_context.get_config().project_public_dir.mkdir(parents=True)
-    # else delete complete tree and recreate
-    else:
-        shutil.rmtree(app_context.get_config().project_public_dir)
-        app_context.get_config().project_public_dir.mkdir(parents=True)
-
     # encapsulates loading of project data and digital objects# encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
@@ -74,15 +64,6 @@ def start(port: int):
     """
     Starts the static site generator (web server with rerendering of views and initial data loading etc.)
     """
-    # TODO where to place this?
-    # if not public folder exist -> create
-    if not app_context.get_config().project_public_dir.exists():
-        app_context.get_config().project_public_dir.mkdir(parents=True)
-    # else delete complete tree and recreate
-    else:
-        shutil.rmtree(app_context.get_config().project_public_dir)
-        app_context.get_config().project_public_dir.mkdir(parents=True)
-
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())

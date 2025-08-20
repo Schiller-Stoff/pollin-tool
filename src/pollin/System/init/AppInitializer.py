@@ -1,4 +1,5 @@
 import logging
+import shutil
 from pathlib import Path
 
 from pollin.System.init.AppEnv import AppEnv
@@ -7,7 +8,6 @@ from pollin.System.init.ApplicationConfiguration import ApplicationConfiguration
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
 from pollin.System.init.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
 from pollin.System.load.utils.Pyrilo import Pyrilo
-from importlib import resources as impresources
 from pollin.System.load.ApplicationDatastore import ApplicationDatastore
 
 class AppInitializer:
@@ -64,3 +64,18 @@ class AppInitializer:
             logging.info(f"External configuration loaded {external_config}")
 
         return self
+
+    def setup(self):
+        """
+        Sets up files, folder needed for the application to run.
+        Ensures that locations specified in the config actually exist and are in a clean state.
+        """
+
+        # if not public folder exist -> create
+        if not self.app_context.get_config().project_public_dir.exists():
+            self.app_context.get_config().project_public_dir.mkdir(parents=True)
+        # else delete complete tree and recreate
+        else:
+            shutil.rmtree(self.app_context.get_config().project_public_dir)
+            self.app_context.get_config().project_public_dir.mkdir(parents=True)
+
