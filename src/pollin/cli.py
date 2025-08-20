@@ -19,20 +19,26 @@ from pollin.System.init.AppInitializer import AppInitializer
 app_context = ApplicationContext()
 
 @click.group()
+def cli():
+    """
+    Init command / start routine of application
+    Sets up the application context for the entire application.
+    """
+    logging.basicConfig( encoding='utf-8', level=logging.INFO)
+
+@cli.command(name="build", help="Builds output files once.")
 @click.argument("project", required=True)
 @click.argument("directory", required=True)
 @click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-def cli(host: str, directory: str, project: str, output_path: str):
+def build(host: str, directory: str, project: str, output_path: str):
     """
-    Init command / start routine of application
-    Sets up the application context for the entire application.
+    Builds the static site generator output files to the specified location.
     :param host: The host of the GAMS5 instance
     :param directory: Path of the view template directory
     :param project: Abbreviation of the project
     :param output_path: Path to where the output files should be placed. By default, the output files are placed in the project directory.
     """
-    logging.basicConfig( encoding='utf-8', level=logging.INFO)
 
     # setting up the application context
     (AppInitializer(app_context)
@@ -41,26 +47,32 @@ def cli(host: str, directory: str, project: str, output_path: str):
      .setup()
      )
 
-@cli.command(name="build", help="Builds output files once.")
-def build():
-    """
-    Builds the static site generator output files to the specified location.
-    :param location: The location where the output files should be placed
-    """
     # encapsulates loading of project data and digital objects# encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
 
-    # init should render output already
+    # render all views (and handle related files etc.)
     (ApplicationViewFileEventController(app_context)
         .render_views())
 
 @cli.command(name="start", help="Starts the development process of the static site generator.")
-@click.argument("port", required=False, default=18090)
-def start(port: int):
+@click.argument("project", required=True)
+@click.argument("directory", required=True)
+@click.option("--port", "-p", default=18090, help="The port to run the development server on")
+@click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
+@click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
+def start(host: str, directory: str, project: str, port: int, output_path: str):
     """
-    Starts the static site generator (web server with rerendering of views and initial data loading etc.)
+    Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
+
+    # setting up the application context
+    (AppInitializer(app_context)
+     .configure(project=project,host=host,directory=directory, output_path=output_path)
+     .init_context_beans()
+     .setup()
+     )
+
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
