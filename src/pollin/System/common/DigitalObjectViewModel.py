@@ -25,6 +25,10 @@ class DigitalObjectViewModel:
     Web component representation of the .xml datastreams of the object.
     """
 
+    # add a to string method
+    def __str__(self):
+        return f"DigitalObjectViewModel(dc={self.dc}, db={self.db}, props={self.props}, component_map={self.component_map})"
+
     def __init__(self, dc: dict[str, any], db: dict[str, any], props: dict[str, any], component_map: Dict[str, str] = None):
         self.dc = dc
         self.db = db
