@@ -22,36 +22,30 @@ app_context = ApplicationContext()
 @click.argument("project", required=True)
 @click.argument("directory", required=True)
 @click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
-def cli(host: str, directory: str, project: str):
+@click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
+def cli(host: str, directory: str, project: str, output_path: str):
     """
     Init command / start routine of application
     Sets up the application context for the entire application.
     :param host: The host of the GAMS5 instance
     :param directory: Path of the view template directory
     :param project: Abbreviation of the project
+    :param output_path: Path to where the output files should be placed. By default, the output files are placed in the project directory.
     """
     logging.basicConfig( encoding='utf-8', level=logging.INFO)
 
     # setting up the application context
     (AppInitializer(app_context)
-     .configure(project, host, directory)
+     .configure(project, host, directory,output_path)
      .init_context_beans()
      )
 
 @cli.command(name="build", help="Builds output files to the specified location.")
-@click.argument("location", required=True)
-def build(location: str):
+def build():
     """
     Builds the static site generator output files to the specified location.
     :param location: The location where the output files should be placed
     """
-
-    # TODO rethink this procedure here
-    # rewrite output location of configuration
-    # first set target location for the build via app context
-    app_context.get_config().public_dir = location
-    app_context.get_config().project_public_dir = Path(app_context.get_config().public_dir) / Path(app_context.get_config().project)
-    app_context.get_config().project_public_static_dir = Path(app_context.get_config().project_public_dir) / "static"
 
     # TODO where to place this? is in a complete wrong location?
     # (also inside the start cli call / remove existing public folder and fresh rebuild on startup)
@@ -93,13 +87,15 @@ def start(port: int):
     (ApplicationDataLoader(app_context)
         .load())
 
+    # TODO try to encapsulate the webserver call better
     web_dir = app_context.get_config().public_dir
-
     dev_server_process = multiprocessing.Process(target=ApplicationWebServer.start, args=(web_dir, port,))
 
     try:
         logging.info(f"*** Starting web server at port {port}")
-        dev_server_process.start()
+        # only launch the web server if no alternative output path is set
+        if not app_context.get_config().alternative_output_path_set():
+            dev_server_process.start()
         logging.info("*** Starting view file watcher now")
         ApplicationViewFileWatcher.start(
             app_context

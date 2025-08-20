@@ -1,27 +1,23 @@
+import pathlib
 from os import PathLike
-
+from importlib import resources as impresources
 from pollin.System.init.AppEnv import AppEnv
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
 
 class ApplicationConfiguration:
     """
     Configuration class for the main program.
-    TODO general refactoring. Fields can be none
+
     """
 
-    project: str| None
+    project: str
     """
     Abbreviation of the project
     """
 
-    gams_host: str | None
+    gams_host: str
     """
     The host of the GAMS5 instance
-    """
-
-    ENV: AppEnv
-    """
-    Stores runtime env variables needed in the templates, e.g. set gams-api host
     """
 
     project_files_root: PathLike
@@ -29,83 +25,130 @@ class ApplicationConfiguration:
     The root folder of the project files (views / public etc.)
     """
 
-    project_src_dir: PathLike
+    _output_path: PathLike | None = None
     """
-    'src'-folder
-    The source directory of the project files needed for building the project frontends
-    (files that need to be watched for changes)
+    The output path where the build files should be placed.
     """
 
-    project_src_static_dir: PathLike
+    ENV: AppEnv
     """
-    Points to the static directory of the project source files
-    """
-
-    project_src_view_template_dir: PathLike
-    """
-    The directory where the view templates are stored in the project files src structure
+    Stores runtime env variables needed in the templates, e.g. set gams-api host
     """
 
-    project_src_view_template_pages_dir: PathLike
-    """
-    Points to the pages directory of the project view templates
-    """
+    def alternative_output_path_set(self) -> bool:
+        """
+        Checks if an alternative output path is set
+        :return: bool
+        """
+        return self._output_path is not None
 
-    public_dir: PathLike
-    """
-    Points to the public folder e.g. "public"
-    """
+    @property
+    def public_dir(self) -> PathLike:
+        """
+        Points to the public folder e.g. "public"
+        :return: PathLike
+        """
+        if self._output_path:
+            return pathlib.Path(self._output_path)
+        # if no output path is set, use the default public directory
+        # which is the project files root
+        return pathlib.Path(self.project_files_root) / "public"
 
-    project_public_dir: PathLike
-    """
-    Points to the public directory of the project e.g. public/memo
-    """
+    @property
+    def project_src_dir(self) -> PathLike:
+        """
+        'src'-folder
+        The source directory of the project files needed for building the project frontends
+        (files that need to be watched for changes)
+        :return: PathLike
+        """
+        return pathlib.Path(self.project_files_root) / "src"
 
-    project_public_static_dir: PathLike
-    """
-    Points to the public static directory of the project
-    """
+    @property
+    def project_src_static_dir(self) -> PathLike:
+        """
+        The directory where the static files are stored in the project files src structure
+        :return: PathLike
+        """
+        return pathlib.Path(self.project_src_dir) / "static"
 
-    project_config_json: PathLike
-    """
-    Points to the path of the project configuration file
-    """
+    @property
+    def project_src_view_template_dir(self) -> PathLike:
+        """
+        The directory where the view templates are stored in the project files src structure
+        :return: PathLike
+        """
+        return pathlib.Path(self.project_src_dir) / "templates"
 
+    @property
+    def project_src_view_template_pages_dir(self) -> PathLike:
+        """
+        Points to the pages directory of the project view templates
+        :return: PathLike
+        """
+        return pathlib.Path(self.project_src_view_template_dir) / "pages"
+
+    @property
+    def project_public_dir(self) -> PathLike:
+        """
+        Points to the public directory of the project e.g. public/memo
+        :return: PathLike
+        """
+        return pathlib.Path(self.public_dir) / self.project
+
+    @property
+    def project_public_static_dir(self) -> PathLike:
+        """
+        Points to the public static directory of the project
+        :return: PathLike
+        """
+        return pathlib.Path(self.project_public_dir) / "static"
+
+    @property
+    def project_config_json(self) -> PathLike:
+        """
+        Points to the path of the project configuration file
+        :return: PathLike
+        """
+        return pathlib.Path(self.project_files_root) / "pollin.json"
+
+    @property
+    def intern_setup_dir(self) -> PathLike:
+        """
+        Points to the internal setup directory
+        :return: PathLike
+        """
+        return impresources.files('pollin') / "setup"
+
+    @property
+    def intern_src_dir(self) -> PathLike:
+        """
+        Points to the internal source directory
+        :return: PathLike
+        """
+        return impresources.files('pollin') / "setup" / "src"
+
+    @property
+    def intern_template_dir(self) -> PathLike:
+        """
+        Always points to the intern view templates (not project files)
+        Pointer to the intern view template files (that are copied to the project structure if not available)
+        :return: PathLike
+        """
+        return impresources.files('pollin') / "setup" / "src" /  "templates"
+
+
+    # TODO what to do with this?
     project_external_config: None | ApplicationExternalConfig
     """
     Contains the external configuration of the project or None if not available
     """
 
-    intern_setup_dir: PathLike
-    """
-    Points to the internal setup directory
-    """
 
-    intern_src_dir: PathLike
-    """
-    Points to the internal source directory
-    """
-
-    intern_template_dir: PathLike
-    """
-    Always points to the intern view templates (not project files)
-    Pointer to the intern view template files (that are copied to the project structure if not available) 
-    """
-
-    def __init__(self):
-        self.project = None
-        self.gams_host = None
-        self.project_src_view_template_dir = None
-        self.project_files_root = None
-        self.intern_template_dir = None
-        self.project_src_dir = None
-        self.project_src_static_dir = None
-        self.project_public_static_dir = None
-        self.project_public_dir = None
-        self.intern_src_dir = None
-        self.public_dir = None
-        self.intern_setup_dir = None
-        self.project_src_view_template_pages_dir = None
-        self.project_config_json = None
+    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None):
+        self.project = project
+        self.gams_host = gams_host
+        self.project_files_root = project_files_root
+        self._output_path = output_path
         self.project_external_config = None
 

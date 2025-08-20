@@ -18,46 +18,22 @@ class AppInitializer:
         self.app_context = app_context
 
 
-    def configure(self, project:str, host: str, directory: str):
+    def configure(self, project:str, host: str, directory: str, output_path: str = None):
         """
         Sets configuration params on the ApplicationContext
         :return:
         """
-        app_config = ApplicationConfiguration()
-
-        app_config.gams_host = host
-        app_config.project = project
+        app_config = ApplicationConfiguration(
+            project=project,
+            gams_host=host,
+            project_files_root=Path(directory),
+            output_path=Path(output_path) if output_path else None
+        )
 
         # storing same variables in ENV reference (used at runtime in templates)
         app_config.ENV = AppEnv(GAMS_API_ORIGIN=app_config.gams_host, PROJECT_ABBR=app_config.project)
-
-        # set folder locations
-        app_config.project_files_root = Path(directory)
-        # set project configuration file
-        app_config.project_config_json = app_config.project_files_root / "pollin.json"
-        # src folder (~files that need to be watched)
-        app_config.project_src_dir = app_config.project_files_root / "src"
-        # set view template directory
-        app_config.project_src_view_template_dir = app_config.project_src_dir / "templates"
-        # pages view directory
-        app_config.project_src_view_template_pages_dir = app_config.project_src_view_template_dir / "pages"
-        # static directory src folder
-        app_config.project_src_static_dir = app_config.project_src_dir / "static"
-
-        # internal setup folder
-        app_config.intern_setup_dir = impresources.files('pollin') / "setup"
-        # internal src folder
-        app_config.intern_src_dir = impresources.files('pollin') / "setup" / "src"
-        # set internal template directory
-        app_config.intern_template_dir = impresources.files('pollin') / "setup" / "src" /  "templates"
-
-        # reference to public folder
-        app_config.public_dir = app_config.project_files_root / "public"
-        app_config.project_public_dir = app_config.public_dir.joinpath(project)
-        # static directory public folder
-        app_config.project_public_static_dir = app_config.project_public_dir / "static"
-
         self.app_context.set_config(app_config)
+
         return self
 
     def init_context_beans(self):
