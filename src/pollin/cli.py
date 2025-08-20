@@ -87,15 +87,12 @@ def start(port: int):
     (ApplicationDataLoader(app_context)
         .load())
 
-    # TODO try to encapsulate the webserver call better
     web_dir = app_context.get_config().public_dir
     dev_server_process = multiprocessing.Process(target=ApplicationWebServer.start, args=(web_dir, port,))
 
     try:
         logging.info(f"*** Starting web server at port {port}")
-        # only launch the web server if no alternative output path is set
-        if not app_context.get_config().alternative_output_path_set():
-            dev_server_process.start()
+        dev_server_process.start()
         logging.info("*** Starting view file watcher now")
         ApplicationViewFileWatcher.start(
             app_context
