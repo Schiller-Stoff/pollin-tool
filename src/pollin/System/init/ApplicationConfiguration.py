@@ -1,6 +1,5 @@
 import pathlib
 from os import PathLike
-from importlib import resources as impresources
 from typing import Literal
 
 from pollin.System.init.AppEnv import AppEnv
@@ -112,7 +111,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_public_dir) / "static"
 
     @property
-    def project_config_json(self) -> PathLike:
+    def project_config_toml(self) -> PathLike:
         """
         Points to the path of the project configuration file
         :return: PathLike
