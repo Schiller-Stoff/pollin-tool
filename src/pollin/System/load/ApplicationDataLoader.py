@@ -1,3 +1,5 @@
+import logging
+
 from pollin.System.load.DigitalObjectService import DigitalObjectService
 from pollin.System.load.ProjectService import ProjectService
 from pollin.System.init.ApplicationContext import ApplicationContext
@@ -21,22 +23,31 @@ class ApplicationDataLoader:
     def limit_project_objects(self, object_ids: List[str]):
         """
         Returns a limited list of object ids based on the external configuration passed via the ApplicationContext
-        :param objects: The original list of object ids
+        :param object_ids: The original list of object ids
         :return: The limited list of object ids
         """
         limited_objects = []
         external_config = self.app_context.get_config().project_external_config
         if external_config:
-            # restrict object count if defined
             required_object_count = external_config.get_obj_count_restriction()
-            if required_object_count:
-                limited_objects = object_ids[:required_object_count]
-            # ensure required objects are loaded
             required_object_ids = external_config.get_obj_required()
+            # if no restrictions are defined, just use all available objects
+            if not required_object_count and not required_object_ids:
+                logging.debug("No object count restriction or required objects defined in the external configuration. Using all available objects.")
+                return object_ids
+
+            # restrict object count if defined
+            if required_object_count:
+                logging.info(f"Limiting the number of objects to {required_object_count} based on external configuration.")
+                limited_objects = object_ids[:required_object_count]
+
+            # ensure required objects are loaded
             if required_object_ids:
+                logging.info(f"Ensuring that the following required objects are loaded: {required_object_ids} based on external configuration.")
                 for id in required_object_ids:
                     limited_objects.append(id)
-            # remove doubles in all_project_objects
+
+            # remove possible doubles in all_project_objects
             limited_objects = list(set(limited_objects))
             return limited_objects
         else:

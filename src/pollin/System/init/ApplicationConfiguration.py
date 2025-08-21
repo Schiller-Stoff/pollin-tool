@@ -117,7 +117,7 @@ class ApplicationConfiguration:
         Points to the path of the project configuration file
         :return: PathLike
         """
-        return pathlib.Path(self.project_files_root) / "pollin.json"
+        return pathlib.Path(self.project_files_root) / "pollin.toml"
 
     project_external_config: ApplicationExternalConfig | None = None
     """

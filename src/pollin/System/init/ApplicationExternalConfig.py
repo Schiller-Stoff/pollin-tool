@@ -7,6 +7,19 @@ class ApplicationExternalConfig:
     supplied by the user via .json file
     """
 
+    PROJECT_PROPERTY = "project"
+    PROJECT_ABBR_PROPERTY = "projectAbbr"
+
+    DEVELOP_PROPERTY = "develop"
+    PRODUCTION_PROPERTY = "production"
+
+    MODE_BASE_PROPERTY = "base"
+
+    MODE_BASE_GAMS_API_HOST_PROPERTY = "gamsApiHost"
+    MODE_BASE_OUTPUT_PATH_PROPERTY = "outputPath"
+    MODE_BASE_SRC_PATH_PROPERTY = "srcPath"
+
+
     config: Dict[str, Any]
     """
     The configuration dictionary (usually extracted from json file)
