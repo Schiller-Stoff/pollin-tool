@@ -41,6 +41,8 @@ class ApplicationConfiguration:
     Stores runtime env variables needed in the templates, e.g. set gams-api host
     """
 
+    CONFIG_FILE_NAME: str = "pollin.toml"
+
     def alternative_output_path_set(self) -> bool:
         """
         Checks if an alternative output path is set
@@ -116,7 +118,7 @@ class ApplicationConfiguration:
         Points to the path of the project configuration file
         :return: PathLike
         """
-        return pathlib.Path(self.project_files_root) / "pollin.toml"
+        return pathlib.Path(self.project_files_root) / self.CONFIG_FILE_NAME
 
     project_external_config: ApplicationExternalConfig | None = None
     """
