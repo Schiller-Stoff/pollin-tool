@@ -21,24 +21,22 @@ def cli():
     logging.basicConfig( encoding='utf-8', level=logging.INFO)
 
 @cli.command(name="build", help="Builds output files once.")
-@click.argument("project", required=True)
 @click.argument("directory", required=True)
 @click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-@click.option("--mode", "-m", default="production", help="Mode of the pollin tool to run in, either 'develop' or 'production'.")
-def build(host: str, directory: str, project: str, output_path: str, mode: str):
+@click.option("--mode", "-m", default="production", help="Mode of the pollin tool to run in, either 'develop' or 'production'. By default start in 'develop' / build in 'production'.")
+def build(host: str, directory: str, output_path: str, mode: str):
     """
     Builds the static site generator output files to the specified location.
     :param host: The host of the GAMS5 instance
     :param directory: Path of the view template directory
-    :param project: Abbreviation of the project
     :param output_path: Path to where the output files should be placed. By default, the output files are placed in the project directory.
+    :param mode: Mode of the pollin tool to run in, either 'develop' or 'production'. By default start in 'develop' / build in 'production'.
     """
 
     # setting up the application context
     (AppInitializer(app_context)
      .configure(
-        project=project,
         host=host,
         directory=directory,
         output_path=output_path,
@@ -58,13 +56,12 @@ def build(host: str, directory: str, project: str, output_path: str, mode: str):
         .render_views())
 
 @cli.command(name="start", help="Starts the development process of the static site generator.")
-@click.argument("project", required=True)
 @click.argument("directory", required=True)
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
 @click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-@click.option("--mode", "-m", default="develop", help="Mode of the pollin tool to run in, either 'develop' or 'production'.")
-def start(host: str, directory: str, project: str, port: int, output_path: str, mode: str):
+@click.option("--mode", "-m", default="develop", help="Mode of the pollin tool to run in, either 'develop' or 'production'. By default start in 'develop' / build in 'production'.")
+def start(host: str, directory: str, port: int, output_path: str, mode: str):
     """
     Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
@@ -72,7 +69,6 @@ def start(host: str, directory: str, project: str, port: int, output_path: str, 
     # setting up the application context
     (AppInitializer(app_context)
      .configure(
-        project=project,
         host=host,
         directory=directory,
         output_path=output_path,

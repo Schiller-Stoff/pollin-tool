@@ -17,7 +17,6 @@ class ApplicationExternalConfig:
 
     MODE_BASE_GAMS_API_HOST_PROPERTY = "gamsApiHost"
     MODE_BASE_OUTPUT_PATH_PROPERTY = "outputPath"
-    MODE_BASE_SRC_PATH_PROPERTY = "srcPath"
 
 
     config: Dict[str, Any]
@@ -25,8 +24,9 @@ class ApplicationExternalConfig:
     The configuration dictionary (usually extracted from json file)
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Dict[str, Any], mode: str):
         self.config = config
+        self.mode = mode
 
 
     def get(self, key: str):
@@ -45,7 +45,7 @@ class ApplicationExternalConfig:
         Returns the object count restriction
         :return: the object count restriction
         """
-        sub_dict: Dict[Any] = self.get("load")
+        sub_dict: Dict[Any] = self.get(self.mode).get("load")
         if sub_dict is None:
             return None
 
@@ -57,7 +57,7 @@ class ApplicationExternalConfig:
         Returns the objects required: List of strings (object ids)
         :return: the objects required to be loaded
         """
-        sub_dict: Dict[Any] = self.get("load")
+        sub_dict: Dict[Any] = self.get(self.mode).get("load")
         if sub_dict is None:
             return None
 

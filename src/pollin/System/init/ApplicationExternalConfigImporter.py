@@ -40,11 +40,11 @@ class ApplicationExternalConfigImporter:
 
             # toml validation
 
-            # if ApplicationExternalConfig.PROJECT_PROPERTY not in config_toml_dict:
-            #     raise ValueError(f"'{ApplicationExternalConfig.PROJECT_PROPERTY}' property not found (or empty) in the configuration file: {config_toml_path}")
-            # else:
-            #     if not config_toml_dict.get(ApplicationExternalConfig.PROJECT_PROPERTY).get(ApplicationExternalConfig.PROJECT_ABBR_PROPERTY):
-            #         raise ValueError(f"'{ApplicationExternalConfig.PROJECT_PROPERTY}.{ApplicationExternalConfig.PROJECT_ABBR_PROPERTY}' not found (or empty) in configuration file: {config_toml_path}")
+            if ApplicationExternalConfig.PROJECT_PROPERTY not in config_toml_dict:
+                raise ValueError(f"'{ApplicationExternalConfig.PROJECT_PROPERTY}' property not found (or empty) in the configuration file: {config_toml_path}")
+            else:
+                if not config_toml_dict.get(ApplicationExternalConfig.PROJECT_PROPERTY).get(ApplicationExternalConfig.PROJECT_ABBR_PROPERTY):
+                    raise ValueError(f"'{ApplicationExternalConfig.PROJECT_PROPERTY}.{ApplicationExternalConfig.PROJECT_ABBR_PROPERTY}' not found (or empty) in configuration file: {config_toml_path}")
 
             if not config_toml_dict.get(cur_mode):
                 raise ValueError(f"For the currently active mode: '{cur_mode}' is no (or empty) toml property '{cur_mode}' defined. In config toml file: {config_toml_path} ")
@@ -65,4 +65,4 @@ class ApplicationExternalConfigImporter:
             # TODO return complete config file not only mode dictionary
 
             # default to empty dict if mode not found
-            return config_toml_dict.get(cur_mode, {})
+            return config_toml_dict
