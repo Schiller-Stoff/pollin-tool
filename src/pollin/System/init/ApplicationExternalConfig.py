@@ -13,6 +13,7 @@ class ApplicationExternalConfig:
     DEVELOP_PROPERTY = "develop"
     PRODUCTION_PROPERTY = "production"
 
+    MODE_LOAD_PROPERTY = "load"
     MODE_GAMS_API_ORIGIN_PROPERTY = "gamsApiOrigin"
     MODE_OUTPUT_PATH_PROPERTY = "outputPath"
 
@@ -33,7 +34,7 @@ class ApplicationExternalConfig:
         :return: the value of the key
         """
         if key not in self.config:
-            return None
+            raise ValueError(f"Cannot find required property {key} in config file")
 
         return self.config[key]
 
@@ -42,11 +43,20 @@ class ApplicationExternalConfig:
         Returns the object count restriction
         :return: the object count restriction
         """
-        sub_dict: Dict[Any] = self.get(self.mode).get("load")
+        sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
-            return None
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.load in config file")
 
-        return sub_dict.get("objectCountRestriction")
+        # must be parseble as integer
+        if "objectCountRestriction" not in sub_dict:
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_LOAD_PROPERTY}.objectCountRestriction in config file")
+
+        extracted_value = sub_dict.get("objectCountRestriction")
+
+        if not isinstance(extracted_value, int):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_LOAD_PROPERTY}.objectCountRestriction to be an integer, but got '{sub_dict.get('objectCountRestriction')}'")
+
+        return extracted_value
 
 
     def get_obj_required(self):
@@ -54,9 +64,12 @@ class ApplicationExternalConfig:
         Returns the objects required: List of strings (object ids)
         :return: the objects required to be loaded
         """
-        sub_dict: Dict[Any] = self.get(self.mode).get("load")
+        sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
-            return None
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_LOAD_PROPERTY} in config file")
+
+        if "objectsRequired" not in sub_dict:
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_LOAD_PROPERTY}.objectsRequired in config file")
 
         return sub_dict.get("objectsRequired")
 
@@ -65,7 +78,17 @@ class ApplicationExternalConfig:
         Returns the GAMS API origin URL
         :return: the GAMS API origin URL
         """
-        return self.get(self.mode).get(self.MODE_GAMS_API_ORIGIN_PROPERTY)
+        configured_origin = self.get(self.mode).get(self.MODE_GAMS_API_ORIGIN_PROPERTY)
+        if configured_origin is None:
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_GAMS_API_ORIGIN_PROPERTY} in config file")
+
+        if not configured_origin.startswith("http"):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_GAMS_API_ORIGIN_PROPERTY} to be a valid URL starting with 'http', but got '{configured_origin}'")
+
+        if configured_origin.endswith("/"):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_GAMS_API_ORIGIN_PROPERTY} to not have a trailing slash, but got '{configured_origin}'")
+
+        return configured_origin
 
 
     def get_project_abbr(self) -> str:
