@@ -13,11 +13,8 @@ class ApplicationExternalConfig:
     DEVELOP_PROPERTY = "develop"
     PRODUCTION_PROPERTY = "production"
 
-    MODE_BASE_PROPERTY = "base"
-
-    MODE_BASE_GAMS_API_HOST_PROPERTY = "gamsApiHost"
-    MODE_BASE_OUTPUT_PATH_PROPERTY = "outputPath"
-
+    MODE_GAMS_API_ORIGIN_PROPERTY = "gamsApiOrigin"
+    MODE_OUTPUT_PATH_PROPERTY = "outputPath"
 
     config: Dict[str, Any]
     """
@@ -62,3 +59,18 @@ class ApplicationExternalConfig:
             return None
 
         return sub_dict.get("objectsRequired")
+
+    def get_gams_api_origin(self) -> str:
+        """
+        Returns the GAMS API origin URL
+        :return: the GAMS API origin URL
+        """
+        return self.get(self.mode).get(self.MODE_GAMS_API_ORIGIN_PROPERTY)
+
+
+    def get_project_abbr(self) -> str:
+        """
+        Returns the project abbreviation
+        :return: the project abbreviation
+        """
+        return self.get(self.PROJECT_PROPERTY).get(self.PROJECT_ABBR_PROPERTY)

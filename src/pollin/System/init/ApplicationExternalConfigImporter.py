@@ -49,11 +49,8 @@ class ApplicationExternalConfigImporter:
             if not config_toml_dict.get(cur_mode):
                 raise ValueError(f"For the currently active mode: '{cur_mode}' is no (or empty) toml property '{cur_mode}' defined. In config toml file: {config_toml_path} ")
 
-            # if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_BASE_PROPERTY):
-            #     raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_BASE_PROPERTY} in config toml file: {config_toml_path}")
-            #
-            # if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_BASE_PROPERTY).get(ApplicationExternalConfig.MODE_BASE_GAMS_API_HOST_PROPERTY):
-            #     raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_BASE_GAMS_API_HOST_PROPERTY} in config toml file: {config_toml_path}")
+            if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY):
+                raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY} in config toml file: {config_toml_path}")
             #
             # if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_BASE_PROPERTY).get(ApplicationExternalConfig.MODE_BASE_OUTPUT_PATH_PROPERTY):
             #     raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_BASE_OUTPUT_PATH_PROPERTY} in config toml file: {config_toml_path}")
