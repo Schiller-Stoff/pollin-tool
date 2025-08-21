@@ -44,6 +44,8 @@ class DigitalObjectViewRenderer:
         """
 
         output_dir = self.app_context.get_config().project_public_dir
+        # make sure that the object output directory exists
+        os.makedirs(Path(output_dir).joinpath("objects"), exist_ok=True)
 
         # digital objects
         data = self.app_context.get_app_data_store().get_objects()
