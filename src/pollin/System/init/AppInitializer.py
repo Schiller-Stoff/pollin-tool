@@ -38,7 +38,10 @@ class AppInitializer:
         self.app_context.set_config(app_config)
 
         # load possible external configuration
-        external_config = ApplicationExternalConfigImporter(self.app_context).import_config()
+        external_config = ApplicationExternalConfigImporter.import_config(
+            app_config.project_config_toml, mode
+        )
+
         if external_config:
             external_config_parsed = ApplicationExternalConfig(external_config)
             self.app_context.get_config().project_external_config = external_config_parsed

@@ -1,7 +1,6 @@
 import os
 import tomllib
-
-from pollin.System.init.ApplicationContext import ApplicationContext
+from os import PathLike
 from typing import Dict, Any
 
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
@@ -12,34 +11,32 @@ class ApplicationExternalConfigImporter:
     Imports the project configuration file from defined location at init process
 
     """
-    app_context: ApplicationContext
 
-    def __init__(self, app_context: ApplicationContext):
-        self.app_context = app_context
-
-    def config_file_exists(self):
+    @staticmethod
+    def config_file_exists(config_file_path_str: PathLike) -> bool:
         """
         Checks if the project configuration file exists
         :return: True if the config file exists, False otherwise
         """
-        path = self.app_context.get_config().project_config_toml
-        return os.path.exists(path)
+        return os.path.exists(config_file_path_str) and os.path.isfile(config_file_path_str)
 
-    def import_config(self):
+
+    @staticmethod
+    def import_config(config_file_path_str: PathLike, mode: str):
         """
         Imports the project configuration file from defined location at init process.
         :return: configuration dictionary from toml
         """
 
-        if not self.config_file_exists():
+        if not ApplicationExternalConfigImporter.config_file_exists(config_file_path_str):
             return None
 
-        config_toml_path = self.app_context.get_config().project_config_toml
+        config_toml_path = config_file_path_str
 
         # load toml as dictionary
         with open(config_toml_path, 'rb') as f:
             config_toml_dict: Dict[str, Any] = tomllib.load(f)
-            cur_mode = self.app_context.get_config().mode
+            cur_mode = mode
 
             # toml validation
 
