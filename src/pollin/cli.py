@@ -41,7 +41,7 @@ def build(directory: str, output_path: str):
      .setup()
      )
 
-    # encapsulates loading of project data and digital objects# encapsulates loading of project data and digital objects
+    # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
 
