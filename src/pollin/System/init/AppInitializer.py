@@ -3,12 +3,12 @@ import pathlib
 import shutil
 from pathlib import Path
 from typing import Literal
-from pollin.System.init.AppEnv import AppEnv
+from pollin.System.init.config.AppEnv import AppEnv
 from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.init.ApplicationConfiguration import ApplicationConfiguration
-from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
-from pollin.System.init.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
-from pollin.System.init.cache.CacheConfig import CacheConfig
+from pollin.System.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
+from pollin.System.init.config.CacheConfig import CacheConfig
 from pollin.System.load.utils.Pyrilo import Pyrilo
 from pollin.System.load.ApplicationDatastore import ApplicationDatastore
 

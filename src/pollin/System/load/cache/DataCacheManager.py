@@ -6,7 +6,7 @@ import hashlib
 from email.utils import formatdate, parsedate_to_datetime
 from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
 
 class DataCacheManager:
