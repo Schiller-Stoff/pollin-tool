@@ -126,7 +126,7 @@ class ApplicationConfiguration:
     """
 
 
-    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None, mode: Literal["develop", "production"] = "develop"):
+    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None, mode: Literal["dev", "build"] = "dev"):
         self.project = project
         self.gams_host = gams_host
         self.project_files_root = project_files_root

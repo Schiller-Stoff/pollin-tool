@@ -18,13 +18,13 @@ class AppInitializer:
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
 
-    def configure(self, directory: str, output_path: str = None, mode: Literal["develop", "production"] = "develop"):
+    def configure(self, directory: str, output_path: str = None, mode: Literal["dev", "build"] = "dev"):
         """
         Sets configuration params on the ApplicationContext
         :return:
         """
-        if mode not in ["develop", "production"]:
-            raise ValueError("Mode must be either 'develop' or 'production'")
+        if mode not in ["dev", "build"]:
+            raise ValueError("Mode must be either 'dev' or 'build'")
 
         # load possible external configuration
         external_config = ApplicationExternalConfigImporter.import_config(

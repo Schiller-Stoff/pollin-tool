@@ -35,8 +35,7 @@ def build(directory: str, output_path: str):
      .configure(
         directory=directory,
         output_path=output_path,
-        mode="production"
-
+        mode="build"
     )
      .init_context_beans()
      .setup()
@@ -50,11 +49,11 @@ def build(directory: str, output_path: str):
     (ApplicationViewFileEventController(app_context)
         .render_views())
 
-@cli.command(name="start", help="Starts the development process of the static site generator.")
+@cli.command(name="dev", help="Starts the development process of the static site generator.")
 @click.argument("directory", required=True)
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-def start(directory: str, port: int, output_path: str):
+def dev(directory: str, port: int, output_path: str):
     """
     Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
@@ -64,7 +63,7 @@ def start(directory: str, port: int, output_path: str):
      .configure(
         directory=directory,
         output_path=output_path,
-        mode="develop"
+        mode="dev"
     )
      .init_context_beans()
      .setup()
@@ -91,5 +90,5 @@ def start(directory: str, port: int, output_path: str):
         dev_server_process.join()
 
 
-cli.add_command(start)
+cli.add_command(dev)
 cli.add_command(build)
