@@ -1,4 +1,5 @@
 import logging
+import pathlib
 import shutil
 from pathlib import Path
 from typing import Literal
@@ -17,32 +18,41 @@ class AppInitializer:
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
 
-    def configure(self, project:str, host: str, directory: str, output_path: str = None, mode: Literal["develop", "production"] = "develop"):
+    def configure(self, directory: str, mode: Literal["dev", "build"] = "dev"):
         """
         Sets configuration params on the ApplicationContext
         :return:
         """
-        if mode not in ["develop", "production"]:
-            raise ValueError("Mode must be either 'develop' or 'production'")
+        if mode not in ["dev", "build"]:
+            raise ValueError("Mode must be either 'dev' or 'build'")
+
+        # load possible external configuration
+        external_config = ApplicationExternalConfigImporter.import_config(
+            pathlib.Path(directory) / ApplicationConfiguration.CONFIG_FILE_NAME,
+            mode
+        )
+        external_config_parsed = ApplicationExternalConfig(external_config, mode)
+        logging.info(f"External configuration loaded {external_config}")
 
         app_config = ApplicationConfiguration(
-            project=project,
-            gams_host=host,
+            project=external_config_parsed.get_project_abbr(),
+            gams_host=external_config_parsed.get_gams_api_origin(),
             project_files_root=Path(directory),
-            output_path=Path(output_path) if output_path else None,
+            output_path=external_config_parsed.get_output_path(), # returns None if not set in config
             mode=mode
         )
 
         # storing same variables in ENV reference (used at runtime in templates)
-        app_config.ENV = AppEnv(GAMS_API_ORIGIN=app_config.gams_host, PROJECT_ABBR=app_config.project)
+        app_config.ENV = AppEnv(
+            GAMS_API_ORIGIN=app_config.gams_host,
+            PROJECT_ABBR=app_config.project,
+            UI_VERSION=external_config_parsed.get_ui_version(),
+            UI_TITLE=external_config_parsed.get_ui_title()
+        )
         self.app_context.set_config(app_config)
+        self.app_context.get_config().project_external_config = external_config_parsed
 
-        # load possible external configuration
-        external_config = ApplicationExternalConfigImporter(self.app_context).import_config()
-        if external_config:
-            external_config_parsed = ApplicationExternalConfig(external_config)
-            self.app_context.get_config().project_external_config = external_config_parsed
-            logging.info(f"External configuration loaded {external_config}")
+
 
         return self
 
