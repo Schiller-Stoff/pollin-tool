@@ -23,13 +23,11 @@ def cli():
 @cli.command(name="build", help="Builds output files once.")
 @click.argument("directory", required=True)
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-@click.option("--mode", "-m", default="production", help="Mode of the pollin tool to run in, either 'develop' or 'production'. By default start in 'develop' / build in 'production'.")
-def build(directory: str, output_path: str, mode: str):
+def build(directory: str, output_path: str):
     """
     Builds the static site generator output files to the specified location.
     :param directory: Path of the view template directory
     :param output_path: Path to where the output files should be placed. By default, the output files are placed in the project directory.
-    :param mode: Mode of the pollin tool to run in, either 'develop' or 'production'. By default start in 'develop' / build in 'production'.
     """
 
     # setting up the application context
@@ -37,7 +35,7 @@ def build(directory: str, output_path: str, mode: str):
      .configure(
         directory=directory,
         output_path=output_path,
-        mode=mode
+        mode="production"
 
     )
      .init_context_beans()
@@ -56,8 +54,7 @@ def build(directory: str, output_path: str, mode: str):
 @click.argument("directory", required=True)
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
 @click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-@click.option("--mode", "-m", default="develop", help="Mode of the pollin tool to run in, either 'develop' or 'production'. By default start in 'develop' / build in 'production'.")
-def start(directory: str, port: int, output_path: str, mode: str):
+def start(directory: str, port: int, output_path: str):
     """
     Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
@@ -67,7 +64,7 @@ def start(directory: str, port: int, output_path: str, mode: str):
      .configure(
         directory=directory,
         output_path=output_path,
-        mode=mode
+        mode="develop"
     )
      .init_context_beans()
      .setup()
