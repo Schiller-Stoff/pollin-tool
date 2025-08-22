@@ -160,7 +160,7 @@ class Pyrilo:
         """
 
         url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects"
-        logging.info(f"Checking if project {project_abbr} has been modified since {last_modified} from {url}")
+        logging.debug(f"Checking if project {project_abbr} has been modified since {last_modified} from {url}")
 
         try:
             # send HEAD request with If-Modified-Since header
@@ -171,8 +171,9 @@ class Pyrilo:
                 if response.status == 200:
                     return True
                 else:
-                    logging.warning(f"Unexpected response status {response.status} while checking if project {project_abbr} has been modified since {last_modified} from url {url}.")
-                    return False
+                    msg = f"Received unexpected response status {response.status} while checking if project {project_abbr} has been modified since {last_modified} from url {url}."
+                    logging.error(msg)
+                    raise ConnectionError(msg)
         except HTTPError as e:
             if e.status == 304:
                 # 304 means not modified
