@@ -1,7 +1,8 @@
 # Poll-In tool
 
-Tool polls / pulls-in ("poll-in") digital objects from a GAMS5 project and performs static site rendering.
-Informatics: polling-concept
+CLI tool that polls / pulls-in ("poll-in") digital objects from a GAMS5 project and performs static site rendering.
+(Informatics: polling-concept)
+Supplies a development workflow for GAMS5-based web projects.
 
 Meant as replacement for the gams3 "gamsdev" development workflow.
 
