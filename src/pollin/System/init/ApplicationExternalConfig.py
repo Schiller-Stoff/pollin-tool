@@ -19,6 +19,8 @@ class ApplicationExternalConfig:
     MODE_GAMS_API_ORIGIN_PROPERTY = "gamsApiOrigin"
     MODE_OUTPUT_PATH_PROPERTY = "outputPath"
 
+    MODE_LOAD_OBJECT_COUNT_RESTRICTION = "objectCountRestriction"
+    MODE_LOAD_OBJECTS_REQUIRED = "objectsRequired"
 
 
     config: Dict[str, Any]
@@ -42,38 +44,41 @@ class ApplicationExternalConfig:
 
         return self.config[key]
 
-    def get_obj_count_restriction(self):
+    def get_obj_count_restriction(self) -> int | None:
         """
         Returns the object count restriction
         :return: the object count restriction
         """
         sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
-            raise ValueError(f"Cannot find (or empty) required property {self.mode}.load in config file")
+            logging.debug(f"No {self.mode}.load property found in config file. No object count restriction defined.")
+            return None
 
         # must be parseble as integer
         if "objectCountRestriction" not in sub_dict:
-            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_LOAD_PROPERTY}.objectCountRestriction in config file")
+            logging.debug(f"No {self.mode}.load.objectCountRestriction property found in config file. No object count restriction defined.")
+            return None
 
         extracted_value = sub_dict.get("objectCountRestriction")
 
         if not isinstance(extracted_value, int):
             raise ValueError(f"Expected {self.mode}.{self.MODE_LOAD_PROPERTY}.objectCountRestriction to be an integer, but got '{sub_dict.get('objectCountRestriction')}'")
 
-        return extracted_value
+        return int(extracted_value)
 
 
-    def get_obj_required(self):
+    def get_obj_required(self) -> list[str] | None:
         """
         Returns the objects required: List of strings (object ids)
         :return: the objects required to be loaded
         """
         sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
-            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_LOAD_PROPERTY} in config file")
+            logging.debug(f"No {self.mode}.load property found in config file. No required objects defined.")
+            return None
 
         if "objectsRequired" not in sub_dict:
-            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_LOAD_PROPERTY}.objectsRequired in config file")
+            logging.debug(f"No {self.mode}.load.objectsRequired property found in config file. No required objects defined.")
 
         return sub_dict.get("objectsRequired")
 
