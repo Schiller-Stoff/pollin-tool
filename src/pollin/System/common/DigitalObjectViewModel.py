@@ -24,14 +24,10 @@ class DigitalObjectViewModel:
     def __str__(self):
         return f"DigitalObjectViewModel(dc={self.dc}, db={self.db}, props={self.props})"
 
-    def __init__(self, dc: dict[str, any], db: dict[str, any], props: dict[str, any], component_map: Dict[str, str] = None):
+    def __init__(self, dc: dict[str, any], db: dict[str, any], props: dict[str, any]):
         self.dc = dc
         self.db = db
         self.props = props
-        if component_map is None:
-            self.component_map = {}
-        else:
-            self.component_map = component_map
 
     def to_dict(self):
         """

@@ -162,11 +162,6 @@ class DataCacheManager:
             # Convert objects to serializable format
             serializable_objects = [obj.to_dict() for obj in objects]
 
-            # Add component_map to the dict if not included in to_dict()
-            for i, obj in enumerate(objects):
-                if hasattr(obj, 'component_map'):
-                    serializable_objects[i]['component_map'] = obj.component_map
-
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(serializable_objects, f, indent=2, ensure_ascii=False)
 
