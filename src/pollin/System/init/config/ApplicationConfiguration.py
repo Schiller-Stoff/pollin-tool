@@ -2,8 +2,10 @@ import pathlib
 from os import PathLike
 from typing import Literal
 
-from pollin.System.init.AppEnv import AppEnv
-from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.config.AppEnv import AppEnv
+from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.config.ApplicationCacheConfig import ApplicationCacheConfig
+
 
 class ApplicationConfiguration:
     """
@@ -42,6 +44,11 @@ class ApplicationConfiguration:
     """
 
     CONFIG_FILE_NAME: str = "pollin.toml"
+
+    cache: ApplicationCacheConfig
+    """
+    Configuration for caching
+    """
 
     def alternative_output_path_set(self) -> bool:
         """

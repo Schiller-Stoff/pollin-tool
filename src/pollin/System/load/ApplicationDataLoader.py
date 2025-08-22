@@ -4,6 +4,8 @@ from pollin.System.load.DigitalObjectService import DigitalObjectService
 from pollin.System.load.ProjectService import ProjectService
 from pollin.System.init.ApplicationContext import ApplicationContext
 from typing import List
+from pollin.System.load.cache.DataCacheManager import DataCacheManager
+
 
 class ApplicationDataLoader:
     """
@@ -16,8 +18,8 @@ class ApplicationDataLoader:
     """
 
     def __init__(self, app_context: ApplicationContext):
-        # TODO validate correct setup of the app_context?
         self.app_context = app_context
+        self.cache_manager = DataCacheManager(app_context)
 
 
     def limit_project_objects(self, object_ids: List[str]):
@@ -53,22 +55,48 @@ class ApplicationDataLoader:
         else:
             return object_ids
 
-
     def load(self):
         """
         Loads the data required for the application (digital objects, project data, but also customizable scripts etc.)
         :return:
         """
+        project_abbr = self.app_context.get_config().project
 
-        # load project metadata from GAMS5
-        project_data = ProjectService(self.app_context).load()
-        self.app_context.get_app_data_store().set_project_data(project_data)
+        # Try to load from cache first
+        cached_project_data = self.cache_manager.get_cached_project_data(project_abbr)
+        cached_objects = self.cache_manager.get_cached_objects(project_abbr)
 
-        # load object data
-        digital_object_service = DigitalObjectService(self.app_context)
-        object_ids = digital_object_service.load_project_object_ids(self.app_context.get_config().project)
-        # optionally limit the number of objects according to external configuration
-        object_ids = self.limit_project_objects(object_ids)
-        # load detailed object data
-        digital_objects = digital_object_service.load_project_objects(self.app_context.get_config().project, object_ids)
-        self.app_context.get_app_data_store().set_objects(digital_objects)
+        if cached_project_data and cached_objects:
+            logging.info(f"Using cached data for project {project_abbr}")
+            self.app_context.get_app_data_store().set_project_data(cached_project_data)
+            self.app_context.get_app_data_store().set_objects(cached_objects)
+            return
+
+        # Cache miss or invalid - load from API
+        logging.info(f"Loading fresh data from API for project {project_abbr}")
+
+        # Load project metadata from GAMS5
+        if not cached_project_data:
+            project_data = ProjectService(self.app_context).load()
+            self.app_context.get_app_data_store().set_project_data(project_data)
+            self.cache_manager.cache_project_data(project_abbr, project_data)
+        else:
+            self.app_context.get_app_data_store().set_project_data(cached_project_data)
+
+        # Load object data
+        if not cached_objects:
+            digital_object_service = DigitalObjectService(self.app_context)
+            object_ids = digital_object_service.load_project_object_ids(project_abbr)
+
+            # Optionally limit the number of objects according to external configuration
+            object_ids = self.limit_project_objects(object_ids)
+
+            # Load detailed object data
+            digital_objects = digital_object_service.load_project_objects(project_abbr, object_ids)
+            self.app_context.get_app_data_store().set_objects(digital_objects)
+
+            # Cache the loaded objects
+            self.cache_manager.cache_objects(project_abbr, digital_objects)
+        else:
+            self.app_context.get_app_data_store().set_objects(cached_objects)
+

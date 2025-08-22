@@ -3,11 +3,12 @@ import pathlib
 import shutil
 from pathlib import Path
 from typing import Literal
-from pollin.System.init.AppEnv import AppEnv
+from pollin.System.init.config.AppEnv import AppEnv
 from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.init.ApplicationConfiguration import ApplicationConfiguration
-from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
-from pollin.System.init.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
+from pollin.System.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
+from pollin.System.init.config.ApplicationCacheConfig import ApplicationCacheConfig
 from pollin.System.load.utils.Pyrilo import Pyrilo
 from pollin.System.load.ApplicationDatastore import ApplicationDatastore
 
@@ -52,7 +53,12 @@ class AppInitializer:
         self.app_context.set_config(app_config)
         self.app_context.get_config().project_external_config = external_config_parsed
 
-
+        # set cache config
+        cache_enabled = mode == "dev"
+        self.app_context.get_config().cache = ApplicationCacheConfig(
+            cache_dir=Path(directory) / ".pollin_cache",
+            enabled=cache_enabled
+        )
 
         return self
 

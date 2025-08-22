@@ -3,7 +3,7 @@ import tomllib
 from os import PathLike
 from typing import Dict, Any
 
-from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
 
 class ApplicationExternalConfigImporter:

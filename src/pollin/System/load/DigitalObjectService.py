@@ -1,10 +1,6 @@
-import json
-import logging
-from pathlib import Path
-from pollin.System.load.utils.XMLWebComponentConverter import XMLWebComponentConverter
 from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.System.init.ApplicationContext import ApplicationContext
-from typing import List, Dict
+from typing import List
 
 
 class DigitalObjectService:
@@ -46,7 +42,7 @@ class DigitalObjectService:
             object_id = project_object_id
             object_metadata = pyrilo.get_object(project, object_id)
             dc_json = pyrilo.get_dublin_core(project, object_id)
-            digital_object = DigitalObjectViewModel(dc_json, object_metadata, {}, {})
+            digital_object = DigitalObjectViewModel(dc_json, object_metadata, {})
             digital_objects.append(digital_object)
 
         return digital_objects

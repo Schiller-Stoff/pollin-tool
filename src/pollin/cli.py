@@ -13,12 +13,13 @@ from pollin.System.init.AppInitializer import AppInitializer
 app_context = ApplicationContext()
 
 @click.group()
-def cli():
+@click.option("--log", "-l", default="INFO", help="log level, default is INFO")
+def cli(log: str):
     """
     Init command / start routine of application
     Sets up the application context for the entire application.
     """
-    logging.basicConfig( encoding='utf-8', level=logging.INFO)
+    logging.basicConfig( encoding='utf-8', level=logging.getLevelName(log))
 
 @cli.command(name="build", help="Builds output files once.")
 @click.argument("directory", required=True)
