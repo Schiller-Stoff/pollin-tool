@@ -1,6 +1,6 @@
 from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.System.init.ApplicationContext import ApplicationContext
-from typing import List, Dict
+from typing import List
 
 
 class DigitalObjectService:
