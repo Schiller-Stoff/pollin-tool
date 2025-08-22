@@ -1,4 +1,5 @@
-
+import logging
+import os.path
 from typing import Any, Dict
 
 class ApplicationExternalConfig:
@@ -97,3 +98,23 @@ class ApplicationExternalConfig:
         :return: the project abbreviation
         """
         return self.get(self.PROJECT_PROPERTY).get(self.PROJECT_ABBR_PROPERTY)
+
+
+    def get_output_path(self) -> str | None:
+        """
+        Returns the output path from the configuration
+        :return: the output path
+        """
+        configured_path = self.get(self.mode).get(self.MODE_OUTPUT_PATH_PROPERTY)
+        if configured_path is None:
+            return None
+
+        # validate path
+        if not isinstance(configured_path, str):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_OUTPUT_PATH_PROPERTY} to be a string, but got '{configured_path}'")
+
+        if not os.path.isabs(configured_path):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_OUTPUT_PATH_PROPERTY} to be an absolute path, but got '{configured_path}'")
+
+        logging.info(f"*** Found configured {self.MODE_OUTPUT_PATH_PROPERTY} in configuration file. Using now: '{configured_path}'")
+        return configured_path

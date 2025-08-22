@@ -22,8 +22,7 @@ def cli():
 
 @cli.command(name="build", help="Builds output files once.")
 @click.argument("directory", required=True)
-@click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-def build(directory: str, output_path: str):
+def build(directory: str):
     """
     Builds the static site generator output files to the specified location.
     :param directory: Path of the view template directory
@@ -34,7 +33,6 @@ def build(directory: str, output_path: str):
     (AppInitializer(app_context)
      .configure(
         directory=directory,
-        output_path=output_path,
         mode="build"
     )
      .init_context_beans()
@@ -49,11 +47,10 @@ def build(directory: str, output_path: str):
     (ApplicationViewFileEventController(app_context)
         .render_views())
 
-@cli.command(name="dev", help="Starts the development process of the static site generator.")
+@cli.command(name="dev", help="Starts the development process of the pollin tool.")
 @click.argument("directory", required=True)
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
-@click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-def dev(directory: str, port: int, output_path: str):
+def dev(directory: str, port: int):
     """
     Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
@@ -62,7 +59,6 @@ def dev(directory: str, port: int, output_path: str):
     (AppInitializer(app_context)
      .configure(
         directory=directory,
-        output_path=output_path,
         mode="dev"
     )
      .init_context_beans()

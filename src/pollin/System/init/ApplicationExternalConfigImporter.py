@@ -39,7 +39,6 @@ class ApplicationExternalConfigImporter:
             cur_mode = mode
 
             # toml validation
-
             if ApplicationExternalConfig.PROJECT_PROPERTY not in config_toml_dict:
                 raise ValueError(f"'{ApplicationExternalConfig.PROJECT_PROPERTY}' property not found (or empty) in the configuration file: {config_toml_path}")
             else:
@@ -51,15 +50,5 @@ class ApplicationExternalConfigImporter:
 
             if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY):
                 raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY} in config toml file: {config_toml_path}")
-            #
-            # if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_BASE_PROPERTY).get(ApplicationExternalConfig.MODE_BASE_OUTPUT_PATH_PROPERTY):
-            #     raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_BASE_OUTPUT_PATH_PROPERTY} in config toml file: {config_toml_path}")
-            #
-            # if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_BASE_PROPERTY).get(ApplicationExternalConfig.MODE_BASE_SRC_PATH_PROPERTY):
-            #     raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_BASE_SRC_PATH_PROPERTY} in config toml file: {config_toml_path}")
 
-
-            # TODO return complete config file not only mode dictionary
-
-            # default to empty dict if mode not found
             return config_toml_dict

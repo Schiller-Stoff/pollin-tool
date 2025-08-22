@@ -18,7 +18,7 @@ class AppInitializer:
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
 
-    def configure(self, directory: str, output_path: str = None, mode: Literal["dev", "build"] = "dev"):
+    def configure(self, directory: str, mode: Literal["dev", "build"] = "dev"):
         """
         Sets configuration params on the ApplicationContext
         :return:
@@ -38,7 +38,7 @@ class AppInitializer:
             project=external_config_parsed.get_project_abbr(),
             gams_host=external_config_parsed.get_gams_api_origin(),
             project_files_root=Path(directory),
-            output_path=Path(output_path) if output_path else None,
+            output_path=external_config_parsed.get_output_path(), # returns None if not set in config
             mode=mode
         )
 
