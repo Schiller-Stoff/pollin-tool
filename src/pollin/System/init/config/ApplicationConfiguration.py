@@ -4,7 +4,7 @@ from typing import Literal
 
 from pollin.System.init.config.AppEnv import AppEnv
 from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
-from pollin.System.init.config.CacheConfig import CacheConfig
+from pollin.System.init.config.ApplicationCacheConfig import ApplicationCacheConfig
 
 
 class ApplicationConfiguration:
@@ -45,7 +45,7 @@ class ApplicationConfiguration:
 
     CONFIG_FILE_NAME: str = "pollin.toml"
 
-    cache: CacheConfig
+    cache: ApplicationCacheConfig
     """
     Configuration for caching
     """

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 @dataclass
-class CacheConfig:
+class ApplicationCacheConfig:
     """Configuration for local data caching"""
     cache_dir: Path
     enabled: bool = True
