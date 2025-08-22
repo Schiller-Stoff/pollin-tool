@@ -1,7 +1,3 @@
-import json
-import logging
-from pathlib import Path
-from pollin.System.load.utils.XMLWebComponentConverter import XMLWebComponentConverter
 from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.System.init.ApplicationContext import ApplicationContext
 from typing import List, Dict
