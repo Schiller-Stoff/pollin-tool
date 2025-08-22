@@ -11,12 +11,15 @@ class ApplicationExternalConfig:
     PROJECT_PROPERTY = "project"
     PROJECT_ABBR_PROPERTY = "projectAbbr"
 
-    DEVELOP_PROPERTY = "develop"
-    PRODUCTION_PROPERTY = "production"
+    UI_PROPERTY = "ui"
+    UI_VERSION_PROPERTY = "version"
+    UI_TITLE_PROPERTY = "title"
 
     MODE_LOAD_PROPERTY = "load"
     MODE_GAMS_API_ORIGIN_PROPERTY = "gamsApiOrigin"
     MODE_OUTPUT_PATH_PROPERTY = "outputPath"
+
+
 
     config: Dict[str, Any]
     """
@@ -118,3 +121,51 @@ class ApplicationExternalConfig:
 
         logging.info(f"*** Found configured {self.MODE_OUTPUT_PATH_PROPERTY} in configuration file. Using now: '{configured_path}'")
         return configured_path
+
+    def get_ui_version(self) -> str | None:
+        """
+        Returns the UI version from the configuration
+        """
+        ui_dict: Dict[Any] = self.get(self.UI_PROPERTY)
+        if ui_dict is None:
+            return None
+
+        configured_version = ui_dict.get(self.UI_VERSION_PROPERTY)
+        if configured_version is None:
+            return None
+
+        if not isinstance(configured_version, str):
+            raise ValueError(f"Expected {self.UI_PROPERTY}.{self.UI_VERSION_PROPERTY} to be a string, but got '{configured_version}'")
+
+        if len(configured_version) == 0:
+            raise ValueError(f"Expected {self.UI_PROPERTY}.{self.UI_VERSION_PROPERTY} to be a non-empty string, but got an empty string")
+
+        if len(configured_version.split(".")) < 2:
+            raise ValueError(f"Expected {self.UI_PROPERTY}.{self.UI_VERSION_PROPERTY} to be a semantic version string, but got '{configured_version}'")
+
+        return configured_version
+
+
+    def get_ui(self) -> Dict[str, Any] | None:
+        """
+        Returns the UI configuration dictionary
+        """
+        ui_dict: Dict[str, Any] = self.get(self.UI_PROPERTY)
+        if ui_dict is None:
+            return None
+
+        return ui_dict
+
+    def get_ui_title(self) -> str | None:
+        """
+        Returns the UI title from the configuration
+        """
+        ui_dict: Dict[Any] = self.get(self.UI_PROPERTY)
+        if ui_dict is None:
+            return None
+
+        configured_title = ui_dict.get(self.UI_TITLE_PROPERTY)
+        if configured_title is None:
+            return None
+
+        return configured_title

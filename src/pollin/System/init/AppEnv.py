@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict, Any
 
 
 @dataclass
@@ -9,4 +10,6 @@ class AppEnv:
 
     GAMS_API_ORIGIN: str
     PROJECT_ABBR: str
+    UI_VERSION: str
+    UI_TITLE: str
 
