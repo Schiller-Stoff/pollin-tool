@@ -150,3 +150,34 @@ class Pyrilo:
             raise ConnectionError(f"Error while requesting project metadata from project {project_abbr} from url {url}. Error: {e}")
 
 
+    def project_modified_since(self, project_abbr: str, last_modified: str) -> bool:
+        """
+        Checks if a project has been modified since the given timestamp.
+
+        :param project_abbr: The project abbreviation
+        :param last_modified: The last modified timestamp in ISO 8601 format
+        :return: True if the project has been modified since the given timestamp, False otherwise
+        """
+
+        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects"
+        logging.info(f"Checking if project {project_abbr} has been modified since {last_modified} from {url}")
+
+        try:
+            # send HEAD request with If-Modified-Since header
+            req = urllib.request.Request(url, method='HEAD')
+            req.add_header('If-Modified-Since', last_modified)
+            with urllib.request.urlopen(req) as response:
+                # if we get a 200 response, the project has been modified
+                if response.status == 200:
+                    return True
+                else:
+                    logging.warning(f"Unexpected response status {response.status} while checking if project {project_abbr} has been modified since {last_modified} from url {url}.")
+                    return False
+        except HTTPError as e:
+            if e.status == 304:
+                # 304 means not modified
+                return False
+
+            msg = f"Error while checking if project {project_abbr} has been modified since {last_modified} from url {url}. Error: {e}"
+            logging.error(msg)
+            raise ConnectionError(msg)
