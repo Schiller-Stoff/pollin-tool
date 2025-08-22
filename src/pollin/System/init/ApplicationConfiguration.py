@@ -4,6 +4,8 @@ from typing import Literal
 
 from pollin.System.init.AppEnv import AppEnv
 from pollin.System.init.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.System.init.cache.CacheConfig import CacheConfig
+
 
 class ApplicationConfiguration:
     """
@@ -42,6 +44,11 @@ class ApplicationConfiguration:
     """
 
     CONFIG_FILE_NAME: str = "pollin.toml"
+
+    cache: CacheConfig
+    """
+    Configuration for caching
+    """
 
     def alternative_output_path_set(self) -> bool:
         """
