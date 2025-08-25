@@ -52,9 +52,9 @@ class ApplicationExternalConfigImporter:
                 raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY} in config toml file: {config_toml_path}")
 
             if not config_toml_dict.get(ApplicationExternalConfig.UI_PROPERTY):
-                raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.UI_PROPERTY} in config toml file: {config_toml_path}")
+                raise ValueError(f"Cannot find (or empty) required property {ApplicationExternalConfig.UI_PROPERTY} in config toml file: {config_toml_path}")
 
             if not config_toml_dict.get(ApplicationExternalConfig.UI_PROPERTY).get(ApplicationExternalConfig.UI_VERSION_PROPERTY):
-                raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.UI_PROPERTY}.{ApplicationExternalConfig.UI_VERSION_PROPERTY} in config toml file: {config_toml_path}")
+                raise ValueError(f"Cannot find (or empty) required property {ApplicationExternalConfig.UI_PROPERTY}.{ApplicationExternalConfig.UI_VERSION_PROPERTY} in config toml file: {config_toml_path}")
 
             return config_toml_dict
