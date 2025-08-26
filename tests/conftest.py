@@ -2,6 +2,10 @@
 import pytest
 from unittest.mock import Mock
 from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
+from pollin.System.init.ApplicationContext import ApplicationContext
+from pollin.System.init.config.AppEnv import AppEnv
+from pollin.System.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.System.load.ApplicationDatastore import ApplicationDatastore
 
 
 @pytest.fixture
@@ -69,3 +73,37 @@ def mock_pyrilo():
         "creator": ["Test Creator"]
     }
     return mock
+
+@pytest.fixture
+def test_application_context(temp_project, sample_object):
+    """
+    Sets up a test application context with test data.
+
+    """
+
+    # Setup mock app context
+    app_context = ApplicationContext()
+
+    # TODO refactor
+    # Supply config to app context
+    config = ApplicationConfiguration(
+        project="test",
+        gams_host="http://localhost:8080",
+        project_files_root=temp_project,
+        mode="dev"
+    )
+    app_context.set_config(config)
+    # for config build abb config
+    app_context.get_config().ENV = AppEnv(
+        GAMS_API_ORIGIN="http://localhost:8080",
+        PROJECT_ABBR="test",
+        UI_VERSION="1.0.0",
+        UI_TITLE="Test Project"
+    ) # Initialize with default values
+
+    # mock a datastore with one object
+    datastore = ApplicationDatastore()
+    datastore.add_object(sample_object)
+    datastore.set_project_data({"projectAbbr": "test"})
+    app_context.set_app_data_store(datastore)
+    return app_context
