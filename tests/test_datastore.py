@@ -1,5 +1,5 @@
 # tests/test_datastore.py - Data storage testing
-from pollin.System.load.ApplicationDatastore import ApplicationDatastore
+from pollin.load.ApplicationDatastore import ApplicationDatastore
 
 
 def test_datastore_stores_objects(sample_object):

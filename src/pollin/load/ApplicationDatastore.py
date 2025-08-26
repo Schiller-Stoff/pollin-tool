@@ -1,4 +1,4 @@
-from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
+from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
 
 
 class ApplicationDatastore:

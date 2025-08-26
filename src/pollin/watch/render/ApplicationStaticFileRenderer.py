@@ -2,7 +2,7 @@ import logging
 import shutil
 from pathlib import Path
 
-from pollin.System.init.ApplicationContext import ApplicationContext
+from pollin.init.ApplicationContext import ApplicationContext
 import time
 
 class ApplicationStaticFileRenderer:

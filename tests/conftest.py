@@ -1,11 +1,11 @@
 # tests/conftest.py - Simple shared fixtures
 import pytest
 from unittest.mock import Mock
-from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
-from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.init.config.AppEnv import AppEnv
-from pollin.System.init.config.ApplicationConfiguration import ApplicationConfiguration
-from pollin.System.load.ApplicationDatastore import ApplicationDatastore
+from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
+from pollin.init.ApplicationContext import ApplicationContext
+from pollin.init.config.AppEnv import AppEnv
+from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.load.ApplicationDatastore import ApplicationDatastore
 
 
 @pytest.fixture

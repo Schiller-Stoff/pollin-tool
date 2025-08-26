@@ -4,9 +4,8 @@ from pathlib import Path
 import jinja2
 from jinja2 import Environment, Template
 
-from pollin.System.load.DigitalObjectService import DigitalObjectService
-from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+from pollin.init.ApplicationContext import ApplicationContext
+from pollin.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
 
 
 class DigitalObjectViewRenderer:

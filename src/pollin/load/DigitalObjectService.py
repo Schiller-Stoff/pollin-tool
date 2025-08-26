@@ -1,5 +1,5 @@
-from pollin.System.common.DigitalObjectViewModel import DigitalObjectViewModel
-from pollin.System.init.ApplicationContext import ApplicationContext
+from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
+from pollin.init.ApplicationContext import ApplicationContext
 from typing import List
 
 

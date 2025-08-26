@@ -1,7 +1,6 @@
 # tests/test_config.py - Core configuration testing
-import pytest
-from pollin.System.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
-from pollin.System.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
+from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
 
 def test_config_loads_from_file(temp_project):

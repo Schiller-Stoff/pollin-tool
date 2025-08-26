@@ -1,7 +1,7 @@
 
-from pollin.System.init.config.ApplicationConfiguration import ApplicationConfiguration
-from pollin.System.load.utils.Pyrilo import Pyrilo
-from pollin.System.load.ApplicationDatastore import ApplicationDatastore
+from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.load.utils.Pyrilo import Pyrilo
+from pollin.load.ApplicationDatastore import ApplicationDatastore
 
 
 class ApplicationContext:

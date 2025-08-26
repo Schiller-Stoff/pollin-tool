@@ -1,10 +1,10 @@
 import logging
 
 from watchdog.events import FileSystemEventHandler
-from pollin.System.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
-from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
-from pollin.System.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
+from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
+from pollin.init.ApplicationContext import ApplicationContext
+from pollin.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
+from pollin.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
 
 class ApplicationViewFileEventController(FileSystemEventHandler):
     """

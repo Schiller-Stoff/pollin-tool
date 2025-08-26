@@ -1,4 +1,4 @@
-from pollin.System.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
+from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 
 def test_digital_object_rendering(temp_project, sample_object, test_application_context):
     """Test that digital objects render to HTML files."""
