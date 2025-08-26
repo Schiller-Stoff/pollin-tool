@@ -13,6 +13,7 @@ def test_digital_object_rendering(temp_project, sample_object):
     app_context = ApplicationContext()
 
     # TODO always supply the same mock / test data
+    # TODO refactor
     # Supply config to app context
     config = ApplicationConfiguration(
         project="test",
@@ -55,6 +56,7 @@ def test_template_error_handling(temp_project, sample_object):
         "{{ broken.template.syntax }}"
     )
 
+    # TODO always supply the same mock / test data
     app_context = ApplicationContext()
     config = ApplicationConfiguration(
         project="test",
