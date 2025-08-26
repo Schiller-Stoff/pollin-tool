@@ -51,12 +51,10 @@ class DigitalObjectViewRenderer:
         data = self.app_context.get_app_data_store().get_objects()
         # metadata about the project
         project_metadata = self.app_context.get_app_data_store().project_data
-        project_abbr = project_metadata["projectAbbr"]
+        project_abbr = self.app_context.get_config().project
 
         for digital_object in data:
             object_id = digital_object.db["id"]
-
-
             object_html = ""
             object_template_name = 'object.j2'
             try:
