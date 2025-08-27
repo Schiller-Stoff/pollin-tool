@@ -29,3 +29,13 @@ def test_external_config_properties(temp_project):
 
     assert config.get_project_abbr() == "test"
     assert config.get_gams_api_origin() == "http://localhost:18085"
+
+
+def test_missing_obj_required_property_should_not_be_none(temp_project):
+    """Test behavior when objectsRequired is missing."""
+    config_dict = ApplicationExternalConfigImporter.import_config(
+        temp_project / "pollin.toml", "dev"
+    )
+    config = ApplicationExternalConfig(config_dict, "dev")
+
+    assert config.get_obj_required() is not None

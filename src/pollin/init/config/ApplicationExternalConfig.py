@@ -67,18 +67,19 @@ class ApplicationExternalConfig:
         return int(extracted_value)
 
 
-    def get_obj_required(self) -> list[str] | None:
+    def get_obj_required(self) -> list[str]:
         """
         Returns the objects required: List of strings (object ids)
-        :return: the objects required to be loaded
+        :return: the objects required to be loaded. Empty list if not defined or property is empty.
         """
         sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
             logging.debug(f"No {self.mode}.load property found in config file. No required objects defined.")
-            return None
+            return []
 
         if "objectsRequired" not in sub_dict:
             logging.debug(f"No {self.mode}.load.objectsRequired property found in config file. No required objects defined.")
+            return []
 
         return sub_dict.get("objectsRequired")
 
