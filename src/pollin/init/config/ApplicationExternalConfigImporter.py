@@ -3,6 +3,7 @@ import tomllib
 from os import PathLike
 from typing import Dict, Any
 
+from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
 from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
 
@@ -29,7 +30,8 @@ class ApplicationExternalConfigImporter:
         """
 
         if not ApplicationExternalConfigImporter.config_file_exists(config_file_path_str):
-            return None
+            msg = f"Cannot find required configuration file {ApplicationConfiguration.CONFIG_FILE_NAME} at expected path: {config_file_path_str}"
+            raise FileNotFoundError(msg)
 
         config_toml_path = config_file_path_str
 

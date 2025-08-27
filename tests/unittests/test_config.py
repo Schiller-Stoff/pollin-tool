@@ -1,7 +1,7 @@
 # tests/test_config.py - Core configuration testing
 from pollin.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
 from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
-
+import pytest
 
 def test_config_loads_from_file(temp_project):
     """Test that configuration loads from TOML file."""
@@ -14,10 +14,10 @@ def test_config_loads_from_file(temp_project):
     assert config_dict["dev"]["gamsApiOrigin"] == "http://localhost:18085"
 
 
-# def test_config_validates_required_fields():
-#     """Test that missing required fields raise errors."""
-#     with pytest.raises(ValueError, match="project.*not found"):
-#         ApplicationExternalConfigImporter.import_config("/nonexistent", "dev")
+def test_config_validates_required_fields():
+    """Test that missing required fields raise errors."""
+    with pytest.raises(FileNotFoundError):
+        ApplicationExternalConfigImporter.import_config("/nonexistent", "dev")
 
 
 def test_external_config_properties(temp_project):
