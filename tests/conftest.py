@@ -45,12 +45,22 @@ def temp_project(tmp_path):
         "<h1>{{ objects[0].title }}</h1>"
     )
 
+    # TODO hardcoded paths
+    # Create basic static files
+    (project_dir / "src" / "static" / "css" / "styles.css").parent.mkdir(parents=True, exist_ok=True)
+    (project_dir / "src" / "static" / "css" / "styles.css").write_text("body { font-family: Arial; }")
+    (project_dir / "src" / "static" / "js" / "scripts.js").parent.mkdir(parents=True, exist_ok=True)
+    (project_dir / "src" / "static" / "js" / "scripts.js").write_text("console.log('Hello, World!');")
+    (project_dir / "src" / "static" / "images" / "logo.png").parent.mkdir(parents=True, exist_ok=True)
+    (project_dir / "src" / "static" / "images" / "logo.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+
     return project_dir
 
 
 @pytest.fixture
 def sample_object():
     """Create a sample digital object."""
+    # TODO hardcoded data
     return DigitalObjectViewModel(
         dc={"title": ["Test Title"], "creator": ["Test Creator"]},
         db={"id": "test.123", "title": "Test Title", "description": "Test desc"},
