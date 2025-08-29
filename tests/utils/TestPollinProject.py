@@ -25,8 +25,7 @@ class TestPollinProject:
     POLLIN_TOML_TITLE = "Test Project"
 
     def __init__(self, root_dir: Path):
-        self.root_dir = root_dir
-        self.project_dir = root_dir / TestPollinProject.PROJECT_ABBR
+        self.project_dir = root_dir
 
         self._config = self._calc_config()
         self._create_file_structure()
@@ -37,6 +36,14 @@ class TestPollinProject:
         """
         return self.project_dir
 
+
+    def get_config(self) -> ApplicationConfiguration:
+        """
+        :return: The ApplicationConfiguration for the test project
+        """
+        if not self._config:
+            raise ValueError("Configuration has not been initialized.")
+        return self._config
 
     def _calc_config(self) -> ApplicationConfiguration:
         """
@@ -77,7 +84,7 @@ class TestPollinProject:
 
 
         test_config.cache = ApplicationCacheConfig(
-            cache_dir=Path(self.root_dir) / ".pollin_cache",
+            cache_dir=Path(self.project_dir) / ".pollin_cache",
             enabled=False
         )
 
