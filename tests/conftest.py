@@ -3,17 +3,15 @@ import pytest
 from unittest.mock import Mock, patch
 from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.init.ApplicationContext import ApplicationContext
-from pollin.init.config.AppEnv import AppEnv
-from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
 from pollin.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestPollinProject import TestPollinProject
 
 
 @pytest.fixture
-def temp_project(tmp_path):
+def test_project(tmp_path):
     """Create a basic test project structure."""
     test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
-    return test_project.project_dir
+    return test_project
 
 
 @pytest.fixture
@@ -27,31 +25,14 @@ def sample_object():
     )
 
 @pytest.fixture
-def test_application_context(temp_project, sample_object):
+def test_application_context(test_project, sample_object):
     """
     Sets up a test application context with test data.
 
     """
-
     # Setup mock app context
     app_context = ApplicationContext()
-
-    # TODO refactor
-    # Supply config to app context
-    config = ApplicationConfiguration(
-        project="test",
-        gams_host="http://localhost:8080",
-        project_files_root=temp_project,
-        mode="dev"
-    )
-    app_context.set_config(config)
-    # for config build abb config
-    app_context.get_config().ENV = AppEnv(
-        GAMS_API_ORIGIN="http://localhost:8080",
-        PROJECT_ABBR="test",
-        UI_VERSION="1.0.0",
-        UI_TITLE="Test Project"
-    ) # Initialize with default values
+    app_context.set_config(test_project.get_config())
 
     # mock a datastore with one object
     datastore = ApplicationDatastore()
