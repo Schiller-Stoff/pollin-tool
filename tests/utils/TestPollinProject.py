@@ -136,9 +136,29 @@ class TestPollinProject:
         )
 
         # Create basic static files
-        (self._config.project_src_static_dir / "css" / "styles.css").parent.mkdir(parents=True, exist_ok=True)
-        (self._config.project_src_static_dir / "css" / "styles.css").write_text("body { font-family: Arial; }")
-        (self._config.project_src_static_dir / "js" / "scripts.js").parent.mkdir(parents=True, exist_ok=True)
-        (self._config.project_src_static_dir / "js" / "scripts.js").write_text("console.log('Hello, World!');")
-        (self._config.project_src_static_dir / "images" / "logo.png").parent.mkdir(parents=True, exist_ok=True)
-        (self._config.project_src_static_dir / "images" / "logo.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+        self.get_test_css_path().parent.mkdir(parents=True, exist_ok=True)
+        self.get_test_css_path().write_text("body { font-family: Arial; }")
+        self.get_test_js_path().parent.mkdir(parents=True, exist_ok=True)
+        self.get_test_js_path().write_text("console.log('Hello, World!');")
+        self.get_test_logo_path().parent.mkdir(parents=True, exist_ok=True)
+        self.get_test_logo_path().write_bytes(b"\x89PNG\r\n\x1a\n")
+
+
+
+    def get_test_css_path(self):
+        """
+        :return: The path to the test CSS file
+        """
+        return self._config.project_src_static_dir / "css" / "styles.css"
+
+    def get_test_js_path(self):
+        """
+        :return: The path to the test JS file
+        """
+        return self._config.project_src_static_dir / "js" / "scripts.js"
+
+    def get_test_logo_path(self):
+        """
+        :return: The path to the test logo file
+        """
+        return self._config.project_src_static_dir / "images" / "logo.png"
