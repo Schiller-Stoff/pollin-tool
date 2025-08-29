@@ -6,55 +6,14 @@ from pollin.init.ApplicationContext import ApplicationContext
 from pollin.init.config.AppEnv import AppEnv
 from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
 from pollin.load.ApplicationDatastore import ApplicationDatastore
+from utils.TestPollinProject import TestPollinProject
 
 
 @pytest.fixture
 def temp_project(tmp_path):
     """Create a basic test project structure."""
-    project_dir = tmp_path / "test_project"
-
-    # Create directories
-    (project_dir / "src" / "templates").mkdir(parents=True)
-    (project_dir / "src" / "static").mkdir(parents=True)
-
-    # Create config file
-    config = """
-        [project]
-        projectAbbr = "test"
-        
-        [dev]
-        gamsApiOrigin = "http://localhost:18085"
-        
-        [build]
-        gamsApiOrigin = "http://localhost:18085"
-        
-        [ui]
-        version = "0.0.1"
-    """
-
-    (project_dir / "pollin.toml").write_text(config)
-
-    # Create basic templates
-    (project_dir / "src" / "templates" / "project.j2").write_text(
-        "<h1>{{ project.projectAbbr }}</h1>"
-    )
-    (project_dir / "src" / "templates" / "object.j2").write_text(
-        "<h1>{{ object.db.title }}</h1>"
-    )
-    (project_dir / "src" / "templates" / "object-list.j2").write_text(
-        "<h1>{{ objects[0].title }}</h1>"
-    )
-
-    # TODO hardcoded paths
-    # Create basic static files
-    (project_dir / "src" / "static" / "css" / "styles.css").parent.mkdir(parents=True, exist_ok=True)
-    (project_dir / "src" / "static" / "css" / "styles.css").write_text("body { font-family: Arial; }")
-    (project_dir / "src" / "static" / "js" / "scripts.js").parent.mkdir(parents=True, exist_ok=True)
-    (project_dir / "src" / "static" / "js" / "scripts.js").write_text("console.log('Hello, World!');")
-    (project_dir / "src" / "static" / "images" / "logo.png").parent.mkdir(parents=True, exist_ok=True)
-    (project_dir / "src" / "static" / "images" / "logo.png").write_bytes(b"\x89PNG\r\n\x1a\n")
-
-    return project_dir
+    test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
+    return test_project.project_dir
 
 
 @pytest.fixture
