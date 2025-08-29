@@ -58,7 +58,7 @@ class ApplicationConfiguration:
         return self._output_path is not None
 
     @property
-    def public_dir(self) -> PathLike:
+    def public_dir(self) -> pathlib.Path:
         """
         Points to the public folder e.g. "public"
         :return: PathLike
@@ -70,7 +70,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_files_root) / "public"
 
     @property
-    def project_src_dir(self) -> PathLike:
+    def project_src_dir(self) -> pathlib.Path:
         """
         'src'-folder
         The source directory of the project files needed for building the project frontends
@@ -80,7 +80,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_files_root) / "src"
 
     @property
-    def project_src_static_dir(self) -> PathLike:
+    def project_src_static_dir(self) -> pathlib.Path:
         """
         The directory where the static files are stored in the project files src structure
         :return: PathLike
@@ -88,7 +88,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_src_dir) / "static"
 
     @property
-    def project_src_view_template_dir(self) -> PathLike:
+    def project_src_view_template_dir(self) -> pathlib.Path:
         """
         The directory where the view templates are stored in the project files src structure
         :return: PathLike
@@ -96,7 +96,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_src_dir) / "templates"
 
     @property
-    def project_src_view_template_pages_dir(self) -> PathLike:
+    def project_src_view_template_pages_dir(self) -> pathlib.Path:
         """
         Points to the pages directory of the project view templates
         :return: PathLike
@@ -104,7 +104,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_src_view_template_dir) / "pages"
 
     @property
-    def project_public_dir(self) -> PathLike:
+    def project_public_dir(self) -> pathlib.Path:
         """
         Points to the public directory of the project e.g. public/memo
         :return: PathLike
@@ -112,7 +112,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.public_dir) / self.project
 
     @property
-    def project_public_static_dir(self) -> PathLike:
+    def project_public_static_dir(self) -> pathlib.Path:
         """
         Points to the public static directory of the project
         :return: PathLike
@@ -120,7 +120,7 @@ class ApplicationConfiguration:
         return pathlib.Path(self.project_public_dir) / "static"
 
     @property
-    def project_config_toml(self) -> PathLike:
+    def project_config_toml(self) -> pathlib.Path:
         """
         Points to the path of the project configuration file
         :return: PathLike
