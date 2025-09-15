@@ -50,10 +50,20 @@ def test_build_command_fails_when_invalid_command_is_given(mock_pollin_env):
     assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate invalid path"
 
 
-def test_build_command_fails_when_no_command_is_given():
+def test_build_command_fails_when_no_command_is_given(mock_pollin_env):
     """Test the build command with no project path."""
     runner = CliRunner()
     result = runner.invoke(cli, ['build'])
 
     assert result.exit_code != 0, "Build command should fail with no path"
     assert isinstance(result.exception, SystemExit), "Exception should be SystemExit"
+
+
+def test_build_command_fails_when_no_config_file_was_found_at_path(tmp_path):
+    """Test the build command when no config file is present."""
+    runner = CliRunner()
+    result = runner.invoke(cli, ['build', str(tmp_path)])
+
+    assert result.exit_code != 0, "Build command should fail with no config file"
+    assert isinstance(result.exception, FileNotFoundError), "Exception should be FileNotFoundError"
+    assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate missing config file"
