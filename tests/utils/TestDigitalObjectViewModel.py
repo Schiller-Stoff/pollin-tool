@@ -14,6 +14,9 @@ class TestDigitalObjectViewModel:
         """
         return DigitalObjectViewModel(
             dc=TestDigitalObject.DC,
-            db={"id": TestDigitalObject.ID, "title": TestDigitalObject.BASE_METADATA.get("title"), "description": TestDigitalObject.BASE_METADATA.get("description")},
+            db={
+                "id": TestDigitalObject.ID,
+                "baseMetadata": TestDigitalObject.BASE_METADATA
+            },
             props={}
         )
