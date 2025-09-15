@@ -11,7 +11,7 @@ from utils.TestProject import TestProject
 
 @pytest.fixture
 def test_project(tmp_path):
-    """Create a basic test project structure."""
+    """Creates a basic testing pollin project structure."""
     test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
     return test_project
 
@@ -53,3 +53,11 @@ def mock_api():
         # ... other mock responses
         MockPyrilo.return_value = mock
         yield mock
+
+@pytest.fixture
+def mock_pollin_env(mock_api, test_project):
+    """
+    Sets up a mock Pollin environment with local test project files (as temp files) and mocked GAMS-API.
+
+    """
+    return test_project

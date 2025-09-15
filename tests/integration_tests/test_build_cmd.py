@@ -3,38 +3,38 @@ import os
 from click.testing import CliRunner
 from pollin.cli import cli
 
-def test_existence_of_expected_html_output_files(test_project, mock_api):
+def test_existence_of_expected_html_output_files(mock_pollin_env):
     """Integration test for the build command."""
 
     runner = CliRunner()
-    with runner.isolated_filesystem(test_project.project_dir):
+    with runner.isolated_filesystem(mock_pollin_env.project_dir):
         # Run build command
-        result = runner.invoke(cli, ['build', str(test_project.project_dir)])
+        result = runner.invoke(cli, ['build', str(mock_pollin_env.project_dir)])
 
         assert result.exit_code == 0, f"Build command failed with exit code {result.exit_code} and output: {result.output}"
 
         # Check that the output directory and files are created
-        assert os.path.exists(test_project.get_config().project_public_dir), "Public directory not found"
-        assert os.path.exists(test_project.get_config().project_public_static_dir), "Project static directory not found"
-        assert os.path.exists(test_project.get_config().project_public_dir / 'index.html'), "Index file not found"
-        assert os.path.exists(test_project.get_config().project_public_dir / 'objects'), "Objects directory not found"
-        assert os.path.exists(test_project.get_config().project_public_dir / 'objects' / 'test.1' / 'index.html'), "Object file not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_dir), "Public directory not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_static_dir), "Project static directory not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_dir / 'index.html'), "Index file not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_dir / 'objects'), "Objects directory not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_dir / 'objects' / 'test.1' / 'index.html'), "Object file not found"
 
-def test_existence_of_expected_static_files(test_project, mock_api):
+def test_existence_of_expected_static_files(mock_pollin_env):
     """Integration test for the build command."""
 
     runner = CliRunner()
-    with runner.isolated_filesystem(test_project.project_dir):
+    with runner.isolated_filesystem(mock_pollin_env.project_dir):
         # Run build command
-        result = runner.invoke(cli, ['build', str(test_project.project_dir)])
+        result = runner.invoke(cli, ['build', str(mock_pollin_env.project_dir)])
 
         assert result.exit_code == 0, f"Build command failed with exit code {result.exit_code} and output: {result.output}"
 
         # Check that static files are copied
-        assert os.path.exists(test_project.get_config().project_public_dir), "Public directory not found"
-        assert os.path.exists(test_project.get_config().project_public_static_dir), "Project static directory not found"
-        assert os.path.exists(test_project.get_test_css_path()), "CSS file not found"
-        assert os.path.exists(test_project.get_test_js_path()), "JS file not found"
-        assert os.path.exists(test_project.get_test_logo_path()), "Logo file not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_dir), "Public directory not found"
+        assert os.path.exists(mock_pollin_env.get_config().project_public_static_dir), "Project static directory not found"
+        assert os.path.exists(mock_pollin_env.get_test_css_path()), "CSS file not found"
+        assert os.path.exists(mock_pollin_env.get_test_js_path()), "JS file not found"
+        assert os.path.exists(mock_pollin_env.get_test_logo_path()), "Logo file not found"
 
-        assert not os.path.exists(test_project.get_config().project_public_dir / 'objects' / 'test.123123' / 'index.html'), "Object file should not exist"
+        assert not os.path.exists(mock_pollin_env.get_config().project_public_dir / 'objects' / 'test.123123' / 'index.html'), "Object file should not exist"
