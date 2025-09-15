@@ -3,6 +3,7 @@ import os
 from click.testing import CliRunner
 from pollin.cli import cli
 from utils.TestDigitalObject import TestDigitalObject
+from utils.TestProject import TestProject
 
 
 def test_existence_of_expected_html_output_files(mock_pollin_env):
@@ -71,7 +72,20 @@ def test_build_command_fails_when_no_config_file_was_found_at_path(tmp_path):
     assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate missing config file"
 
 
-def test_templates_contain_expected_values(mock_pollin_env):
+def test_object_template_contains_expected_values(mock_pollin_env):
+
+    runner = CliRunner()
+    with runner.isolated_filesystem(mock_pollin_env.project_dir):
+        # Run build command
+        result = runner.invoke(cli, ['build', str(mock_pollin_env.project_dir)])
+
+        assert result.exit_code == 0, f"Build command failed with exit code {result.exit_code} and output: {result.output}"
+
+        object_html = (mock_pollin_env.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
+        assert TestDigitalObject.TITLE in object_html, "Object title not found in object HTML"
+
+
+def test_project_template_contains_expected_values(mock_pollin_env):
     """Integration test for the build command."""
 
     runner = CliRunner()
@@ -84,6 +98,3 @@ def test_templates_contain_expected_values(mock_pollin_env):
         # Check that the output files contain expected values
         index_html = (mock_pollin_env.get_config().project_public_dir / 'index.html').read_text()
         assert mock_pollin_env.PROJECT_ABBR in index_html, "Project abbreviation not found in index.html"
-
-        object_html = (mock_pollin_env.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
-        assert TestDigitalObject.TITLE in object_html, "Object title not found in object HTML"
