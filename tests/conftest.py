@@ -1,10 +1,10 @@
 
 import pytest
 from unittest.mock import Mock, patch
-from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDigitalObject import TestDigitalObject
+from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
 from utils.TestPollinProject import TestPollinProject
 from utils.TestProject import TestProject
 
@@ -15,18 +15,8 @@ def test_project(tmp_path):
     test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
     return test_project
 
-
 @pytest.fixture
-def sample_object():
-    """Create a sample digital object."""
-    return DigitalObjectViewModel(
-        dc=TestDigitalObject.DC,
-        db={"id": TestDigitalObject.ID, "title": TestDigitalObject.BASE_METADATA.get("title"), "description": TestDigitalObject.BASE_METADATA.get("description")},
-        props={}
-    )
-
-@pytest.fixture
-def test_application_context(test_project, sample_object):
+def test_application_context(test_project):
     """
     Sets up a test application context with test data.
 
@@ -37,7 +27,7 @@ def test_application_context(test_project, sample_object):
 
     # mock a datastore with one object
     datastore = ApplicationDatastore()
-    datastore.add_object(sample_object)
+    datastore.add_object(TestDigitalObjectViewModel.generate())
     datastore.set_project_data({"projectAbbr": "test"})
     app_context.set_app_data_store(datastore)
     return app_context

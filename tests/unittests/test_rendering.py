@@ -2,7 +2,7 @@ from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRende
 from utils.TestDigitalObject import TestDigitalObject
 
 
-def test_digital_object_rendering(test_project, sample_object, test_application_context):
+def test_digital_object_rendering(test_project, test_application_context):
     """Test that digital objects render to HTML files."""
 
     # Render objects
@@ -19,7 +19,7 @@ def test_digital_object_rendering(test_project, sample_object, test_application_
     assert TestDigitalObject.TITLE in object_html
 
 
-def test_template_error_handling(test_project, sample_object, test_application_context):
+def test_template_error_handling(test_project, test_application_context):
     """Test that template errors are handled gracefully."""
     # Create broken template
     (test_project.get_config().project_src_view_template_dir / "object.j2").write_text(

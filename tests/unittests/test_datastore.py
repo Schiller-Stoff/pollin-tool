@@ -1,23 +1,23 @@
 # tests/test_datastore.py - Data storage testing
 from pollin.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDigitalObject import TestDigitalObject
+from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
 
 
-def test_datastore_stores_objects(sample_object):
+def test_datastore_stores_objects():
     """Test that datastore can store and retrieve objects."""
     datastore = ApplicationDatastore()
-
-    datastore.add_object(sample_object)
+    datastore.add_object(TestDigitalObjectViewModel.generate())
     objects = datastore.get_objects()
 
     assert len(objects) == 1
     assert objects[0].db["id"] == TestDigitalObject.ID
 
 
-def test_datastore_finds_object_by_id(sample_object):
+def test_datastore_finds_object_by_id():
     """Test finding objects by ID."""
     datastore = ApplicationDatastore()
-    datastore.add_object(sample_object)
+    datastore.add_object(TestDigitalObjectViewModel.generate())
 
     found = datastore.find_object(TestDigitalObject.ID)
     assert found is not None
