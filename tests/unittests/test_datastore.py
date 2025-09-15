@@ -21,7 +21,7 @@ def test_datastore_finds_object_by_id():
 
     found = datastore.find_object(TestDigitalObject.ID)
     assert found is not None
-    assert found.db["title"] == TestDigitalObject.BASE_METADATA.get("title")
+    assert found.db.get("baseMetadata")["title"] == TestDigitalObject.BASE_METADATA.get("title")
 
     not_found = datastore.find_object("nonexistent")
     assert not_found is None
