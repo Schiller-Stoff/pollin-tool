@@ -38,3 +38,13 @@ def test_existence_of_expected_static_files(mock_pollin_env):
         assert os.path.exists(mock_pollin_env.get_test_logo_path()), "Logo file not found"
 
         assert not os.path.exists(mock_pollin_env.get_config().project_public_dir / 'objects' / 'test.123123' / 'index.html'), "Object file should not exist"
+
+
+def test_build_command_fails_when_invalid_command_is_given(mock_pollin_env):
+    """Test the build command with an invalid project path."""
+    runner = CliRunner()
+    result = runner.invoke(cli, ['build', '/invalid/path/to/project'])
+
+    assert result.exit_code != 0, "Build command should fail with invalid path"
+    assert isinstance(result.exception, FileNotFoundError), "Exception should be FileNotFoundError"
+    assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate invalid path"
