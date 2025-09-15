@@ -1,5 +1,6 @@
 # tests/test_datastore.py - Data storage testing
 from pollin.load.ApplicationDatastore import ApplicationDatastore
+from utils.TestDigitalObject import TestDigitalObject
 
 
 def test_datastore_stores_objects(sample_object):
@@ -10,7 +11,7 @@ def test_datastore_stores_objects(sample_object):
     objects = datastore.get_objects()
 
     assert len(objects) == 1
-    assert objects[0].db["id"] == "test.123"
+    assert objects[0].db["id"] == TestDigitalObject.ID
 
 
 def test_datastore_finds_object_by_id(sample_object):
@@ -18,9 +19,9 @@ def test_datastore_finds_object_by_id(sample_object):
     datastore = ApplicationDatastore()
     datastore.add_object(sample_object)
 
-    found = datastore.find_object("test.123")
+    found = datastore.find_object(TestDigitalObject.ID)
     assert found is not None
-    assert found.db["title"] == "Test Title"
+    assert found.db["title"] == TestDigitalObject.BASE_METADATA.get("title")
 
     not_found = datastore.find_object("nonexistent")
     assert not_found is None

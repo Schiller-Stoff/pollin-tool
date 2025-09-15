@@ -1,4 +1,6 @@
 from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
+from utils.TestDigitalObject import TestDigitalObject
+
 
 def test_digital_object_rendering(test_project, sample_object, test_application_context):
     """Test that digital objects render to HTML files."""
@@ -10,11 +12,11 @@ def test_digital_object_rendering(test_project, sample_object, test_application_
     # Check output files exist
     output_dir = test_project.get_config().project_public_dir
     assert (output_dir / "index.html").exists()
-    assert (output_dir / "objects" / "test.123" / "index.html").exists()
+    assert (output_dir / "objects" / TestDigitalObject.ID / "index.html").exists()
 
     # Check content
-    object_html = (output_dir / "objects" / "test.123" / "index.html").read_text()
-    assert "Test Title" in object_html
+    object_html = (output_dir / "objects" / TestDigitalObject.ID / "index.html").read_text()
+    assert TestDigitalObject.TITLE in object_html
 
 
 def test_template_error_handling(test_project, sample_object, test_application_context):
@@ -29,5 +31,5 @@ def test_template_error_handling(test_project, sample_object, test_application_c
     renderer.render()
 
     # Should create error HTML
-    error_html = (test_project.get_config().project_public_dir / "objects" / "test.123" / "index.html").read_text()
+    error_html = (test_project.get_config().project_public_dir / "objects" / TestDigitalObject.ID / "index.html").read_text()
     assert "POLLIN ERROR" in error_html
