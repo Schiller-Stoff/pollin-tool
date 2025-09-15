@@ -130,7 +130,7 @@ class TestPollinProject:
             "<h1>{{ project.projectAbbr }}</h1>"
         )
         (self._config.project_src_view_template_dir / "object.j2").write_text(
-            "<h1>{{ object.db.title }}</h1>"
+            "<h1>{{ object.db.baseMetadata.title }}</h1>"
         )
         (self._config.project_src_view_template_dir / "object-list.j2").write_text(
             "<h1>{{ objects[0].title }}</h1>"
