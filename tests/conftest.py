@@ -44,11 +44,9 @@ def test_application_context(test_project, sample_object):
 @pytest.fixture
 def mock_api():
     """Simple mock without actual HTTP server."""
-    # TODO same procedure for mocking the web server? (to test the dev command)
-    # TODO this needs to point to where pyrilo is initiated in the app
-    # e.g. pollin.init.AppInitializer.Pyrilo
     with patch('pollin.init.AppInitializer.Pyrilo') as MockPyrilo:
 
+        # TODO hardcoded data?
         test_object = {
             "id": "test.1",
             "objectType": "TEI",
