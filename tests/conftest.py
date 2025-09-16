@@ -7,6 +7,8 @@ from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
 from utils.TestPollinProject import TestPollinProject
 from utils.TestProject import TestProject
+from click.testing import CliRunner
+from pollin.cli import cli
 
 
 @pytest.fixture
@@ -60,4 +62,9 @@ def mock_pollin_env(mock_api, test_pollin_project):
     Sets up a mock Pollin environment with local test project files (as temp files) and mocked GAMS-API.
 
     """
-    return test_pollin_project
+    # ensure that click is run in isolated filesystem
+    runner = CliRunner()
+    with runner.isolated_filesystem(test_pollin_project.project_dir):
+        # Run build command
+        cli_result = runner.invoke(cli, ['build', str(test_pollin_project.project_dir)])
+        return cli_result, test_pollin_project
