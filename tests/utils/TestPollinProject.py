@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from pollin.init.config.AppEnv import AppEnv
 from pollin.init.config.ApplicationCacheConfig import ApplicationCacheConfig
@@ -99,8 +100,6 @@ class TestPollinProject:
         if not self._config:
             raise ValueError("Configuration must be set before creating file structure.")
 
-
-
         # Create directories
         self._config.project_src_view_template_dir.mkdir(parents=True)
         self._config.project_src_static_dir.mkdir(parents=True)
@@ -123,18 +122,24 @@ class TestPollinProject:
 
         self._config.project_config_toml.write_text(config)
 
-        # TODO hardcoded test values also needed outside?
+        templates_folder_path = Path(__file__).parent.parent / "resources" / "test" / "templates"
 
-        # Create basic templates
-        (self._config.project_src_view_template_dir / "project.j2").write_text(
-            "<h1>{{ project.projectAbbr }}</h1>"
-        )
-        (self._config.project_src_view_template_dir / "object.j2").write_text(
-            "<h1>{{ object.db.baseMetadata.title }}</h1>"
-        )
-        (self._config.project_src_view_template_dir / "object-list.j2").write_text(
-            "<h1>{{ objects[0].title }}</h1>"
-        )
+        # Load project.j2 template content from resources
+        project_template_path = templates_folder_path / "project.j2"
+        project_j2_content = project_template_path.read_text(encoding="utf-8")
+
+        # Load object.j2 template content from resources
+        object_template_path = templates_folder_path / "object.j2"
+        object_j2_content = object_template_path.read_text(encoding="utf-8")
+
+        # Load object-list.j2 template content from resources
+        object_list_template_path = templates_folder_path / "object-list.j2"
+        object_list_j2_content = object_list_template_path.read_text(encoding="utf-8")
+
+        # Create basic templates as temp files
+        (self._config.project_src_view_template_dir / "project.j2").write_text(project_j2_content)
+        (self._config.project_src_view_template_dir / "object.j2").write_text(object_j2_content)
+        (self._config.project_src_view_template_dir / "object-list.j2").write_text(object_list_j2_content)
 
         # Create basic static files
         self.get_test_css_path().parent.mkdir(parents=True, exist_ok=True)
@@ -143,8 +148,6 @@ class TestPollinProject:
         self.get_test_js_path().write_text("console.log('Hello, World!');")
         self.get_test_logo_path().parent.mkdir(parents=True, exist_ok=True)
         self.get_test_logo_path().write_bytes(b"\x89PNG\r\n\x1a\n")
-
-
 
     def get_test_css_path(self):
         """
