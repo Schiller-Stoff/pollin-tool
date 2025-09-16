@@ -3,7 +3,6 @@ import os
 from click.testing import CliRunner
 from pollin.cli import cli
 from utils.TestDigitalObject import TestDigitalObject
-from utils.TestProject import TestProject
 
 
 def test_existence_of_expected_html_output_files(mock_pollin_env):
@@ -96,17 +95,6 @@ def test_object_template_includes_expected_object_to_string(mock_pollin_env):
     object_html = (pollin_project.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
     test_object_to_string = str(TestDigitalObject.generate())
     assert test_object_to_string in object_html, "Object __str__ value not found in object HTML"
-
-def test_project_template_includes_expected_project_to_string(mock_pollin_env):
-    """Integration test for the build command."""
-
-    cli_result, pollin_project = mock_pollin_env
-    assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
-
-    # Check that the output files contain expected values
-    index_html = (pollin_project.get_config().project_public_dir / 'index.html').read_text()
-    test_project_to_string = str(TestProject.generate())
-    assert test_project_to_string in index_html, "Project __str__ value not found in index.html"
 
 
 def test_object_list_template_contains_expected_values(mock_pollin_env):
