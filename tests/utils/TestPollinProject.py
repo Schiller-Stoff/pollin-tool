@@ -26,6 +26,10 @@ class TestPollinProject:
     POLLIN_TOML_VERSION = "0.0.0"
     POLLIN_TOML_TITLE = "Test Project"
 
+    TEST_JS_FILE_CONTENT = "console.log('Hello, World!');"
+    TEST_CSS_FILE_CONTENT = "body { font-family: Arial; }"
+    TEST_LOGO_FILE_CONTENT = b"\x89PNG\r\n\x1a\n"
+
     def __init__(self, root_dir: Path):
         self.project_dir = root_dir
 
@@ -143,11 +147,11 @@ class TestPollinProject:
 
         # Create basic static files
         self.get_test_css_path().parent.mkdir(parents=True, exist_ok=True)
-        self.get_test_css_path().write_text("body { font-family: Arial; }")
+        self.get_test_css_path().write_text(TestPollinProject.TEST_CSS_FILE_CONTENT)
         self.get_test_js_path().parent.mkdir(parents=True, exist_ok=True)
-        self.get_test_js_path().write_text("console.log('Hello, World!');")
+        self.get_test_js_path().write_text(TestPollinProject.TEST_JS_FILE_CONTENT)
         self.get_test_logo_path().parent.mkdir(parents=True, exist_ok=True)
-        self.get_test_logo_path().write_bytes(b"\x89PNG\r\n\x1a\n")
+        self.get_test_logo_path().write_bytes(TestPollinProject.TEST_LOGO_FILE_CONTENT)
 
     def get_test_css_path(self):
         """
