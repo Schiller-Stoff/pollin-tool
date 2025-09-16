@@ -114,3 +114,18 @@ def test_object_template_includes_expected_object_to_string(mock_pollin_env):
         object_html = (mock_pollin_env.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
         test_object_to_string = str(TestDigitalObject.generate())
         assert test_object_to_string in object_html, "Object __str__ value not found in object HTML"
+
+def test_project_template_includes_expected_project_to_string(mock_pollin_env):
+    """Integration test for the build command."""
+
+    runner = CliRunner()
+    with runner.isolated_filesystem(mock_pollin_env.project_dir):
+        # Run build command
+        result = runner.invoke(cli, ['build', str(mock_pollin_env.project_dir)])
+
+        assert result.exit_code == 0, f"Build command failed with exit code {result.exit_code} and output: {result.output}"
+
+        # Check that the output files contain expected values
+        index_html = (mock_pollin_env.get_config().project_public_dir / 'index.html').read_text()
+        test_project_to_string = str(TestProject.generate())
+        assert test_project_to_string in index_html, "Project __str__ value not found in index.html"
