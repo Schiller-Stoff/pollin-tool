@@ -11,4 +11,5 @@ class AppEnv:
     PROJECT_ABBR: str
     UI_VERSION: str
     UI_TITLE: str
+    POLLIN_MODE: str
 
