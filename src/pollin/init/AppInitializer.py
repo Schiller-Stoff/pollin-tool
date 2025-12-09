@@ -49,7 +49,8 @@ class AppInitializer:
             PROJECT_ABBR=app_config.project,
             UI_VERSION=external_config_parsed.get_ui_version(),
             UI_TITLE=external_config_parsed.get_ui_title(),
-            POLLIN_MODE=mode
+            POLLIN_MODE=mode,
+            IIIF_IMAGE_SERVER_ORIGIN=external_config_parsed.get_iiif_image_server_origin()
         )
         self.app_context.set_config(app_config)
         self.app_context.get_config().project_external_config = external_config_parsed

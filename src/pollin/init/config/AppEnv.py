@@ -12,4 +12,5 @@ class AppEnv:
     UI_VERSION: str
     UI_TITLE: str
     POLLIN_MODE: str
+    IIIF_IMAGE_SERVER_ORIGIN: str
 

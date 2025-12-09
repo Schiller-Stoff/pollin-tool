@@ -17,6 +17,7 @@ class ApplicationExternalConfig:
 
     MODE_LOAD_PROPERTY = "load"
     MODE_GAMS_API_ORIGIN_PROPERTY = "gamsApiOrigin"
+    MODE_IIIF_IMAGE_SERVER_PROPERTY = "iiifImageServerOrigin"
     MODE_OUTPUT_PATH_PROPERTY = "outputPath"
 
     MODE_LOAD_OBJECT_COUNT_RESTRICTION = "objectCountRestriction"
@@ -97,6 +98,22 @@ class ApplicationExternalConfig:
 
         if configured_origin.endswith("/"):
             raise ValueError(f"Expected {self.mode}.{self.MODE_GAMS_API_ORIGIN_PROPERTY} to not have a trailing slash, but got '{configured_origin}'")
+
+        return configured_origin
+
+    def get_iiif_image_server_origin(self) -> str:
+        """
+        Returns the configured IIIF image server url
+        """
+        configured_origin = self.get(self.mode).get(self.MODE_IIIF_IMAGE_SERVER_PROPERTY)
+        if configured_origin is None:
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_IIIF_IMAGE_SERVER_PROPERTY} in config file")
+
+        if not configured_origin.startswith("http"):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_IIIF_IMAGE_SERVER_PROPERTY} to be a valid URL starting with 'http', but got '{configured_origin}'")
+
+        if configured_origin.endswith("/"):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_IIIF_IMAGE_SERVER_PROPERTY} to not have a trailing slash, but got '{configured_origin}'")
 
         return configured_origin
 
