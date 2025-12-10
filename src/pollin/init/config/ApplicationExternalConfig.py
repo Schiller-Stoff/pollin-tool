@@ -9,11 +9,11 @@ class ApplicationExternalConfig:
     """
 
     PROJECT_PROPERTY = "project"
-    PROJECT_ABBR_PROPERTY = "projectAbbr"
+    PROJECT_ABBR_PROPERTY = "PROJECT_ABBR"
 
     UI_PROPERTY = "ui"
-    UI_VERSION_PROPERTY = "version"
-    UI_TITLE_PROPERTY = "title"
+    UI_VERSION_PROPERTY = "VERSION"
+    UI_TITLE_PROPERTY = "TITLE"
 
     MODE_LOAD_PROPERTY = "load"
     MODE_GAMS_API_ORIGIN_PROPERTY = "GAMS_API_ORIGIN"
