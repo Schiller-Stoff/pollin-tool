@@ -1,12 +1,10 @@
-from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
-
 
 class ApplicationDatastore:
     """
     ApplicationDatastore class is responsible for storing and retrieving application data.
     """
 
-    digital_objects: list[DigitalObjectViewModel] = []
+    digital_objects: list[dict[str,str]] = []
     """
     List of digital objects
     """
@@ -17,7 +15,7 @@ class ApplicationDatastore:
     Project metadata
     """
 
-    def add_object(self, digital_object: DigitalObjectViewModel):
+    def add_object(self, digital_object: dict[str,str]) -> None:
         """
         Adds a digital object to the datastore
         :param digital_object: DigitalObject
@@ -25,25 +23,25 @@ class ApplicationDatastore:
         """
         self.digital_objects.append(digital_object)
 
-    def get_objects(self) -> list[DigitalObjectViewModel]:
+    def get_objects(self) -> list[dict[str,str]]:
         """
         Returns all digital objects
         :return:
         """
         return self.digital_objects
 
-    def find_object(self, id: str) -> DigitalObjectViewModel | None:
+    def find_object(self, id: str) -> dict[str, str] | None:
         """
         Returns given digital object instance from the internal array.
         None if nothing has been found.
         """
         for digital_object in self.digital_objects:
-            if digital_object.db["id"] == id:
+            if digital_object["id"] == id:
                 return digital_object
 
         return None
 
-    def set_objects(self, digital_objects: list[DigitalObjectViewModel]):
+    def set_objects(self, digital_objects: list[dict[str,str]]) -> None:
         """
         Sets the digital objects
         :param digital_objects: list
@@ -51,7 +49,7 @@ class ApplicationDatastore:
         """
         self.digital_objects = digital_objects
 
-    def remove_object(self, digital_object: DigitalObjectViewModel):
+    def remove_object(self, digital_object: dict[str,str]):
         """
         Removes a digital object from the datastore
         :param digital_object: DigitalObject

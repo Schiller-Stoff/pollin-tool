@@ -11,7 +11,7 @@ def test_datastore_stores_objects():
     objects = datastore.get_objects()
 
     assert len(objects) == 1
-    assert objects[0].db["id"] == TestDigitalObject.ID
+    assert objects[0]["id"] == TestDigitalObject.ID
 
 
 def test_datastore_finds_object_by_id():
@@ -21,7 +21,7 @@ def test_datastore_finds_object_by_id():
 
     found = datastore.find_object(TestDigitalObject.ID)
     assert found is not None
-    assert found.db.get("baseMetadata")["title"] == TestDigitalObject.BASE_METADATA.get("title")
+    assert found.get("baseMetadata")["title"] == TestDigitalObject.BASE_METADATA.get("title")
 
     not_found = datastore.find_object("nonexistent")
     assert not_found is None

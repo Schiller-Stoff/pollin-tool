@@ -4,7 +4,6 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 import hashlib
 from email.utils import formatdate, parsedate_to_datetime
-from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
@@ -111,7 +110,7 @@ class DataCacheManager:
             return False
 
 
-    def get_cached_objects(self, project: str) -> Optional[List[DigitalObjectViewModel]]:
+    def get_cached_objects(self, project: str) -> Optional[List[dict[str,str]]]:
         """Retrieve cached digital objects if valid"""
         if not self.cache_config.enabled:
             return None
@@ -135,11 +134,7 @@ class DataCacheManager:
             # Convert back to DigitalObjectViewModel instances
             objects = []
             for obj_data in cached_data:
-                digital_object = DigitalObjectViewModel(
-                    dc=obj_data['dc'],
-                    db=obj_data['db'],
-                    props=obj_data['props']
-                )
+                digital_object = obj_data
                 objects.append(digital_object)
 
             logging.info(f"Loaded {len(objects)} objects from cache for project {project}")
@@ -149,7 +144,7 @@ class DataCacheManager:
             logging.error(f"Failed to load cached objects: {e}")
             return None
 
-    def cache_objects(self, project: str, objects: List[DigitalObjectViewModel]):
+    def cache_objects(self, project: str, objects: List[dict[str,str]]):
         """Cache digital objects"""
         if not self.cache_config.enabled:
             return
@@ -160,7 +155,7 @@ class DataCacheManager:
 
         try:
             # Convert objects to serializable format
-            serializable_objects = [obj.to_dict() for obj in objects]
+            serializable_objects = [obj for obj in objects]
 
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(serializable_objects, f, indent=2, ensure_ascii=False)

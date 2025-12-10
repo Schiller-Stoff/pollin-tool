@@ -53,14 +53,14 @@ class DigitalObjectViewRenderer:
         project_abbr = self.app_context.get_config().project
 
         for digital_object in data:
-            object_id = digital_object.db["id"]
+            object_id = digital_object["id"]
             object_html = ""
             object_template_name = 'object.j2'
             try:
                 object_template = self.environment.get_template(object_template_name)
                 object_html = object_template.render(object=digital_object, project=project_metadata, env=self.app_context.get_config().ENV)
             except Exception as e:
-                msg = f"Failed to render template {object_template_name} for object {digital_object.db['id']}. Original error: {e}"
+                msg = f"Failed to render template {object_template_name} for object {digital_object['id']}. Original error: {e}"
                 logging.error(msg)
                 object_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
             finally:
@@ -119,7 +119,7 @@ class DigitalObjectViewRenderer:
         :return:
         """
         if self.custom_template is None:
-            msg = f"Cannot find current custom template for object: {str(digital_object.db)} for the relative path: {relative_path}"
+            msg = f"Cannot find current custom template for object: {str(digital_object)} for the relative path: {relative_path}"
             logging.error(msg)
             raise ValueError(msg)
 
@@ -138,4 +138,4 @@ class DigitalObjectViewRenderer:
         # store file
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(content)
-            logging.info(f"Successfully wrote object {digital_object.db['id']} to file at {output_file}")
+            logging.info(f"Successfully wrote object {digital_object['id']} to file at {output_file}")

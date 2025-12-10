@@ -1,4 +1,3 @@
-from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
 from utils.TestDigitalObject import TestDigitalObject
 
 
@@ -12,9 +11,7 @@ class TestDigitalObjectViewModel:
         """
         Generate a test DigitalObjectViewModel instance.
         """
-        return DigitalObjectViewModel(
-            db={
-                "id": TestDigitalObject.ID,
-                "baseMetadata": TestDigitalObject.BASE_METADATA
-            }
-        )
+        return {
+            "id": TestDigitalObject.ID,
+            "baseMetadata": TestDigitalObject.BASE_METADATA
+        }

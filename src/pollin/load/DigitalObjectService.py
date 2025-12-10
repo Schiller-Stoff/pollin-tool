@@ -1,4 +1,3 @@
-from pollin.common.DigitalObjectViewModel import DigitalObjectViewModel
 from pollin.init.ApplicationContext import ApplicationContext
 from typing import List
 
@@ -40,8 +39,7 @@ class DigitalObjectService:
 
         for project_object_id in project_object_ids:
             object_id = project_object_id
-            object_metadata = pyrilo.get_object(project, object_id)
-            digital_object = DigitalObjectViewModel(object_metadata)
+            digital_object = pyrilo.get_object(project, object_id)
             digital_objects.append(digital_object)
 
         return digital_objects
