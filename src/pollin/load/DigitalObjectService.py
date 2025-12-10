@@ -41,7 +41,7 @@ class DigitalObjectService:
         for project_object_id in project_object_ids:
             object_id = project_object_id
             object_metadata = pyrilo.get_object(project, object_id)
-            digital_object = DigitalObjectViewModel(object_metadata, {})
+            digital_object = DigitalObjectViewModel(object_metadata)
             digital_objects.append(digital_object)
 
         return digital_objects

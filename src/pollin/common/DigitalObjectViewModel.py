@@ -8,18 +8,12 @@ class DigitalObjectViewModel:
     Object metadata from the database
     """
 
-    props: dict[str, any]
-    """
-    Search json properties of the object
-    """
-
     # add a to string method
     def __str__(self):
-        return f"DigitalObjectViewModel(db={self.db}, props={self.props})"
+        return f"DigitalObjectViewModel(db={self.db})"
 
-    def __init__(self, db: dict[str, any], props: dict[str, any]):
+    def __init__(self, db: dict[str, any]):
         self.db = db
-        self.props = props
 
     def to_dict(self):
         """
@@ -27,6 +21,5 @@ class DigitalObjectViewModel:
         :return: dictionary representation of the object
         """
         return {
-            "db": self.db,
-            "props": self.props
+            "db": self.db
         }

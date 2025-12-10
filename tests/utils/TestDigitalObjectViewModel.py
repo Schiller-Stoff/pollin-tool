@@ -16,6 +16,5 @@ class TestDigitalObjectViewModel:
             db={
                 "id": TestDigitalObject.ID,
                 "baseMetadata": TestDigitalObject.BASE_METADATA
-            },
-            props={}
+            }
         )
