@@ -40,6 +40,10 @@ class DigitalObjectService:
         for project_object_id in project_object_ids:
             object_id = project_object_id
             digital_object = pyrilo.get_object(project, object_id)
+            # also fetch datastreams info
+            digital_object_datastreams = pyrilo.get_datastreams(project, object_id)
+            digital_object["datastreams"] = digital_object_datastreams
+
             digital_objects.append(digital_object)
 
         return digital_objects

@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import Mock, patch
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.load.ApplicationDatastore import ApplicationDatastore
+from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
 from utils.TestPollinProject import TestPollinProject
@@ -51,6 +52,8 @@ def mock_api():
         mock.get_object.return_value = test_object
 
         mock.get_datastream_content.return_value = bytes("Sample datastream content", 'utf-8')
+
+        mock.get_datastreams.return_value = TestDatastream.generate_list()
 
         # ... other mock responses
         MockPyrilo.return_value = mock

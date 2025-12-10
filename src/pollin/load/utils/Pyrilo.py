@@ -79,6 +79,22 @@ class Pyrilo:
         except HTTPError as e:
             raise ConnectionError(f"Error while requesting digital object with id {object_id} for project {project_abbr} from url {url}. Error: {e}")
 
+
+    def get_datastreams(self, project_abbr: str, object_id: str) -> dict[str, str]:
+        """
+        Requests a list of all datastreams for given digital object
+        """
+        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects/{object_id}/datastreams?pageSize=1000"
+        logging.info(f"Requesting datastreams for object with id {object_id} for project {project_abbr} from {url}")
+        try:
+            with urllib.request.urlopen(url) as response:
+                data = response.read()
+                logging.debug(data)
+                parsed = json.loads(data.decode('utf-8'))
+                return parsed["results"]
+        except HTTPError as e:
+            raise ConnectionError(f"Error while requesting datastreams from digital object with id {object_id} for project {project_abbr} from url {url}. Error: {e}")
+
     def get_datastream_content(self, project_abbr: str, object_id: str, ds_id: str) -> bytes:
         """
         Retrieves a datastream for given project, object id and datastream id.

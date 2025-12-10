@@ -1,3 +1,4 @@
+from utils.TestDatastream import TestDatastream
 from utils.TestProject import TestProject
 
 
@@ -30,5 +31,7 @@ class TestDigitalObject:
             "id": TestDigitalObject.ID,
             "objectType": TestDigitalObject.OBJECT_TYPE,
             "baseMetadata": TestDigitalObject.BASE_METADATA,
-            "dc": TestDigitalObject.DC
+            "dc": TestDigitalObject.DC,
+            # is being added by pyrilo via extra request
+            "datastreams": TestDatastream.generate_list()
         }
