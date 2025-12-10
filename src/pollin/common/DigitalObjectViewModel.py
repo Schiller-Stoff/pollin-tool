@@ -1,13 +1,6 @@
-from typing import List
-
 class DigitalObjectViewModel:
     """
     Model class for the views rendered by jinja2 templates
-    """
-
-    dc: dict[str, List[str]]
-    """
-    Dublin Core metadata of the object
     """
 
     db: dict[str, str]
@@ -22,10 +15,9 @@ class DigitalObjectViewModel:
 
     # add a to string method
     def __str__(self):
-        return f"DigitalObjectViewModel(dc={self.dc}, db={self.db}, props={self.props})"
+        return f"DigitalObjectViewModel(db={self.db}, props={self.props})"
 
-    def __init__(self, dc: dict[str, any], db: dict[str, any], props: dict[str, any]):
-        self.dc = dc
+    def __init__(self, db: dict[str, any], props: dict[str, any]):
         self.db = db
         self.props = props
 
@@ -35,7 +27,6 @@ class DigitalObjectViewModel:
         :return: dictionary representation of the object
         """
         return {
-            "dc": self.dc,
             "db": self.db,
             "props": self.props
         }

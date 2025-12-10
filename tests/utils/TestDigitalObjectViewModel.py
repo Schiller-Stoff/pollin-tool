@@ -13,7 +13,6 @@ class TestDigitalObjectViewModel:
         Generate a test DigitalObjectViewModel instance.
         """
         return DigitalObjectViewModel(
-            dc=TestDigitalObject.DC,
             db={
                 "id": TestDigitalObject.ID,
                 "baseMetadata": TestDigitalObject.BASE_METADATA
