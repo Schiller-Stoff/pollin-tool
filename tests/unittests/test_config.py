@@ -10,8 +10,9 @@ def test_config_loads_from_file(test_pollin_project):
     )
 
     assert config_dict is not None
-    assert config_dict["project"]["projectAbbr"] == test_pollin_project.PROJECT_ABBR
-    assert config_dict["dev"]["gamsApiOrigin"] == test_pollin_project.GAMS_API_ORIGIN
+    assert config_dict["project"]["PROJECT_ABBR"] == test_pollin_project.PROJECT_ABBR
+    assert config_dict["dev"]["GAMS_API_ORIGIN"] == test_pollin_project.GAMS_API_ORIGIN
+    assert config_dict["dev"]["IIIF_IMAGE_SERVER_ORIGIN"] == test_pollin_project.IIIF_IMAGE_SERVER_ORIGIN
 
 
 def test_config_validates_required_fields():

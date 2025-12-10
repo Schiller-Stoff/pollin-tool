@@ -22,6 +22,7 @@ class TestPollinProject:
     PROJECT_ABBR = TestProject.PROJECT_ABBR
 
     GAMS_API_ORIGIN = "http://localhost:18085"
+    IIIF_IMAGE_SERVER_ORIGIN = "http://localhost:18080"
 
     POLLIN_TOML_VERSION = "0.0.0"
     POLLIN_TOML_TITLE = "Test Project"
@@ -69,7 +70,9 @@ class TestPollinProject:
             GAMS_API_ORIGIN=test_config.gams_host,
             PROJECT_ABBR=test_config.project,
             UI_VERSION=TestPollinProject.POLLIN_TOML_VERSION,
-            UI_TITLE=TestPollinProject.POLLIN_TOML_TITLE
+            UI_TITLE=TestPollinProject.POLLIN_TOML_TITLE,
+            POLLIN_MODE="build",
+            IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN
         )
 
         test_config.project_external_config = {
@@ -111,17 +114,19 @@ class TestPollinProject:
         # Create config file
         config = f"""
             [project]
-            projectAbbr = "{self.PROJECT_ABBR}"
+            PROJECT_ABBR = "{self.PROJECT_ABBR}"
             
             [dev]
-            gamsApiOrigin = "{TestPollinProject.GAMS_API_ORIGIN}"
+            GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
+            IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [build]
-            gamsApiOrigin = "{TestPollinProject.GAMS_API_ORIGIN}"
+            GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
+            IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [ui]
-            version = "{TestPollinProject.POLLIN_TOML_VERSION}"
-            title = "{TestPollinProject.POLLIN_TOML_TITLE}"
+            VERSION = "{TestPollinProject.POLLIN_TOML_VERSION}"
+            TITLE = "{TestPollinProject.POLLIN_TOML_TITLE}"
         """
 
         self._config.project_config_toml.write_text(config)
