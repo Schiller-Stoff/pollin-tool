@@ -16,12 +16,12 @@ class ApplicationExternalConfig:
     UI_TITLE_PROPERTY = "title"
 
     MODE_LOAD_PROPERTY = "load"
-    MODE_GAMS_API_ORIGIN_PROPERTY = "gamsApiOrigin"
-    MODE_IIIF_IMAGE_SERVER_PROPERTY = "iiifImageServerOrigin"
-    MODE_OUTPUT_PATH_PROPERTY = "outputPath"
+    MODE_GAMS_API_ORIGIN_PROPERTY = "GAMS_API_ORIGIN"
+    MODE_IIIF_IMAGE_SERVER_PROPERTY = "IIIF_IMAGE_SERVER_ORIGIN"
+    MODE_OUTPUT_PATH_PROPERTY = "OUTPUT_PATH"
 
-    MODE_LOAD_OBJECT_COUNT_RESTRICTION = "objectCountRestriction"
-    MODE_LOAD_OBJECTS_REQUIRED = "objectsRequired"
+    MODE_LOAD_OBJECT_COUNT_RESTRICTION = "OBJECT_COUNT_RESTRICTION"
+    MODE_LOAD_OBJECTS_REQUIRED = "OBJECTS_REQUIRED"
 
 
     config: Dict[str, Any]
@@ -52,18 +52,17 @@ class ApplicationExternalConfig:
         """
         sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
-            logging.debug(f"No {self.mode}.load property found in config file. No object count restriction defined.")
+            logging.debug(f"No {self.mode}.{self.MODE_LOAD_PROPERTY} property found in config file. No object count restriction defined.")
             return None
 
-        # must be parseble as integer
-        if "objectCountRestriction" not in sub_dict:
-            logging.debug(f"No {self.mode}.load.objectCountRestriction property found in config file. No object count restriction defined.")
+        if self.MODE_LOAD_OBJECT_COUNT_RESTRICTION not in sub_dict:
+            logging.debug(f"No {self.mode}.{self.MODE_LOAD_PROPERTY}.{self.MODE_LOAD_OBJECT_COUNT_RESTRICTION} property found in config file. No object count restriction defined.")
             return None
 
-        extracted_value = sub_dict.get("objectCountRestriction")
+        extracted_value = sub_dict.get(self.MODE_LOAD_OBJECT_COUNT_RESTRICTION)
 
         if not isinstance(extracted_value, int):
-            raise ValueError(f"Expected {self.mode}.{self.MODE_LOAD_PROPERTY}.objectCountRestriction to be an integer, but got '{sub_dict.get('objectCountRestriction')}'")
+            raise ValueError(f"Expected {self.mode}.{self.MODE_LOAD_PROPERTY}.{self.MODE_LOAD_OBJECT_COUNT_RESTRICTION} to be an integer, but got '{sub_dict.get('objectCountRestriction')}'")
 
         return int(extracted_value)
 
@@ -75,14 +74,14 @@ class ApplicationExternalConfig:
         """
         sub_dict: Dict[Any] = self.get(self.mode).get(self.MODE_LOAD_PROPERTY)
         if sub_dict is None:
-            logging.debug(f"No {self.mode}.load property found in config file. No required objects defined.")
+            logging.debug(f"No {self.mode}.{self.MODE_LOAD_PROPERTY} property found in config file. No required objects defined.")
             return []
 
-        if "objectsRequired" not in sub_dict:
-            logging.debug(f"No {self.mode}.load.objectsRequired property found in config file. No required objects defined.")
+        if self.MODE_LOAD_OBJECTS_REQUIRED not in sub_dict:
+            logging.debug(f"No {self.mode}.{self.MODE_LOAD_PROPERTY}.{self.MODE_LOAD_OBJECTS_REQUIRED} property found in config file. No required objects defined.")
             return []
 
-        return sub_dict.get("objectsRequired")
+        return sub_dict.get(self.MODE_LOAD_OBJECTS_REQUIRED)
 
     def get_gams_api_origin(self) -> str:
         """
