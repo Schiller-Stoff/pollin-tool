@@ -3,7 +3,7 @@
 
 class TestDatastream:
     """
-
+    Contains test data for a datastream used in testing
     """
 
     DSID = "TEI_SOURCE"
