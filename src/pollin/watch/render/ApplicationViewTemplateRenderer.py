@@ -43,6 +43,7 @@ class ApplicationViewTemplateRenderer:
         """
         Renders the views for application based data
         :param project_data: metadata of the GAMS project
+        # TODO is this method outdated ? what does it actually do???
         """
         # accessing information from the application context
         output_dir = self.app_context.get_config().project_public_dir

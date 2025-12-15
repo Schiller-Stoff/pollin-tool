@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -13,4 +13,8 @@ class AppEnv:
     UI_TITLE: str
     POLLIN_MODE: str
     IIIF_IMAGE_SERVER_ORIGIN: str
+
+    def to_dict(self):
+        """Convert to dictionary for JSON serialization"""
+        return asdict(self)
 

@@ -58,7 +58,16 @@ class DigitalObjectViewRenderer:
             object_template_name = 'object.j2'
             try:
                 object_template = self.environment.get_template(object_template_name)
-                object_html = object_template.render(object=digital_object, project=project_metadata, env=self.app_context.get_config().ENV)
+                render_context = {
+                    "context": {
+                        'object': digital_object,
+                        'project': project_metadata,
+                        'env': self.app_context.get_config().ENV.to_dict(),
+                        '_template_name': object_template_name.replace(".j2", ""),
+                        '_template_file_name': object_template_name,
+                    }
+                }
+                object_html = object_template.render(render_context)
             except Exception as e:
                 msg = f"Failed to render template {object_template_name} for object {digital_object['id']}. Original error: {e}"
                 logging.error(msg)
@@ -72,12 +81,19 @@ class DigitalObjectViewRenderer:
                     logging.info(f"Successfully wrote object {object_id} to file")
 
         # rendering of project home page
-
         project_html = ""
         project_template_name = "project.j2"
         try:
             project_template = self.environment.get_template(project_template_name)
-            project_html = project_template.render(project=project_metadata, env=self.app_context.get_config().ENV)
+            render_context = {
+                "context": {
+                    'project': project_metadata,
+                    'env': self.app_context.get_config().ENV.to_dict(),
+                    '_template_name': project_template_name.replace(".j2", ""),
+                    '_template_file_name': project_template_name
+                }
+            }
+            project_html = project_template.render(render_context)
         except Exception as e:
             msg = f"Failed to render template {project_template_name} for project {project_abbr}. Original error: {e}"
             logging.error(msg)
@@ -93,7 +109,16 @@ class DigitalObjectViewRenderer:
         object_list_template_name = 'object-list.j2'
         try:
             object_list_template = self.environment.get_template(object_list_template_name)
-            object_list_html = object_list_template.render(objects=data, project=project_metadata, env=self.app_context.get_config().ENV)
+            render_context = {
+                "context": {
+                    'objects': data,
+                    'project': project_metadata,
+                    'env': self.app_context.get_config().ENV.to_dict(),
+                    '_template_name': object_list_template_name.replace(".j2", ""),
+                    '_template_file_name': object_list_template_name
+                }
+            }
+            object_list_html = object_list_template.render(render_context)
         except Exception as e:
             msg = f"Failed to render template {object_list_template_name} for object-list for project {project_abbr}. Original error: {e}"
             logging.error(msg)
