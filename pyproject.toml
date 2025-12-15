@@ -24,5 +24,10 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["src/pollin"]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]
+
 [project.scripts]
 pollin = "pollin.cli:cli"

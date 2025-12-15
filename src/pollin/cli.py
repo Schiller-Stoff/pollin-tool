@@ -2,12 +2,12 @@ import logging
 
 import click
 import multiprocessing
-from pollin.System.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
-from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.load.ApplicationDataLoader import ApplicationDataLoader
-from pollin.System.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
-from pollin.System.watch.ApplicationWebServer import ApplicationWebServer
-from pollin.System.init.AppInitializer import AppInitializer
+from pollin.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
+from pollin.init.ApplicationContext import ApplicationContext
+from pollin.load.ApplicationDataLoader import ApplicationDataLoader
+from pollin.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
+from pollin.watch.ApplicationWebServer import ApplicationWebServer
+from pollin.init.AppInitializer import AppInitializer
 
 # global application context
 app_context = ApplicationContext()
