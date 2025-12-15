@@ -43,7 +43,6 @@ class ApplicationViewTemplateRenderer:
         """
         Renders the views for application based data
         :param project_data: metadata of the GAMS project
-        # TODO is this method outdated ? what does it actually do???
         """
         # accessing information from the application context
         output_dir = self.app_context.get_config().project_public_dir
@@ -72,14 +71,30 @@ class ApplicationViewTemplateRenderer:
                     expected_object_id = template_filename
                     object_to_bind = self.app_context.get_app_data_store().find_object(expected_object_id)
                     if object_to_bind:
-                        page_html = template.render(project=project_data, object=object_to_bind, env=self.app_context.get_config().ENV)
+                        render_context = {
+                            "context": {
+                                'project': project_data,
+                                'env': self.app_context.get_config().ENV.to_dict(),
+                                '_template_name': template_filename.replace(".j2", ""),
+                                '_template_file_name': template_filename
+                            }
+                        }
+                        page_html = template.render(render_context)
                     else:
                         msg = f"Cannot find object {expected_object_id} to bind to jinja template with name {template_filename}"
                         logging.error(msg)
                         raise LookupError(msg)
                 else:
                     # just render page if not following template name convention.
-                    page_html = template.render(project=project_data, env=self.app_context.get_config().ENV)
+                    render_context = {
+                        "context": {
+                            'project': project_data,
+                            'env': self.app_context.get_config().ENV.to_dict(),
+                            '_template_name': template_path.replace(".j2", ""),
+                            '_template_file_name': template_path
+                        }
+                    }
+                    page_html = template.render(render_context)
 
             except Exception as e:
                 msg = f"Failed to render page html for page template {page.name} for project {project_abbr}. At template_path: {template_path} Original error: {e}"
