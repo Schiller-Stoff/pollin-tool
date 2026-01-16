@@ -21,6 +21,34 @@ def cli(log: str):
     """
     logging.basicConfig( encoding='utf-8', level=logging.getLevelName(log))
 
+@cli.command(name="stage", help="Builds output files once.")
+@click.argument("directory", required=True)
+def stage(directory: str):
+    """
+    Builds the static site generator output files to the specified location with staging config.
+    :param directory: Path of the view template directory
+    :param output_path: Path to where the output files should be placed. By default, the output files are placed in the project directory.
+    """
+
+    # setting up the application context
+    (AppInitializer(app_context)
+     .configure(
+        directory=directory,
+        mode="stage"
+    )
+     .init_context_beans()
+     .setup()
+     )
+
+    # encapsulates loading of project data and digital objects
+    (ApplicationDataLoader(app_context)
+        .load())
+
+    # render all views (and handle related files etc.)
+    (ApplicationViewFileEventController(app_context)
+        .render_views())
+
+
 @cli.command(name="build", help="Builds output files once.")
 @click.argument("directory", required=True)
 def build(directory: str):
@@ -89,3 +117,4 @@ def dev(directory: str, port: int):
 
 cli.add_command(dev)
 cli.add_command(build)
+cli.add_command(stage)

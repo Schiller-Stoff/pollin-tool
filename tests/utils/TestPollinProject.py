@@ -120,6 +120,10 @@ class TestPollinProject:
             GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
             IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
+            [stage]
+            GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
+            IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
+            
             [build]
             GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
             IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"

@@ -30,6 +30,20 @@ pollin dev "C:\path\to\project"
 # for production use
 pollin build "C:\path\to\project"
 
- 
+```
+
+## Staging
+
+```sh
+pollin stage "/path/to/project"
+
+```
+
+
+## Production
+
+```sh
+# use build command to generate the production files
+pollin build "/path/to/project"
 
 ```
