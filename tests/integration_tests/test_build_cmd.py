@@ -121,3 +121,31 @@ def test_object_list_templates_includes_expected_to_string(mock_pollin_env):
     object_list_html = (pollin_project.get_config().project_public_dir / 'objects' / 'index.html').read_text()
     test_object_to_string = str(TestDigitalObject.generate())
     assert test_object_to_string in object_list_html, "Object __str__ value not found in object list HTML"
+
+
+def test_build_creates_pub_directory_structure(mock_pollin_env):
+    """
+    Test that the build command creates the fixed 'pub' directory structure.
+    Target: /public/pub/{project_abbr}/index.html
+    """
+    cli_result, pollin_project = mock_pollin_env
+
+    assert cli_result.exit_code == 0
+
+    # 1. Define the expected paths
+    # We expect: .../public/pub
+    expected_public_dir = pollin_project.get_project_dir() / "public" / "pub"
+
+    # We expect: .../public/pub/test (where 'test' is the project abbr)
+    expected_project_dir = expected_public_dir / pollin_project.PROJECT_ABBR
+
+    # 2. Assertions
+    assert expected_public_dir.exists(), "The fixed 'pub' directory was not created"
+    assert expected_public_dir.name == "pub", "The directory name must be 'pub'"
+
+    assert expected_project_dir.exists(), f"The project directory was not created inside 'pub'. Path: {expected_project_dir}"
+    assert (expected_project_dir / "index.html").exists(), "Index file missing in the new structure"
+
+    # 3. Verify we didn't accidentally build in the old location (.../public/test)
+    old_path = pollin_project.get_project_dir() / "public" / pollin_project.PROJECT_ABBR
+    assert not old_path.exists(), "Build artifacts found in the old location (without 'pub')"

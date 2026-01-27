@@ -67,7 +67,7 @@ class ApplicationConfiguration:
             return pathlib.Path(self._output_path)
         # if no output path is set, use the default public directory
         # which is the project files root
-        return pathlib.Path(self.project_files_root) / "public"
+        return pathlib.Path(self.project_files_root) / "public" / "pub"
 
     @property
     def project_src_dir(self) -> pathlib.Path:
