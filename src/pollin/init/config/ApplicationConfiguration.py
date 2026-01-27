@@ -33,7 +33,7 @@ class ApplicationConfiguration:
     The output path where the build files should be placed.
     """
 
-    mode: Literal["develop", "production"] = "develop"
+    mode:  Literal["dev", "build", "stage"] = "dev"
     """
     The mode the pollin tool is running in, either 'develop' or 'production'.
     """
@@ -133,7 +133,7 @@ class ApplicationConfiguration:
     """
 
 
-    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None, mode: Literal["dev", "build"] = "dev"):
+    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None, mode: Literal["dev", "build", "stage"] = "dev"):
         self.project = project
         self.gams_host = gams_host
         self.project_files_root = project_files_root
