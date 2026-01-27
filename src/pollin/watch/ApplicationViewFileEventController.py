@@ -1,26 +1,32 @@
 import logging
 
-from watchdog.events import FileSystemEventHandler
+# Change import to PatternMatchingEventHandler
+from watchdog.events import PatternMatchingEventHandler
 from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
 from pollin.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
 
-class ApplicationViewFileEventController(FileSystemEventHandler):
+
+class ApplicationViewFileEventController(PatternMatchingEventHandler):
     """
-    Listens to file system events and triggers the rendering of views
+    Listens to file system events and triggers the rendering of views.
+    Configured to ignore system, temporary, and IDE files to prevent infinite loops.
     """
 
     app_context: ApplicationContext
-
     digital_object_view_renderer: DigitalObjectViewRenderer
-
     application_view_template_render: ApplicationViewTemplateRenderer
-
     application_static_file_refresher: ApplicationStaticFileRenderer
 
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
+
+        # Initialize with ignore patterns to filter out noise
+        super().__init__(ignore_patterns=[
+            "*/.git/*", "*/.idea/*", "*/.vscode/*", "*/__pycache__/*",
+            "*.swp", "*.tmp", "*.DS_Store", "~*"
+        ])
 
         # for digital objects
         self.digital_object_view_renderer = DigitalObjectViewRenderer(app_context)
@@ -32,24 +38,31 @@ class ApplicationViewFileEventController(FileSystemEventHandler):
         self.application_static_file_refresher = ApplicationStaticFileRenderer(app_context)
 
     def on_modified(self, event):
+        # Ignore directory events to avoid double-triggering (file + folder update)
+        if event.is_directory:
+            return
+
+        logging.info(f"File modified: {event.src_path}")
         self.render_views()
-        logging.info("on_modified event")
 
     def on_created(self, event):
+        if event.is_directory:
+            return
+
+        logging.info(f"File created: {event.src_path}")
         self.render_views()
-        logging.info("on_created event")
 
     def on_deleted(self, event):
+        if event.is_directory:
+            return
+
+        logging.info(f"File deleted: {event.src_path}")
         # deletes correspondent file
         self.application_view_template_render.delete_output_file(event.src_path)
 
-        # deletion only performed at startup
+        # trigger re-render of dependent components
         self.digital_object_view_renderer.render()
-
-        # will delete everything and copy again (no delete necessary)
         self.application_static_file_refresher.refresh()
-        logging.info("on_deleted event")
-
 
     def render_views(self):
         """
