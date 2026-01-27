@@ -50,6 +50,11 @@ class ApplicationConfiguration:
     Configuration for caching
     """
 
+    PROJECT_DEPLOYMENT_FOLDER: str = "pub"
+    """
+    Root path of the pollin project on the deployment webserver
+    """
+
     def alternative_output_path_set(self) -> bool:
         """
         Checks if an alternative output path is set
@@ -109,7 +114,7 @@ class ApplicationConfiguration:
         Points to the public directory of the project e.g. public/memo
         :return: PathLike
         """
-        return pathlib.Path(self.public_dir) / self.project
+        return pathlib.Path(self.public_dir) / "pub" / self.project
 
     @property
     def project_public_static_dir(self) -> pathlib.Path:

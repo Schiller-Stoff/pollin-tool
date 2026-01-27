@@ -121,3 +121,19 @@ def test_object_list_templates_includes_expected_to_string(mock_pollin_env):
     object_list_html = (pollin_project.get_config().project_public_dir / 'objects' / 'index.html').read_text()
     test_object_to_string = str(TestDigitalObject.generate())
     assert test_object_to_string in object_list_html, "Object __str__ value not found in object list HTML"
+
+
+def test_build_creates_pub_directory_structure(mock_pollin_env):
+    cli_result, pollin_project = mock_pollin_env
+    assert cli_result.exit_code == 0
+
+    # public_dir should be just ".../public"
+    public_dir = pollin_project.get_config().public_dir
+    assert public_dir.name == "public"
+
+    # project_public_dir should be ".../public/pub/test"
+    project_public_dir = pollin_project.get_config().project_public_dir
+
+    assert project_public_dir.exists()
+    assert "pub" in project_public_dir.parts[-2]  # Check that 'pub' is the parent of the project folder
+    assert (project_public_dir / "index.html").exists()
