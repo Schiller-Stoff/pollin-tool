@@ -1,7 +1,6 @@
 import json
 import urllib
 from typing import List, Any
-from urllib import request
 import logging
 from urllib.error import HTTPError
 from xml.etree import ElementTree as ET

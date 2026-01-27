@@ -27,6 +27,7 @@ packages = ["src/pollin"]
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
+    "ruff>=0.14.0"
 ]
 
 [project.scripts]
