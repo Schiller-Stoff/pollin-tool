@@ -67,7 +67,7 @@ class ApplicationConfiguration:
             return pathlib.Path(self._output_path)
         # if no output path is set, use the default public directory
         # which is the project files root
-        return pathlib.Path(self.project_files_root) / "public" / "pub"
+        return pathlib.Path(self.project_files_root) / "public"
 
     @property
     def project_src_dir(self) -> pathlib.Path:
@@ -109,7 +109,7 @@ class ApplicationConfiguration:
         Points to the public directory of the project e.g. public/memo
         :return: PathLike
         """
-        return pathlib.Path(self.public_dir) / self.project
+        return pathlib.Path(self.public_dir) / "pub" / self.project
 
     @property
     def project_public_static_dir(self) -> pathlib.Path:
