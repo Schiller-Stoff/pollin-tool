@@ -72,7 +72,8 @@ class TestPollinProject:
             UI_VERSION=TestPollinProject.POLLIN_TOML_VERSION,
             UI_TITLE=TestPollinProject.POLLIN_TOML_TITLE,
             POLLIN_MODE="build",
-            IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN
+            IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN,
+            PROJECT_WEB_ROOT= "/" + test_config.PROJECT_DEPLOYMENT_FOLDER + "/" + test_config.project
         )
 
         test_config.project_external_config = {

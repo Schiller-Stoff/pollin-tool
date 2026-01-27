@@ -50,6 +50,11 @@ class ApplicationConfiguration:
     Configuration for caching
     """
 
+    PROJECT_DEPLOYMENT_FOLDER: str = "pub"
+    """
+    Root path of the pollin project on the deployment webserver
+    """
+
     def alternative_output_path_set(self) -> bool:
         """
         Checks if an alternative output path is set

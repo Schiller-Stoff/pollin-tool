@@ -47,6 +47,7 @@ class AppInitializer:
         app_config.ENV = AppEnv(
             GAMS_API_ORIGIN=app_config.gams_host,
             PROJECT_ABBR=app_config.project,
+            PROJECT_WEB_ROOT="/" + app_config.PROJECT_DEPLOYMENT_FOLDER + "/" + app_config.project,
             UI_VERSION=external_config_parsed.get_ui_version(),
             UI_TITLE=external_config_parsed.get_ui_title(),
             POLLIN_MODE=mode,
