@@ -44,4 +44,4 @@ build:
   stage: build
   image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_BASE_VERSION-$BASE_LAYER
   script:
-    make
+    uv build
