@@ -6,7 +6,7 @@ variables:
 stages:
   - test
   - lint
-#  - build
+  - build
 
 # A hidden job template that can be used by different Python versions
 .test-template:
@@ -39,3 +39,9 @@ lint:
     - python --version
     - echo "Running uv check with ruff"
     - uv run ruff check src
+
+build:
+  stage: build
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_BASE_VERSION-$BASE_LAYER
+  script:
+    uv build
