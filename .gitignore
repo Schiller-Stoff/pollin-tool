@@ -8,7 +8,6 @@ wheels/
 
 # venv
 .venv
-*.lock
 
 output/*
 views/*
