@@ -13,7 +13,6 @@ class AppEnv:
     UI_TITLE: str
     POLLIN_MODE: str
     IIIF_IMAGE_SERVER_ORIGIN: str
-    PROJECT_WEB_ROOT: str
 
     def to_dict(self):
         """Convert to dictionary for JSON serialization"""
