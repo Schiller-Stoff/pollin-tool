@@ -6,6 +6,7 @@ from jinja2 import Environment, Template
 
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+from pollin.watch.utils.RenderUtils import RenderUtils
 
 
 class DigitalObjectViewRenderer:
@@ -56,6 +57,10 @@ class DigitalObjectViewRenderer:
             object_id = digital_object["id"]
             object_html = ""
             object_template_name = 'object.j2'
+
+            obj_template_target_output_path = Path(output_dir).joinpath("objects").joinpath(object_id)
+            obj_template_relative_path_to_root = RenderUtils.calc_relative_path(output_dir, obj_template_target_output_path)
+
             try:
                 object_template = self.environment.get_template(object_template_name)
                 render_context = {
@@ -65,6 +70,7 @@ class DigitalObjectViewRenderer:
                         'env': self.app_context.get_config().ENV.to_dict(),
                         '_template_name': object_template_name.replace(".j2", ""),
                         '_template_file_name': object_template_name,
+                        '_root_path': obj_template_relative_path_to_root
                     }
                 }
                 object_html = object_template.render(render_context)
@@ -74,15 +80,18 @@ class DigitalObjectViewRenderer:
                 object_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
             finally:
                 # writing the object html to file in any case
-                cur_object_folder = Path(output_dir).joinpath("objects").joinpath(object_id)
-                os.makedirs(cur_object_folder, exist_ok=True)
-                with open(cur_object_folder.joinpath("index.html"), "w", encoding="utf-8") as f:
+                os.makedirs(obj_template_target_output_path, exist_ok=True)
+                with open(obj_template_target_output_path.joinpath("index.html"), "w", encoding="utf-8") as f:
                     f.write(object_html)
                     logging.info(f"Successfully wrote object {object_id} to file")
 
         # rendering of project home page
         project_html = ""
         project_template_name = "project.j2"
+
+        project_template_target_output_path = Path(output_dir)
+        project_template_relative_path_to_root = RenderUtils.calc_relative_path(output_dir, project_template_target_output_path)
+
         try:
             project_template = self.environment.get_template(project_template_name)
             render_context = {
@@ -90,7 +99,8 @@ class DigitalObjectViewRenderer:
                     'project': project_metadata,
                     'env': self.app_context.get_config().ENV.to_dict(),
                     '_template_name': project_template_name.replace(".j2", ""),
-                    '_template_file_name': project_template_name
+                    '_template_file_name': project_template_name,
+                    '_root_path': project_template_relative_path_to_root
                 }
             }
             project_html = project_template.render(render_context)
@@ -99,7 +109,7 @@ class DigitalObjectViewRenderer:
             logging.error(msg)
             project_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
         finally:
-            with open(Path(output_dir).joinpath("index.html"), "w", encoding="utf-8") as f:
+            with open(project_template_target_output_path.joinpath("index.html"), "w", encoding="utf-8") as f:
                 f.write(project_html)
                 logging.info(f"Successfully wrote project home page {project_abbr}")
 
@@ -107,6 +117,11 @@ class DigitalObjectViewRenderer:
 
         object_list_html = ""
         object_list_template_name = 'object-list.j2'
+
+        object_list_template_target_output_path = Path(output_dir).joinpath("objects")
+        object_list_template_relative_path_to_root = (RenderUtils
+                                                      .calc_relative_path(output_dir,object_list_template_target_output_path))
+
         try:
             object_list_template = self.environment.get_template(object_list_template_name)
             render_context = {
@@ -115,7 +130,8 @@ class DigitalObjectViewRenderer:
                     'project': project_metadata,
                     'env': self.app_context.get_config().ENV.to_dict(),
                     '_template_name': object_list_template_name.replace(".j2", ""),
-                    '_template_file_name': object_list_template_name
+                    '_template_file_name': object_list_template_name,
+                    '_root_path': object_list_template_relative_path_to_root
                 }
             }
             object_list_html = object_list_template.render(render_context)
@@ -124,7 +140,7 @@ class DigitalObjectViewRenderer:
             logging.error(msg)
             object_list_html = ApplicationErrorHtmlBuilder.build_general_error_html(msg)
         finally:
-            with open(Path(output_dir).joinpath("objects").joinpath("index.html"), "w", encoding="utf-8") as f:
+            with open(object_list_template_target_output_path.joinpath("index.html"), "w", encoding="utf-8") as f:
                 f.write(object_list_html)
 
     def activate_custom_template(self, template_name):

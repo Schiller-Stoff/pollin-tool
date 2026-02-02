@@ -4,7 +4,7 @@ from pathlib import Path
 import jinja2
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
-
+from pollin.watch.utils.RenderUtils import RenderUtils
 
 class ApplicationViewTemplateRenderer:
     """
@@ -62,6 +62,8 @@ class ApplicationViewTemplateRenderer:
             # thymeleaf expects forward slashes
             template_path = str(template_path).replace(os.sep, '/')
 
+            template_relative_path_to_root = RenderUtils.calc_relative_path(self.app_context.get_config().project_public_dir,
+                                                                                    output_dir)
             page_html = ""
             try:
                 template = environment.get_template( template_path )
@@ -76,7 +78,8 @@ class ApplicationViewTemplateRenderer:
                                 'project': project_data,
                                 'env': self.app_context.get_config().ENV.to_dict(),
                                 '_template_name': template_filename.replace(".j2", ""),
-                                '_template_file_name': template_filename
+                                '_template_file_name': template_filename,
+                                '_root_path': template_relative_path_to_root
                             }
                         }
                         page_html = template.render(render_context)
@@ -91,7 +94,8 @@ class ApplicationViewTemplateRenderer:
                             'project': project_data,
                             'env': self.app_context.get_config().ENV.to_dict(),
                             '_template_name': template_path.replace(".j2", ""),
-                            '_template_file_name': template_path
+                            '_template_file_name': template_path,
+                            '_root_path': template_relative_path_to_root
                         }
                     }
                     page_html = template.render(render_context)
