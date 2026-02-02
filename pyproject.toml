@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
     "jinja2==3.1.6",
-    "click>=8.1.7",
+    "click>=8.3.1",
     "watchdog>=6.0.0",
     "aiohttp>=3.11.11",
 ]
