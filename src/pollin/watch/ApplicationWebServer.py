@@ -12,7 +12,8 @@ class ApplicationWebServer:
         """
         def handle_directory_index(request):
             """
-            Checks if incoming request url
+            Checks if incoming request url points to a directory or file.
+            Enforces trailing slashes for directory requests to ensure relative path integrity.
             """
             # TODO add logging
 
@@ -26,6 +27,12 @@ class ApplicationWebServer:
 
             # Check if path is a directory
             if os.path.isdir(full_path):
+                # Pollin-Tool logic: Directory URLs must end with a slash for relative linking to work
+                if not requested_path.endswith("/"):
+                    msg = (f"POLLIN ERROR: The URL path '{requested_path}' points to a directory (trying to resolve the nested index.html) but is missing a trailing slash '/'. "
+                           "This hinders relative paths (like 'root_path') in the static site from resolving correctly.")
+                    return web.Response(text=msg, status=400)
+
                 index_path = os.path.join(full_path, "index.html")
                 if os.path.exists(index_path):
                     return web.FileResponse(index_path)
