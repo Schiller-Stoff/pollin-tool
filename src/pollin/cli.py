@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import click
 import multiprocessing
@@ -8,9 +9,16 @@ from pollin.load.ApplicationDataLoader import ApplicationDataLoader
 from pollin.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
 from pollin.watch.ApplicationWebServer import ApplicationWebServer
 from pollin.init.AppInitializer import AppInitializer
+from pollin.web_validation.JinjaTemplateValidator import JinjaTemplateValidator
 
 # global application context
 app_context = ApplicationContext()
+
+def run_validation_or_exit(context: ApplicationContext):
+    validator = JinjaTemplateValidator(context)
+    if not validator.validate():
+        logging.error("Build aborted due to quality gate violation.")
+        sys.exit(1)
 
 @click.group()
 @click.option("--log", "-l", default="INFO", help="log level, default is INFO")
@@ -40,6 +48,9 @@ def stage(directory: str):
      .setup()
      )
 
+    # validate template files first
+    run_validation_or_exit(app_context)
+
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
@@ -68,6 +79,9 @@ def build(directory: str):
      .setup()
      )
 
+    # validate template files first
+    run_validation_or_exit(app_context)
+
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
@@ -93,6 +107,9 @@ def dev(directory: str, port: int):
      .init_context_beans()
      .setup()
      )
+
+    # first run validation
+    run_validation_or_exit(app_context)
 
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
