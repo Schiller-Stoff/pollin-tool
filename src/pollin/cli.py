@@ -10,14 +10,22 @@ from pollin.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
 from pollin.watch.ApplicationWebServer import ApplicationWebServer
 from pollin.init.AppInitializer import AppInitializer
 from pollin.web_validation.JinjaTemplateValidator import JinjaTemplateValidator
+from pollin.web_validation.StaticFileValidator import StaticFileValidator
 
 # global application context
 app_context = ApplicationContext()
 
 def run_validation_or_exit(context: ApplicationContext):
-    validator = JinjaTemplateValidator(context)
-    if not validator.validate():
-        logging.error("Build aborted due to quality gate violation.")
+    # 1. Validate Templates (AST)
+    template_validator = JinjaTemplateValidator(context)
+    templates_ok = template_validator.validate()
+
+    # 2. Validate Static Files (Regex)
+    static_validator = StaticFileValidator(context)
+    static_ok = static_validator.validate()
+
+    if not (templates_ok and static_ok):
+        logging.error("Build aborted due to quality gate violations.")
         sys.exit(1)
 
 @click.group()
