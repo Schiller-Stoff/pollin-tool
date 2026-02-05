@@ -54,12 +54,15 @@ def test_import_config_applies_overrides(tmp_path):
     PROJECT_ABBR = "TEST_BASE"
 
     [dev]
-    GAMS_ORIGIN = "http://base.example.com"
     GAMS_API_ORIGIN = "http://base.example.com"
     IIIF_IMAGE_SERVER_ORIGIN = "http://base.iiif.com"
 
     [ui]
     VERSION = "1.0.0"
+    
+    [dangerous]
+    GAMS3_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
+    GAMS5_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
     """
 
     config_file = tmp_path / "pollin.toml"

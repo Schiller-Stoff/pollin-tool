@@ -7,6 +7,9 @@ class AppEnv:
     Stores runtime env variables needed in the templates during runtime, e.g. set gams-api host.
     """
 
+    DANGEROUS_GAMS3_PRODUCTION_ORIGIN: str
+    DANGEROUS_GAMS5_PRODUCTION_ORIGIN: str
+
     GAMS_API_ORIGIN: str
     PROJECT_ABBR: str
     UI_VERSION: str

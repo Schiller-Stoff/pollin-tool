@@ -15,6 +15,10 @@ class ApplicationExternalConfig:
     UI_VERSION_PROPERTY = "VERSION"
     UI_TITLE_PROPERTY = "TITLE"
 
+    DANGEROUS_PROPERTY = "dangerous"
+    DANGEROUS_GAMS3_PRODUCTION_ORIGIN_PROPERTY = "GAMS3_PRODUCTION_ORIGIN"
+    DANGEROUS_GAMS5_PRODUCTION_ORIGIN_PROPERTY = "GAMS5_PRODUCTION_ORIGIN"
+
     MODE_LOAD_PROPERTY = "load"
     MODE_GAMS_API_ORIGIN_PROPERTY = "GAMS_API_ORIGIN"
     MODE_IIIF_IMAGE_SERVER_PROPERTY = "IIIF_IMAGE_SERVER_ORIGIN"
@@ -82,6 +86,35 @@ class ApplicationExternalConfig:
             return []
 
         return sub_dict.get(self.MODE_LOAD_OBJECTS_REQUIRED)
+
+    def get_gams3_production_origin(self) -> str:
+        """
+        Returns the configured origin of gams3
+        :return: the configured origin of gams3
+        """
+        sub_dict: Dict[Any] = self.get(self.DANGEROUS_PROPERTY)
+        if sub_dict is None:
+            raise ValueError(f"No {self.DANGEROUS_PROPERTY} property found in config file. No required objects defined.")
+
+        if self.DANGEROUS_GAMS3_PRODUCTION_ORIGIN_PROPERTY not in sub_dict:
+            raise ValueError(f"No {self.DANGEROUS_PROPERTY}.{self.DANGEROUS_GAMS3_PRODUCTION_ORIGIN_PROPERTY} property found")
+
+        return sub_dict.get(self.DANGEROUS_GAMS3_PRODUCTION_ORIGIN_PROPERTY)
+
+    def get_gams5_production_origin(self) -> str:
+        """
+        Returns the configured origin of gams3
+        :return: the configured origin of gams3
+        """
+        sub_dict: Dict[Any] = self.get(self.DANGEROUS_PROPERTY)
+        if sub_dict is None:
+            raise ValueError(f"No {self.DANGEROUS_PROPERTY} property found in config file. No required objects defined.")
+
+        if self.DANGEROUS_GAMS5_PRODUCTION_ORIGIN_PROPERTY not in sub_dict:
+            raise ValueError(f"No {self.DANGEROUS_PROPERTY}.{self.DANGEROUS_GAMS5_PRODUCTION_ORIGIN_PROPERTY} property found")
+
+        return sub_dict.get(self.DANGEROUS_GAMS5_PRODUCTION_ORIGIN_PROPERTY)
+
 
     def get_gams_api_origin(self) -> str:
         """

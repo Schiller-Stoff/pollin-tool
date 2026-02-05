@@ -31,6 +31,9 @@ class TestPollinProject:
     TEST_CSS_FILE_CONTENT = "body { font-family: Arial; }"
     TEST_LOGO_FILE_CONTENT = b"\x89PNG\r\n\x1a\n"
 
+    DANGEROUS_GAMS3_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
+    DANGEROUS_GAMS5_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
+
     def __init__(self, root_dir: Path):
         self.project_dir = root_dir
 
@@ -72,7 +75,9 @@ class TestPollinProject:
             UI_VERSION=TestPollinProject.POLLIN_TOML_VERSION,
             UI_TITLE=TestPollinProject.POLLIN_TOML_TITLE,
             POLLIN_MODE="build",
-            IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN
+            IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN,
+            DANGEROUS_GAMS3_PRODUCTION_ORIGIN=TestPollinProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN,
+            DANGEROUS_GAMS5_PRODUCTION_ORIGIN=TestPollinProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN
         )
 
         test_config.project_external_config = {
@@ -115,6 +120,10 @@ class TestPollinProject:
         config = f"""
             [project]
             PROJECT_ABBR = "{self.PROJECT_ABBR}"
+            
+            [dangerous]
+            GAMS3_PRODUCTION_ORIGIN = "{TestPollinProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN}"
+            GAMS5_PRODUCTION_ORIGIN = "{TestPollinProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN}"
             
             [dev]
             GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
