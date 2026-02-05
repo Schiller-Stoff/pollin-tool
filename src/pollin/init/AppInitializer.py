@@ -45,6 +45,7 @@ class AppInitializer:
 
         # storing same variables in ENV reference (used at runtime in templates)
         app_config.ENV = AppEnv(
+            GAMS_ORIGIN=external_config_parsed.get_gams_origin(),
             GAMS_API_ORIGIN=app_config.gams_host,
             PROJECT_ABBR=app_config.project,
             UI_VERSION=external_config_parsed.get_ui_version(),

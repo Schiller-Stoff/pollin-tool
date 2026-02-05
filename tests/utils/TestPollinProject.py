@@ -21,6 +21,7 @@ class TestPollinProject:
 
     PROJECT_ABBR = TestProject.PROJECT_ABBR
 
+    GAMS_ORIGIN = "http://localhost:8080"
     GAMS_API_ORIGIN = "http://localhost:18085"
     IIIF_IMAGE_SERVER_ORIGIN = "http://localhost:18080"
 
@@ -67,6 +68,7 @@ class TestPollinProject:
 
         # storing same variables in ENV reference (used at runtime in templates)
         test_config.ENV = AppEnv(
+            GAMS_ORIGIN=TestPollinProject.GAMS_ORIGIN,
             GAMS_API_ORIGIN=test_config.gams_host,
             PROJECT_ABBR=test_config.project,
             UI_VERSION=TestPollinProject.POLLIN_TOML_VERSION,
@@ -117,14 +119,17 @@ class TestPollinProject:
             PROJECT_ABBR = "{self.PROJECT_ABBR}"
             
             [dev]
+            GAMS_ORIGIN = "{TestPollinProject.GAMS_ORIGIN}"
             GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
             IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [stage]
+            GAMS_ORIGIN = "{TestPollinProject.GAMS_ORIGIN}"
             GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
             IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [build]
+            GAMS_ORIGIN = "{TestPollinProject.GAMS_ORIGIN}"
             GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
             IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
             

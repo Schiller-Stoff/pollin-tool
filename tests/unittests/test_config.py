@@ -54,6 +54,7 @@ def test_import_config_applies_overrides(tmp_path):
     PROJECT_ABBR = "TEST_BASE"
 
     [dev]
+    GAMS_ORIGIN = "http://base.example.com"
     GAMS_API_ORIGIN = "http://base.example.com"
     IIIF_IMAGE_SERVER_ORIGIN = "http://base.iiif.com"
 

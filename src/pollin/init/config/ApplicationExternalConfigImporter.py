@@ -82,6 +82,9 @@ class ApplicationExternalConfigImporter:
         if not config_toml_dict.get(cur_mode):
             raise ValueError(f"For the currently active mode: '{cur_mode}' is no (or empty) toml property '{cur_mode}' defined. In config.")
 
+        if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_GAMS_ORIGIN):
+            raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_GAMS_ORIGIN} in config")
+
         if not config_toml_dict.get(cur_mode).get(ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY):
             raise ValueError(f"Cannot find (or empty) required property {cur_mode}.{ApplicationExternalConfig.MODE_GAMS_API_ORIGIN_PROPERTY} in config")
 

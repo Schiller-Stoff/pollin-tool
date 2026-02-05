@@ -16,6 +16,7 @@ class ApplicationExternalConfig:
     UI_TITLE_PROPERTY = "TITLE"
 
     MODE_LOAD_PROPERTY = "load"
+    MODE_GAMS_ORIGIN = "GAMS_ORIGIN"
     MODE_GAMS_API_ORIGIN_PROPERTY = "GAMS_API_ORIGIN"
     MODE_IIIF_IMAGE_SERVER_PROPERTY = "IIIF_IMAGE_SERVER_ORIGIN"
     MODE_OUTPUT_PATH_PROPERTY = "OUTPUT_PATH"
@@ -82,6 +83,23 @@ class ApplicationExternalConfig:
             return []
 
         return sub_dict.get(self.MODE_LOAD_OBJECTS_REQUIRED)
+
+    def get_gams_origin(self) -> str:
+        """
+        Returns the GAMS origin URL
+        :return: the GAMS origin URL
+        """
+
+        configured_origin = self.get(self.mode).get(self.MODE_GAMS_ORIGIN)
+        if configured_origin is None:
+            raise ValueError(f"Cannot find (or empty) required property {self.mode}.{self.MODE_GAMS_ORIGIN} in config file")
+        if not configured_origin.startswith("http"):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_GAMS_ORIGIN} to be a valid URL starting with 'http', but got '{configured_origin}'")
+        if configured_origin.endswith("/"):
+            raise ValueError(f"Expected {self.mode}.{self.MODE_GAMS_ORIGIN} to not have a trailing slash, but got '{configured_origin}'")
+
+        return configured_origin
+
 
     def get_gams_api_origin(self) -> str:
         """
