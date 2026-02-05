@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Set
 
 from pollin.init.ApplicationContext import ApplicationContext
+from pollin.web_validation.ValidationStatics import ValidationStatics
 
 
 class StaticFileValidator:
@@ -67,11 +68,11 @@ class StaticFileValidator:
 
         for i, line in enumerate(lines, 1):
             match = pattern.search(line)
-            if match:
-                snippet = line.strip()
-                if len(snippet) > 60:
-                    snippet = snippet[:50] + "..."
+            snippet = line.strip()
+            if len(snippet) > 60:
+                snippet = snippet[:50] + "..."
 
+            if match:
                 logging.warning(
                     f"Static Violation in {file_path.name} (Line {i}):\n"
                     f"\tFound:   ...{match.group(0)}...\n"
@@ -80,5 +81,18 @@ class StaticFileValidator:
                     f"\tFix:     Use POLLIN VARIABLES instead of hardcoded paths."
                 )
                 is_valid = False
+
+            # Check 2: Forbidden Origins
+            for origin in ValidationStatics.FORBIDDEN_ORIGINS:
+                if origin in line:
+                    logging.warning(
+                        f"Static Violation in {file_path.name} (Line {i}):\n"
+                        f"\tFound:   ...{origin}...\n"
+                        f"\tContext: {snippet}\n"
+                        f"\tReason:  Hardcoded paths break deployment flexibility and reuse.\n"
+                        f"\tFix:     Use POLLIN VARIABLES instead of hardcoded paths."
+                    )
+                    is_valid = False
+                    break  # Stop checking other origins for this line
 
         return is_valid

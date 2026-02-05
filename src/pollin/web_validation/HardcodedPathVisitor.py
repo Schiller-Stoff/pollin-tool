@@ -2,6 +2,9 @@ import re
 from typing import List, Dict
 from jinja2.visitor import NodeVisitor
 
+from pollin.web_validation.ValidationStatics import ValidationStatics
+
+
 class HardcodedPathVisitor(NodeVisitor):
     """
     Jinja2 AST Visitor that inspects text and string literals for forbidden patterns.
@@ -10,13 +13,7 @@ class HardcodedPathVisitor(NodeVisitor):
     # TODO rename class
 
     # Centralized configuration for forbidden strings
-    FORBIDDEN_ORIGINS = [
-        "gams-staging.uni-graz.at",
-        "gams.uni-graz.at",
-        "glossa.uni-graz.at",
-        "localhost",
-        "it030021.uni-graz.at",
-    ]
+    FORBIDDEN_ORIGINS = ValidationStatics.FORBIDDEN_ORIGINS
 
     def __init__(self, project_abbr: str):
         self.project_abbr = project_abbr
