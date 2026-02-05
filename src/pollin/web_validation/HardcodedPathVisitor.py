@@ -7,6 +7,17 @@ class HardcodedPathVisitor(NodeVisitor):
     Jinja2 AST Visitor that inspects text and string literals for forbidden patterns.
     """
 
+    # TODO rename class
+
+    # Centralized configuration for forbidden strings
+    FORBIDDEN_ORIGINS = [
+        "gams-staging.uni-graz.at",
+        "gams.uni-graz.at",
+        "glossa.uni-graz.at",
+        "localhost",
+        "it030021.uni-graz.at",
+    ]
+
     def __init__(self, project_abbr: str):
         self.project_abbr = project_abbr
         self.errors: List[Dict] = []
@@ -21,12 +32,15 @@ class HardcodedPathVisitor(NodeVisitor):
     def visit_TemplateData(self, node):
         """Checks raw HTML/text content between Jinja tags."""
         self._check_content(node, node.data)
+        self._check_forbidden_origins(node, node.data)
 
     def visit_Const(self, node):
         """Checks literal values inside Jinja expressions (e.g. {{ "string" }})."""
         if isinstance(node.value, str):
             self._check_content(node, node.value)
+            self._check_forbidden_origins(node, node.value)
 
+    # TODO rename function?
     def _check_content(self, node, content: str):
         if self.pattern.search(content):
             # Clean up the snippet for display
@@ -40,3 +54,19 @@ class HardcodedPathVisitor(NodeVisitor):
                 'msg': f"Hardcoded path using the project abbreviation '{self.project_abbr}' is forbidden."
             })
 
+    def _check_forbidden_origins(self, node, content: str):
+        """
+        TODO write pydoc
+        """
+
+        for forbidden_origin in self.FORBIDDEN_ORIGINS:
+            if forbidden_origin in content:
+                snippet = content.replace('\n', ' ').strip()
+                if len(snippet) > 60:
+                    snippet = snippet[:30] + "..." + snippet[-30:]
+
+                self.errors.append({
+                    'lineno': node.lineno,
+                    'snippet': snippet,
+                    'msg': f"Using the hardcoded origin {forbidden_origin} is forbidden. Use environment variables instead."
+                })
