@@ -59,6 +59,10 @@ def test_import_config_applies_overrides(tmp_path):
 
     [ui]
     VERSION = "1.0.0"
+    
+    [dangerous]
+    GAMS3_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
+    GAMS5_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
     """
 
     config_file = tmp_path / "pollin.toml"

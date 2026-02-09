@@ -79,6 +79,15 @@ class ApplicationExternalConfigImporter:
             if not config_toml_dict.get(ApplicationExternalConfig.PROJECT_PROPERTY).get(ApplicationExternalConfig.PROJECT_ABBR_PROPERTY):
                 raise ValueError(f"'{ApplicationExternalConfig.PROJECT_PROPERTY}.{ApplicationExternalConfig.PROJECT_ABBR_PROPERTY}' not found (or empty) in configuration")
 
+        if not config_toml_dict.get(ApplicationExternalConfig.DANGEROUS_PROPERTY):
+            raise ValueError(f"Cannot find (or empty) required property {ApplicationExternalConfig.DANGEROUS_PROPERTY} in configuration")
+
+        if not config_toml_dict.get(ApplicationExternalConfig.DANGEROUS_PROPERTY).get(ApplicationExternalConfig.DANGEROUS_GAMS3_PRODUCTION_ORIGIN_PROPERTY):
+            raise ValueError(f"Cannot find (or empty) required property {ApplicationExternalConfig.DANGEROUS_PROPERTY}.{ApplicationExternalConfig.DANGEROUS_GAMS3_PRODUCTION_ORIGIN_PROPERTY}")
+
+        if not config_toml_dict.get(ApplicationExternalConfig.DANGEROUS_PROPERTY).get(ApplicationExternalConfig.DANGEROUS_GAMS5_PRODUCTION_ORIGIN_PROPERTY):
+            raise ValueError(f"Cannot find (or empty) required property {ApplicationExternalConfig.DANGEROUS_PROPERTY}.{ApplicationExternalConfig.DANGEROUS_GAMS5_PRODUCTION_ORIGIN_PROPERTY}")
+
         if not config_toml_dict.get(cur_mode):
             raise ValueError(f"For the currently active mode: '{cur_mode}' is no (or empty) toml property '{cur_mode}' defined. In config.")
 
