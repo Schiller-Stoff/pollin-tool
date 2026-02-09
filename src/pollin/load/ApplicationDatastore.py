@@ -15,6 +15,11 @@ class ApplicationDatastore:
     Project metadata
     """
 
+    def __init__(self):
+        self.digital_objects = []
+        self.project_data = {}
+
+
     def add_object(self, digital_object: dict[str,str]) -> None:
         """
         Adds a digital object to the datastore
