@@ -18,6 +18,9 @@ def test_jinja_valid_files(test_application_context):
     validator = JinjaTemplateValidator(test_application_context)
     assert validator.validate() is True
 
+    # remove written template again
+    (template_dir / "valid.j2").unlink()
+
 
 def test_jinja_catch_hardcoded_project_path(test_application_context):
     """Test catching /pub/test/ in HTML attributes."""
@@ -32,6 +35,9 @@ def test_jinja_catch_hardcoded_project_path(test_application_context):
     validator = JinjaTemplateValidator(test_application_context)
     assert validator.validate() is False
 
+    # remove written template again
+    (template_dir / "violation_1.j2").unlink()
+
 
 def test_jinja_catch_hardcoded_variable(test_application_context):
     """Test catching /pub/test/ inside Jinja variables."""
@@ -45,6 +51,9 @@ def test_jinja_catch_hardcoded_variable(test_application_context):
 
     validator = JinjaTemplateValidator(test_application_context)
     assert validator.validate() is False
+
+    # remove written template again
+    (template_dir / "violation_2.j2").unlink()
 
 
 def test_jinja_ignore_false_positives(test_application_context):
@@ -62,6 +71,9 @@ def test_jinja_ignore_false_positives(test_application_context):
     validator = JinjaTemplateValidator(test_application_context)
     assert validator.validate() is True
 
+    # remove written template again
+    (template_dir / "edge_cases.j2").unlink()
+
 
 def test_jinja_catch_forbidden_origins(test_application_context):
     """Test catching localhost and gams-staging."""
@@ -74,6 +86,9 @@ def test_jinja_catch_forbidden_origins(test_application_context):
 
     validator = JinjaTemplateValidator(test_application_context)
     assert validator.validate() is False
+
+    # remove written template again
+    (template_dir / "origin_violation.j2").unlink()
 
 
 # --- Static File Validator Tests (Regex) ---
@@ -94,6 +109,9 @@ def test_static_valid_files(test_application_context):
     validator = StaticFileValidator(test_application_context)
     assert validator.validate() is True
 
+    # remove written file again
+    (static_dir / "style.css").unlink()
+
 
 def test_static_catch_absolute_path(test_application_context):
     """Test catching /pub/test/  in CSS."""
@@ -106,6 +124,9 @@ def test_static_catch_absolute_path(test_application_context):
 
     validator = StaticFileValidator(test_application_context)
     assert validator.validate() is False
+
+    # remove written file again
+    (static_dir / "style.css").unlink()
 
 
 def test_static_catch_forbidden_origin(test_application_context):
@@ -120,6 +141,9 @@ def test_static_catch_forbidden_origin(test_application_context):
     validator = StaticFileValidator(test_application_context)
     assert validator.validate() is False
 
+    # remove written file again
+    (static_dir / "app.js").unlink()
+
 
 def test_static_ignores_binary_files(test_application_context):
     """Ensure the validator doesn't crash on images."""
@@ -132,3 +156,6 @@ def test_static_ignores_binary_files(test_application_context):
     validator = StaticFileValidator(test_application_context)
     # Should simply pass (return True) and not crash
     assert validator.validate() is True
+
+    # remove written file again
+    (static_dir / "image.png").unlink()
