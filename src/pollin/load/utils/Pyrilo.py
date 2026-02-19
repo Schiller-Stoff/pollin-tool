@@ -174,7 +174,7 @@ class Pyrilo:
         :return: True if the project has been modified since the given timestamp, False otherwise
         """
 
-        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}/objects"
+        url = f"{self.HOST}/{self.API_BASE_PATH}/projects/{project_abbr}"
         logging.debug(f"Checking if project {project_abbr} has been modified since {last_modified} from {url}")
 
         try:
