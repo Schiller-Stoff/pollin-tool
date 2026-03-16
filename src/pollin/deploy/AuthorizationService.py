@@ -1,11 +1,12 @@
 import logging
 from urllib.parse import urljoin
-from pyrilo.api.GamsApiClient import GamsApiClient  # <--- Changed from requests
-from pyrilo.api.auth.LoginFormParser import LoginFormParser
+
+from pollin.deploy.GamsApiClient import GamsApiClient
+from pollin.deploy.LoginFormParser import LoginFormParser
 
 
 class AuthorizationService:
-    # 1. Inject the Client, not the Session
+
     def __init__(self, client: GamsApiClient):
         self.client = client
 
@@ -13,18 +14,16 @@ class AuthorizationService:
         """
         Performs authentication using the shared GamsApiClient.
         """
-        # 2. Use 'auth' endpoint. The client automatically prepends {host}/api/v1/
-        # This replaces: login_url = f"{self.host}{PyriloStatics.AUTH_ENDPOINT}"
 
+        # TODO headers look weird!
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
             'Upgrade-Insecure-Requests': '1'
         }
 
-        # 3. Use client.get()
         # We assume the API returns HTML here, but client.get returns the response object, so that's fine.
-        response = self.client.get("auth", headers=headers)
+        response = self.client.get("auth/login", headers=headers)
         response.raise_for_status()
 
         # Parsing the keycloak form
