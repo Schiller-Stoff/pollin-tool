@@ -11,8 +11,6 @@ class GamsAuthClient:
     host: str
     api_base_url: str
 
-    # TODO: Could implement this as AuthClient (rename?) --> to be used for Authorized processes on GAMS?
-
     def __init__(self, host: str):
         # 1. Initialize Session internally
         self.session = requests.Session()
