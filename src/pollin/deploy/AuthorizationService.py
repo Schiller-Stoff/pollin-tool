@@ -1,13 +1,13 @@
 import logging
 from urllib.parse import urljoin
 
-from pollin.deploy.GamsApiClient import GamsApiClient
+from pollin.deploy.GamsAuthClient import GamsAuthClient
 from pollin.deploy.LoginFormParser import LoginFormParser
 
 
 class AuthorizationService:
 
-    def __init__(self, client: GamsApiClient):
+    def __init__(self, client: GamsAuthClient):
         self.client = client
 
     def login(self, username: str = None, password: str = None) -> None:

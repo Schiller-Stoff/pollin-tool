@@ -3,7 +3,7 @@ import logging
 import zipfile
 from pathlib import Path
 
-from pollin.deploy.GamsApiClient import GamsApiClient
+from pollin.deploy.GamsAuthClient import GamsAuthClient
 from pollin.init.ApplicationContext import ApplicationContext
 
 
@@ -24,7 +24,7 @@ class DeployService:
 
     DEPLOY_API_PATH = "v1/projects/{project_abbr}/web"
 
-    def __init__(self, app_context: ApplicationContext, gams_client: GamsApiClient):
+    def __init__(self, app_context: ApplicationContext, gams_client: GamsAuthClient):
         self.app_context = app_context
         self.gams_client = gams_client
 

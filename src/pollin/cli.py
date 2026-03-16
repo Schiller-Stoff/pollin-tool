@@ -4,7 +4,7 @@ import sys
 import click
 import multiprocessing
 
-from pollin.deploy.GamsApiClient import GamsApiClient
+from pollin.deploy.GamsAuthClient import GamsAuthClient
 from pollin.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
 from pollin.init.ApplicationContext import ApplicationContext
 from pollin.load.ApplicationDataLoader import ApplicationDataLoader
@@ -61,7 +61,7 @@ def run_deploy(context: ApplicationContext, username: str | None, password: str 
 
     # Authenticate
     logging.info(f"Authenticating with GAMS API at {target_host}...")
-    auth_gams_client = GamsApiClient(target_host)
+    auth_gams_client = GamsAuthClient(target_host)
     try:
         from pollin.deploy.AuthorizationService import AuthorizationService
         # TODO using a separte client seems weird

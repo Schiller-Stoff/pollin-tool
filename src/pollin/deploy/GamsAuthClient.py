@@ -3,7 +3,7 @@ import logging
 import requests
 
 
-class GamsApiClient:
+class GamsAuthClient:
     """
     Owns the HTTP session and handles all low-level API interactions.
     """
