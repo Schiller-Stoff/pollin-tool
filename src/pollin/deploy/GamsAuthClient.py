@@ -22,7 +22,7 @@ class GamsAuthClient:
         })
 
         self.host = host.rstrip("/")
-        self.api_base_url = f"{self.host}/api" # TODO hardcoded api basepath!
+        self.api_base_url = f"{self.host}/api"
 
     def get(self, endpoint: str, **kwargs) -> requests.Response:
         return self._request("GET", endpoint, **kwargs)
