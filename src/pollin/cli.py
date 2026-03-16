@@ -46,7 +46,7 @@ def run_deploy(context: ApplicationContext, username: str | None, password: str 
 
     # Safety confirmation for production deployments
     if mode == "build":
-        click.echo(f"\n*** PRODUCTION DEPLOYMENT ***")
+        click.echo("\n*** PRODUCTION DEPLOYMENT ***")
         click.echo(f"Target: {target_host}")
         click.echo(f"Project: {context.get_config().project}")
         if not click.confirm("Deploy to PRODUCTION environment?", default=False):
@@ -78,7 +78,7 @@ def run_deploy(context: ApplicationContext, username: str | None, password: str 
     try:
         deploy_service = DeployService(context, auth_gams_client)
         result = deploy_service.deploy()
-        click.echo(f"\nDeployment successful!")
+        click.echo("\nDeployment successful!")
         click.echo(f"  Project:    {result.get('projectAbbr', 'N/A')}")
         click.echo(f"  Files:      {result.get('fileCount', 'N/A')}")
         click.echo(f"  Total size: {result.get('totalSize', 'N/A')} bytes")
