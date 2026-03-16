@@ -1,7 +1,10 @@
 import io
 import logging
+import time
 import zipfile
 from pathlib import Path
+
+import click
 
 from pollin.deploy.GamsAuthClient import GamsAuthClient
 from pollin.init.ApplicationContext import ApplicationContext
@@ -33,6 +36,10 @@ class DeployService:
         Creates an in-memory zip archive from the contents of source_dir.
         Files are stored at the zip root (no parent directory prefix).
 
+        Note: On Windows with corporate antivirus, this can take over a minute
+        for large projects due to real-time file scanning. A progress bar is
+        shown to provide feedback during this process.
+
         :param source_dir: The directory whose contents should be zipped
         :return: BytesIO buffer containing the zip archive
         :raises FileNotFoundError: If source_dir does not exist
@@ -41,21 +48,28 @@ class DeployService:
         if not source_dir.exists():
             raise FileNotFoundError(f"Output directory does not exist: {source_dir}")
 
-        buffer = io.BytesIO()
-        file_count = 0
+        # Collect file list first (fast operation)
+        files_to_zip = [f for f in source_dir.rglob('*') if f.is_file()]
 
-        with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
-            for file_path in source_dir.rglob('*'):
-                if file_path.is_file():
-                    arcname = file_path.relative_to(source_dir)
-                    zf.write(file_path, arcname)
-                    file_count += 1
-
-        if file_count == 0:
+        if not files_to_zip:
             raise ValueError(f"Output directory is empty, nothing to deploy: {source_dir}")
 
+        t0 = time.perf_counter()
+
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=1) as zf:
+            with click.progressbar(
+                files_to_zip,
+                label=f"Zipping {len(files_to_zip)} files",
+                show_pos=True
+            ) as progress:
+                for file_path in progress:
+                    arcname = str(file_path.relative_to(source_dir))
+                    zf.write(file_path, arcname)
+
+        elapsed = time.perf_counter() - t0
         buffer.seek(0)
-        logging.info(f"Created deployment archive with {file_count} files")
+        logging.info(f"Created deployment archive with {len(files_to_zip)} files in {elapsed:.1f}s")
         return buffer
 
     def _build_deploy_endpoint(self) -> str:
