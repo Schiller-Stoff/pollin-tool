@@ -1,5 +1,5 @@
 [project]
-name = "pollin"
+name = "pollin-tool"
 version = "0.1.0"
 description = "CLI tool for static site generation from GAMS5 digital object collections"
 authors = [
