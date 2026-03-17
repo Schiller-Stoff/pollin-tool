@@ -2,7 +2,7 @@ import re
 from typing import List, Dict
 from jinja2.visitor import NodeVisitor
 
-from pollin.web_validation.ValidationStatics import ValidationStatics
+from pollin.validation.ValidationStatics import ValidationStatics
 
 
 class HardcodedPathVisitor(NodeVisitor):

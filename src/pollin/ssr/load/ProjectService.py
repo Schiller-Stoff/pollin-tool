@@ -1,4 +1,4 @@
-from pollin.init.ApplicationContext import ApplicationContext
+from pollin.ssr.init.ApplicationContext import ApplicationContext
 
 
 class ProjectService:

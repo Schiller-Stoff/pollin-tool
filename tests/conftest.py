@@ -1,8 +1,10 @@
 
 import pytest
 from unittest.mock import Mock, patch
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.load.ApplicationDatastore import ApplicationDatastore
+
+from pollin.deploy.GamsAuthClient import GamsAuthClient
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
@@ -38,7 +40,7 @@ def test_application_context(test_pollin_project):
 @pytest.fixture
 def mock_api():
     """Simple mock without actual HTTP server."""
-    with patch('pollin.init.AppInitializer.Pyrilo') as MockPyrilo:
+    with patch('pollin.ssr.init.AppInitializer.Pyrilo') as MockPyrilo:
 
         test_object = TestDigitalObject.generate()
         test_project_dict = TestProject.generate()
@@ -71,3 +73,20 @@ def mock_pollin_env(mock_api, test_pollin_project):
         # Run build command
         cli_result = runner.invoke(cli, ['build', str(test_pollin_project.project_dir)])
         return cli_result, test_pollin_project
+
+
+
+@pytest.fixture
+def mock_gams_auth_client():
+    """Creates a mock gams_auth_client with a successful default response."""
+    client = Mock(spec=GamsAuthClient)
+    response = Mock()
+    response.status_code = 200
+    response.json.return_value = {
+        "projectAbbr": "test",
+        "deployedAt": "2026-03-16T12:00:00Z",
+        "fileCount": 1,
+        "totalSize": 42
+    }
+    client.put.return_value = response
+    return client

@@ -47,3 +47,18 @@ pollin stage "/path/to/project"
 pollin build "/path/to/project"
 
 ```
+
+
+## Deployment
+
+- use the -d flag to deploy to staging or production envrionment
+
+```sh
+# staging deployment
+pollin stage "/path/to/project" -d
+
+# production deployment
+pollin build "/path/to/project" -d
+
+
+```

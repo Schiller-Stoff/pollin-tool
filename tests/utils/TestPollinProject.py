@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from pollin.init.config.AppEnv import AppEnv
-from pollin.init.config.ApplicationCacheConfig import ApplicationCacheConfig
-from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.ssr.init.config.AppEnv import AppEnv
+from pollin.ssr.init.config.ApplicationCacheConfig import ApplicationCacheConfig
+from pollin.ssr.init.config.ApplicationConfiguration import ApplicationConfiguration
 from utils.TestProject import TestProject
 
 
