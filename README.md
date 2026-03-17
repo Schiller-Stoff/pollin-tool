@@ -6,6 +6,18 @@ Supplies a development workflow for GAMS5-based web projects.
 
 Meant as replacement for the gams3 "gamsdev" development workflow.
 
+## Quickstart
+
+```sh
+
+# optionally specifiy version tag
+uv tool install pollin-tool
+
+# use 
+pollin dev "C:\path\to\project"
+
+```
+
 ## Basic usage
 
 1. Have a running GAM5-API (OR external)
