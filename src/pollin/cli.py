@@ -7,7 +7,7 @@ import multiprocessing
 from importlib.metadata import version, PackageNotFoundError
 # makes sure that the version is set correctly
 try:
-    __version__ = version("pollin")
+    __version__ = version("pollin-tool")
 except PackageNotFoundError:
     __version__ = "dev"
 
@@ -99,7 +99,7 @@ def run_deploy(context: ApplicationContext, username: str | None, password: str 
 
 
 @click.group()
-@click.version_option(version=version("pollin"), prog_name="pollin-tool")
+@click.version_option(version=version("pollin-tool"), prog_name="pollin-tool")
 @click.option("--log", "-l", default="INFO", help="log level, default is INFO")
 def cli(log: str):
     """
