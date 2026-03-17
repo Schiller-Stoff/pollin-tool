@@ -1,55 +1,130 @@
 import logging
+import sys
 
 import click
 import multiprocessing
-from pollin.System.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
-from pollin.System.init.ApplicationContext import ApplicationContext
-from pollin.System.load.ApplicationDataLoader import ApplicationDataLoader
-from pollin.System.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
-from pollin.System.watch.ApplicationWebServer import ApplicationWebServer
-from pollin.System.init.AppInitializer import AppInitializer
+
+from pollin.deploy.GamsAuthClient import GamsAuthClient
+from pollin.ssr.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.load.ApplicationDataLoader import ApplicationDataLoader
+from pollin.ssr.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
+from pollin.ssr.watch.ApplicationWebServer import ApplicationWebServer
+from pollin.ssr.init.AppInitializer import AppInitializer
+from pollin.validation.JinjaTemplateValidator import JinjaTemplateValidator
+from pollin.validation.StaticFileValidator import StaticFileValidator
 
 # global application context
 app_context = ApplicationContext()
 
+def run_validation_or_exit(context: ApplicationContext):
+    # 1. Validate Templates (AST)
+    template_validator = JinjaTemplateValidator(context)
+    templates_ok = template_validator.validate()
+
+    # 2. Validate Static Files (Regex)
+    static_validator = StaticFileValidator(context)
+    static_ok = static_validator.validate()
+
+    if not (templates_ok and static_ok):
+        logging.error("Build aborted due to quality gate violations.")
+        sys.exit(1)
+
+
+def run_deploy(context: ApplicationContext, username: str | None, password: str | None):
+    """
+    Performs authentication and deployment to the GAMS5 API.
+
+    :param context: The application context
+    :param username: GAMS API username (prompted if not provided)
+    :param password: GAMS API password (prompted if not provided)
+    """
+    from pollin.deploy.DeployService import DeployService
+
+    mode = context.get_config().mode
+    target_host = context.get_config().gams_host
+
+    # Safety confirmation for production deployments
+    if mode == "build":
+        click.echo("\n*** PRODUCTION DEPLOYMENT ***")
+        click.echo(f"Target: {target_host}")
+        click.echo(f"Project: {context.get_config().project}")
+        if not click.confirm("Deploy to PRODUCTION environment?", default=False):
+            click.echo("Deployment cancelled.")
+            return
+
+    # Prompt for credentials if not provided via options
+    if not username:
+        username = click.prompt("GAMS API username")
+    if not password:
+        password = click.prompt("GAMS API password", hide_input=True)
+
+    # Authenticate
+    logging.info(f"Authenticating with GAMS API at {target_host}...")
+    auth_gams_client = GamsAuthClient(target_host)
+    try:
+        from pollin.deploy.AuthorizationService import AuthorizationService
+        # TODO using a separte client seems weird
+        auth_service = AuthorizationService(auth_gams_client)
+        auth_service.login(username=username, password=password)
+    except PermissionError as e:
+        logging.error(f"Authentication failed: {e}")
+        sys.exit(1)
+    except Exception as e:
+        logging.error(f"Authentication error: {e}")
+        sys.exit(1)
+
+    # Deploy
+    try:
+        deploy_service = DeployService(context, auth_gams_client)
+        result = deploy_service.deploy()
+        click.echo("\nDeployment successful!")
+        click.echo(f"  Project:    {result.get('projectAbbr', 'N/A')}")
+        click.echo(f"  Files:      {result.get('fileCount', 'N/A')}")
+        click.echo(f"  Total size: {result.get('totalSize', 'N/A')} bytes")
+        click.echo(f"  Deployed at: {result.get('deployedAt', 'N/A')}")
+    except (FileNotFoundError, ValueError) as e:
+        logging.error(f"Deployment failed: {e}")
+        sys.exit(1)
+    except (ConnectionError, PermissionError) as e:
+        logging.error(f"Deployment failed: {e}")
+        sys.exit(1)
+
+
 @click.group()
-def cli():
+@click.option("--log", "-l", default="INFO", help="log level, default is INFO")
+def cli(log: str):
     """
     Init command / start routine of application
     Sets up the application context for the entire application.
     """
-    logging.basicConfig( encoding='utf-8', level=logging.INFO)
+    logging.basicConfig( encoding='utf-8', level=logging.getLevelName(log))
 
-@cli.command(name="build", help="Builds output files once.")
-@click.argument("project", required=True)
+@cli.command(name="stage", help="Builds output files once with staging configuration.")
 @click.argument("directory", required=True)
-@click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
-@click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-@click.option("--mode", "-m", default="production", help="Mode of the pollin tool to run in, either 'develop' or 'production'.")
-def build(host: str, directory: str, project: str, output_path: str, mode: str):
+@click.option("--deploy", "-d", is_flag=True, default=False, help="Deploy the built files to the staging GAMS API after build.")
+@click.option("--username", "-u", default=None, help="GAMS API username for deployment.")
+@click.option("--password", "-p", default=None, help="GAMS API password for deployment.")
+def stage(directory: str, deploy: bool, username: str, password: str):
     """
-    Builds the static site generator output files to the specified location.
-    :param host: The host of the GAMS5 instance
-    :param directory: Path of the view template directory
-    :param project: Abbreviation of the project
-    :param output_path: Path to where the output files should be placed. By default, the output files are placed in the project directory.
+    Builds the static site generator output files with staging config.
+    Use --deploy to upload the result to the staging GAMS API.
     """
 
     # setting up the application context
     (AppInitializer(app_context)
      .configure(
-        project=project,
-        host=host,
         directory=directory,
-        output_path=output_path,
-        mode=mode
-
+        mode="stage"
     )
      .init_context_beans()
      .setup()
      )
 
-    # encapsulates loading of project data and digital objects# encapsulates loading of project data and digital objects
+    # validate template files first
+    run_validation_or_exit(app_context)
+
+    # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
         .load())
 
@@ -57,14 +132,52 @@ def build(host: str, directory: str, project: str, output_path: str, mode: str):
     (ApplicationViewFileEventController(app_context)
         .render_views())
 
-@cli.command(name="start", help="Starts the development process of the static site generator.")
-@click.argument("project", required=True)
+    # deploy if requested
+    if deploy:
+        run_deploy(app_context, username, password)
+
+
+@cli.command(name="build", help="Builds production output files.")
+@click.argument("directory", required=True)
+@click.option("--deploy", "-d", is_flag=True, default=False, help="Deploy the built files to the production GAMS API after build.")
+@click.option("--username", "-u", default=None, help="GAMS API username for deployment.")
+@click.option("--password", "-p", default=None, help="GAMS API password for deployment.")
+def build(directory: str, deploy: bool, username: str, password: str):
+    """
+    Builds the static site generator production output files.
+    Use --deploy to upload the result to the production GAMS API.
+    """
+
+    # setting up the application context
+    (AppInitializer(app_context)
+     .configure(
+        directory=directory,
+        mode="build"
+    )
+     .init_context_beans()
+     .setup()
+     )
+
+    # validate template files first
+    run_validation_or_exit(app_context)
+
+    # encapsulates loading of project data and digital objects
+    (ApplicationDataLoader(app_context)
+        .load())
+
+    # render all views (and handle related files etc.)
+    (ApplicationViewFileEventController(app_context)
+        .render_views())
+
+    # deploy if requested
+    if deploy:
+        run_deploy(app_context, username, password)
+
+
+@cli.command(name="dev", help="Starts the development process of the pollin tool.")
 @click.argument("directory", required=True)
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
-@click.option("--host", "-h", default="http://localhost:18085", help="The host of the GAMS5 instance")
-@click.option("--output_path", "-o", default=None, help="Path to where the output = public files should be placed. By default, the output files are placed in the project directory.")
-@click.option("--mode", "-m", default="develop", help="Mode of the pollin tool to run in, either 'develop' or 'production'.")
-def start(host: str, directory: str, project: str, port: int, output_path: str, mode: str):
+def dev(directory: str, port: int):
     """
     Starts the static site generator (web server with rendering of views and initial data loading etc.)
     """
@@ -72,15 +185,15 @@ def start(host: str, directory: str, project: str, port: int, output_path: str, 
     # setting up the application context
     (AppInitializer(app_context)
      .configure(
-        project=project,
-        host=host,
         directory=directory,
-        output_path=output_path,
-        mode=mode
+        mode="dev"
     )
      .init_context_beans()
      .setup()
      )
+
+    # first run validation
+    run_validation_or_exit(app_context)
 
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
@@ -103,5 +216,6 @@ def start(host: str, directory: str, project: str, port: int, output_path: str, 
         dev_server_process.join()
 
 
-cli.add_command(start)
+cli.add_command(dev)
 cli.add_command(build)
+cli.add_command(stage)

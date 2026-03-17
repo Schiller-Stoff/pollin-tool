@@ -1,0 +1,57 @@
+variables:
+    UV_VERSION: 0.5
+    PYTHON_BASE_VERSION: 3.12
+    BASE_LAYER: bookworm-slim
+
+stages:
+  - test
+  - lint
+  - build
+  - publish
+
+# A hidden job template that can be used by different Python versions
+.test-template:
+  stage: test
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_BASE_VERSION-$BASE_LAYER
+  script:
+    - echo "uv environment version"
+    - uv --version
+    - echo "Pinning ${PYTHON_VERSION}"
+    - uv python pin ${PYTHON_VERSION}
+    - uv sync
+    - echo "Using python version:"
+    - python --version
+    - echo "Running tests with uv"
+    - uv run pytest tests
+
+# Specific jobs for Python versions
+test-py_3.12:
+  extends: .test-template
+  variables:
+    PYTHON_VERSION: "3.12"
+
+lint:
+  stage: lint
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_BASE_VERSION-$BASE_LAYER
+  script:
+    - echo "uv environment version"
+    - uv --version
+    - echo "Using python version:"
+    - python --version
+    - echo "Running uv check with ruff"
+    - uv run ruff check src
+
+build:
+  stage: build
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_BASE_VERSION-$BASE_LAYER
+  script:
+    uv build
+
+publish-pypi:
+  stage: publish
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_BASE_VERSION-$BASE_LAYER
+  script:
+    - uv build
+    - uv publish --token $PYPI_TOKEN
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
