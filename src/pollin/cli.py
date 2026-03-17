@@ -4,6 +4,13 @@ import sys
 import click
 import multiprocessing
 
+from importlib.metadata import version, PackageNotFoundError
+# makes sure that the version is set correctly
+try:
+    __version__ = version("pollin")
+except PackageNotFoundError:
+    __version__ = "dev"
+
 from pollin.deploy.GamsAuthClient import GamsAuthClient
 from pollin.ssr.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
 from pollin.ssr.init.ApplicationContext import ApplicationContext
@@ -92,6 +99,7 @@ def run_deploy(context: ApplicationContext, username: str | None, password: str 
 
 
 @click.group()
+@click.version_option(version=version("pollin"), prog_name="pollin-tool")
 @click.option("--log", "-l", default="INFO", help="log level, default is INFO")
 def cli(log: str):
     """
