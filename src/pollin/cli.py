@@ -11,8 +11,8 @@ from pollin.ssr.load.ApplicationDataLoader import ApplicationDataLoader
 from pollin.ssr.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
 from pollin.ssr.watch.ApplicationWebServer import ApplicationWebServer
 from pollin.ssr.init.AppInitializer import AppInitializer
-from pollin.web_validation.JinjaTemplateValidator import JinjaTemplateValidator
-from pollin.web_validation.StaticFileValidator import StaticFileValidator
+from pollin.validation.JinjaTemplateValidator import JinjaTemplateValidator
+from pollin.validation.StaticFileValidator import StaticFileValidator
 
 # global application context
 app_context = ApplicationContext()
