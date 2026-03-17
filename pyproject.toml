@@ -25,7 +25,7 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://zimlab.uni-graz.at/gams5/pollin"
+Repository = "https://zimlab.uni-graz.at/gams5/production/postprocessing/poll-in-tool"
 
 [build-system]
 requires = ["hatchling"]
