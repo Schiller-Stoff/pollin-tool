@@ -2,9 +2,9 @@ import pathlib
 from os import PathLike
 from typing import Literal
 
-from pollin.init.config.AppEnv import AppEnv
-from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
-from pollin.init.config.ApplicationCacheConfig import ApplicationCacheConfig
+from pollin.ssr.init.config.AppEnv import AppEnv
+from pollin.ssr.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.ssr.init.config.ApplicationCacheConfig import ApplicationCacheConfig
 
 
 class ApplicationConfiguration:

@@ -3,8 +3,8 @@ from pathlib import Path
 
 import jinja2
 
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.web_validation.HardcodedPathVisitor import HardcodedPathVisitor
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.validation.HardcodedPathVisitor import HardcodedPathVisitor
 
 
 class JinjaTemplateValidator:

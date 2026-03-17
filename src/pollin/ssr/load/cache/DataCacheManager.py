@@ -4,8 +4,8 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 import hashlib
 from email.utils import formatdate, parsedate_to_datetime
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
 
 class DataCacheManager:

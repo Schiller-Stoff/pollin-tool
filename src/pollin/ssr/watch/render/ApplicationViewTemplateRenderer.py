@@ -2,9 +2,9 @@ import logging
 import os.path
 from pathlib import Path
 import jinja2
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
-from pollin.watch.utils.RenderUtils import RenderUtils
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+from pollin.ssr.watch.utils.RenderUtils import RenderUtils
 
 class ApplicationViewTemplateRenderer:
     """

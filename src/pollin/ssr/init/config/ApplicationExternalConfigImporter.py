@@ -5,8 +5,8 @@ from os import PathLike
 from pathlib import Path
 from typing import Dict, Any
 
-from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
-from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.ssr.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.ssr.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 
 
 class ApplicationExternalConfigImporter:

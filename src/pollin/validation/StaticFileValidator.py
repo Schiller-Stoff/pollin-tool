@@ -3,8 +3,8 @@ import re
 from pathlib import Path
 from typing import Set
 
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.web_validation.ValidationStatics import ValidationStatics
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.validation.ValidationStatics import ValidationStatics
 
 
 class StaticFileValidator:

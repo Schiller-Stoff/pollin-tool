@@ -1,4 +1,4 @@
-from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
+from pollin.ssr.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from utils.TestDigitalObject import TestDigitalObject
 
 

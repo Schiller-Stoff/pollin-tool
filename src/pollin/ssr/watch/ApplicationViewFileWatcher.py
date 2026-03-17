@@ -2,8 +2,8 @@ import time
 
 from watchdog.observers import Observer
 
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
 
 
 class ApplicationViewFileWatcher:
