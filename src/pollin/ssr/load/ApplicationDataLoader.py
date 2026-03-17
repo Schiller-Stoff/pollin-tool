@@ -1,10 +1,10 @@
 import logging
 
-from pollin.load.DigitalObjectService import DigitalObjectService
-from pollin.load.ProjectService import ProjectService
-from pollin.init.ApplicationContext import ApplicationContext
+from pollin.ssr.load.DigitalObjectService import DigitalObjectService
+from pollin.ssr.load.ProjectService import ProjectService
+from pollin.ssr.init.ApplicationContext import ApplicationContext
 from typing import List
-from pollin.load.cache.DataCacheManager import DataCacheManager
+from pollin.ssr.load.cache.DataCacheManager import DataCacheManager
 
 
 class ApplicationDataLoader:

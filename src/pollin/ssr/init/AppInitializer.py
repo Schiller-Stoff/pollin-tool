@@ -3,14 +3,14 @@ import pathlib
 import shutil
 from pathlib import Path
 from typing import Literal
-from pollin.init.config.AppEnv import AppEnv
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.init.config.ApplicationConfiguration import ApplicationConfiguration
-from pollin.init.config.ApplicationExternalConfig import ApplicationExternalConfig
-from pollin.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
-from pollin.init.config.ApplicationCacheConfig import ApplicationCacheConfig
-from pollin.load.utils.Pyrilo import Pyrilo
-from pollin.load.ApplicationDatastore import ApplicationDatastore
+from pollin.ssr.init.config.AppEnv import AppEnv
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.init.config.ApplicationConfiguration import ApplicationConfiguration
+from pollin.ssr.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from pollin.ssr.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
+from pollin.ssr.init.config.ApplicationCacheConfig import ApplicationCacheConfig
+from pollin.ssr.load.utils.Pyrilo import Pyrilo
+from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
 
 class AppInitializer:
 

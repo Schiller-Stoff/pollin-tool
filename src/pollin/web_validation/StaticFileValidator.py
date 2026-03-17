@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from typing import Set
 
-from pollin.init.ApplicationContext import ApplicationContext
+from pollin.ssr.init.ApplicationContext import ApplicationContext
 from pollin.web_validation.ValidationStatics import ValidationStatics
 
 

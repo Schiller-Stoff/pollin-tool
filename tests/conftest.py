@@ -3,8 +3,8 @@ import pytest
 from unittest.mock import Mock, patch
 
 from pollin.deploy.GamsAuthClient import GamsAuthClient
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.load.ApplicationDatastore import ApplicationDatastore
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
@@ -40,7 +40,7 @@ def test_application_context(test_pollin_project):
 @pytest.fixture
 def mock_api():
     """Simple mock without actual HTTP server."""
-    with patch('pollin.init.AppInitializer.Pyrilo') as MockPyrilo:
+    with patch('pollin.ssr.init.AppInitializer.Pyrilo') as MockPyrilo:
 
         test_object = TestDigitalObject.generate()
         test_project_dict = TestProject.generate()

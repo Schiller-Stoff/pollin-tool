@@ -17,8 +17,8 @@ class TestDeployAfterBuild:
         cli_result, pollin_project = mock_pollin_env
         assert cli_result.exit_code == 0, f"Build failed: {cli_result.output}"
 
-        from pollin.init.ApplicationContext import ApplicationContext
-        from pollin.load.ApplicationDatastore import ApplicationDatastore
+        from pollin.ssr.init.ApplicationContext import ApplicationContext
+        from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
 
         app_context = ApplicationContext()
         app_context.set_config(pollin_project.get_config())

@@ -2,10 +2,10 @@ import logging
 
 # Change import to PatternMatchingEventHandler
 from watchdog.events import PatternMatchingEventHandler
-from pollin.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
-from pollin.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
+from pollin.ssr.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
+from pollin.ssr.watch.render.ApplicationViewTemplateRenderer import ApplicationViewTemplateRenderer
 
 
 class ApplicationViewFileEventController(PatternMatchingEventHandler):

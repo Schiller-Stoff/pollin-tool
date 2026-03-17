@@ -5,12 +5,12 @@ import click
 import multiprocessing
 
 from pollin.deploy.GamsAuthClient import GamsAuthClient
-from pollin.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
-from pollin.init.ApplicationContext import ApplicationContext
-from pollin.load.ApplicationDataLoader import ApplicationDataLoader
-from pollin.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
-from pollin.watch.ApplicationWebServer import ApplicationWebServer
-from pollin.init.AppInitializer import AppInitializer
+from pollin.ssr.watch.ApplicationViewFileEventController import ApplicationViewFileEventController
+from pollin.ssr.init.ApplicationContext import ApplicationContext
+from pollin.ssr.load.ApplicationDataLoader import ApplicationDataLoader
+from pollin.ssr.watch.ApplicationViewFileWatcher import ApplicationViewFileWatcher
+from pollin.ssr.watch.ApplicationWebServer import ApplicationWebServer
+from pollin.ssr.init.AppInitializer import AppInitializer
 from pollin.web_validation.JinjaTemplateValidator import JinjaTemplateValidator
 from pollin.web_validation.StaticFileValidator import StaticFileValidator
 

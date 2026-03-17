@@ -7,7 +7,7 @@ from pathlib import Path
 import click
 
 from pollin.deploy.GamsAuthClient import GamsAuthClient
-from pollin.init.ApplicationContext import ApplicationContext
+from pollin.ssr.init.ApplicationContext import ApplicationContext
 
 
 class DeployService:
