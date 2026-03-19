@@ -85,6 +85,7 @@ pollin build "/path/to/project" -d
 1. Increment version in pyproject.toml in feature branch (merging into develop):
     - make sure version follow vd.d.d pattern 
 2. Merge changes to develop -> main
-3. Create release on the gitlab webclient with new git tag that must be the same as in the pyproject.toml!
+3. Create release on the gitlab webclient (from main branch) with new git tag that must be the same as in the pyproject.toml!
     - e.g. v0.1.1
+    - create the release from the main branch!
     - gitlab will autodeploy the new version to pypi
