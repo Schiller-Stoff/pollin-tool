@@ -27,6 +27,8 @@ class AppInitializer:
         if mode not in ["dev", "build", "stage"]:
             raise ValueError("Mode must be either 'dev', 'stage' or 'build'")
 
+        directory = str(Path(directory).resolve())  # resolve "." to absolute path
+
         # load possible external configuration
         external_config = ApplicationExternalConfigImporter.import_config(
             pathlib.Path(directory) / ApplicationConfiguration.CONFIG_FILE_NAME,
