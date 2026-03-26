@@ -46,13 +46,18 @@ def test_build_command_fails_when_invalid_command_is_given(mock_pollin_env):
     assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate invalid path"
 
 
-def test_build_command_fails_when_no_command_is_given(mock_pollin_env):
-    """Test the build command with no project path."""
+def test_build_command_should_not_fail_when_no_path_was_given(mock_api, test_pollin_project):
+    """Test that build works when invoked without a path argument (defaults to CWD)."""
     runner = CliRunner()
-    result = runner.invoke(cli, ['build'])
+    original_dir = os.getcwd()
+    # i need to make sure that the working directory has the pollin.toml from the test files in it
+    try:
+        os.chdir(test_pollin_project.project_dir)
+        result = runner.invoke(cli, ['build'])
+    finally:
+        os.chdir(original_dir)
 
-    assert result.exit_code != 0, "Build command should fail with no path"
-    assert isinstance(result.exception, SystemExit), "Exception should be SystemExit"
+    assert result.exit_code == 0, f"Build command failed: {result.output}"
 
 
 def test_build_command_fails_when_no_config_file_was_found_at_path(tmp_path):

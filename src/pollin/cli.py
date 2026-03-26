@@ -109,7 +109,7 @@ def cli(log: str):
     logging.basicConfig( encoding='utf-8', level=logging.getLevelName(log))
 
 @cli.command(name="stage", help="Builds output files once with staging configuration.")
-@click.argument("directory", required=True)
+@click.argument("directory", default=".", required=False)
 @click.option("--deploy", "-d", is_flag=True, default=False, help="Deploy the built files to the staging GAMS API after build.")
 @click.option("--username", "-u", default=None, help="GAMS API username for deployment.")
 @click.option("--password", "-p", default=None, help="GAMS API password for deployment.")
@@ -146,7 +146,7 @@ def stage(directory: str, deploy: bool, username: str, password: str):
 
 
 @cli.command(name="build", help="Builds production output files.")
-@click.argument("directory", required=True)
+@click.argument("directory", default=".", required=False)
 @click.option("--deploy", "-d", is_flag=True, default=False, help="Deploy the built files to the production GAMS API after build.")
 @click.option("--username", "-u", default=None, help="GAMS API username for deployment.")
 @click.option("--password", "-p", default=None, help="GAMS API password for deployment.")
@@ -183,7 +183,7 @@ def build(directory: str, deploy: bool, username: str, password: str):
 
 
 @cli.command(name="dev", help="Starts the development process of the pollin tool.")
-@click.argument("directory", required=True)
+@click.argument("directory", default=".", required=False)
 @click.option("--port", "-p", default=18090, help="The port to run the development server on")
 def dev(directory: str, port: int):
     """
