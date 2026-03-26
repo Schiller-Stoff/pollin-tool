@@ -8,16 +8,26 @@ Meant as replacement for the gams3 "gamsdev" development workflow.
 
 ## Quickstart
 
+1. Setup project files for the pollin tool
+
+2. Install pollin-tool itself
+
 ```sh
 
 # 1. install uv
+# mac might need brew to install uv
 
 # 2. install pollin-tool via 
 # optionally specifiy version tag
 uv tool install pollin-tool
 
-#3. use the pollin-tool
-# e.g. 
+# verify installation via
+pollin --version
+
+# 3. use the pollin-tool
+cd ./my/working/directory
+pollin dev # will use the pollin.toml from the current working dir
+# alternatively specifiy a path
 pollin dev "C:\path\to\project"
 # check for basic commands
 pollin 
