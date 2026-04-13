@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from pollin.ssr.init.config.AppEnv import AppEnv
-from pollin.ssr.init.config.ApplicationCacheConfig import ApplicationCacheConfig
-from pollin.ssr.init.config.ApplicationConfiguration import ApplicationConfiguration
+from gams_frog.ssr.init.config.AppEnv import AppEnv
+from gams_frog.ssr.init.config.ApplicationCacheConfig import ApplicationCacheConfig
+from gams_frog.ssr.init.config.ApplicationConfiguration import ApplicationConfiguration
 from utils.TestProject import TestProject
 
 
@@ -74,7 +74,7 @@ class TestPollinProject:
             PROJECT_ABBR=test_config.project,
             UI_VERSION=TestPollinProject.POLLIN_TOML_VERSION,
             UI_TITLE=TestPollinProject.POLLIN_TOML_TITLE,
-            POLLIN_MODE="build",
+            GAMS_FROG_MODE="build",
             IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN,
             DANGEROUS_GAMS3_PRODUCTION_ORIGIN=TestPollinProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN,
             DANGEROUS_GAMS5_PRODUCTION_ORIGIN=TestPollinProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN

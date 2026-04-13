@@ -1,7 +1,7 @@
 import os
 
 from click.testing import CliRunner
-from pollin.cli import cli
+from gams_frog.cli import cli
 from utils.TestDigitalObject import TestDigitalObject
 
 

@@ -2,16 +2,16 @@
 import pytest
 from unittest.mock import Mock, patch
 
-from pollin.deploy.GamsAuthClient import GamsAuthClient
-from pollin.ssr.init.ApplicationContext import ApplicationContext
-from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
+from gams_frog.deploy.GamsAuthClient import GamsAuthClient
+from gams_frog.ssr.init.ApplicationContext import ApplicationContext
+from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
 from utils.TestPollinProject import TestPollinProject
 from utils.TestProject import TestProject
 from click.testing import CliRunner
-from pollin.cli import cli
+from gams_frog.cli import cli
 
 
 @pytest.fixture
