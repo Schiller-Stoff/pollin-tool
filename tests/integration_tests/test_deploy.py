@@ -2,7 +2,7 @@ import zipfile
 
 from gams_frog.deploy.DeployService import DeployService
 from utils.TestDigitalObject import TestDigitalObject
-from utils.TestGamsFrogProject import TestPollinProject
+from utils.TestGamsFrogProject import TestGamsFrogProject
 
 
 # ---------------------------------------------------------------------------
@@ -65,7 +65,7 @@ class TestDeployAfterBuild:
             assert TestDigitalObject.TITLE in object_html
 
             index_html = zf.read("index.html").decode("utf-8")
-            assert TestPollinProject.PROJECT_ABBR in index_html
+            assert TestGamsFrogProject.PROJECT_ABBR in index_html
 
     def test_deploy_zip_preserves_static_file_content(self, mock_gams_frog_env, mock_gams_auth_client):
         """Static files in the zip should match original source content."""
@@ -73,13 +73,13 @@ class TestDeployAfterBuild:
 
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
             css_content = zf.read("static/css/styles.css").decode("utf-8")
-            assert TestPollinProject.TEST_CSS_FILE_CONTENT in css_content
+            assert TestGamsFrogProject.TEST_CSS_FILE_CONTENT in css_content
 
             js_content = zf.read("static/js/scripts.js").decode("utf-8")
-            assert TestPollinProject.TEST_JS_FILE_CONTENT in js_content
+            assert TestGamsFrogProject.TEST_JS_FILE_CONTENT in js_content
 
             logo_bytes = zf.read("static/images/logo.png")
-            assert logo_bytes == TestPollinProject.TEST_LOGO_FILE_CONTENT
+            assert logo_bytes == TestGamsFrogProject.TEST_LOGO_FILE_CONTENT
 
     def test_deploy_zip_has_no_path_prefixes(self, mock_gams_frog_env, mock_gams_auth_client):
         """No file in the zip should start with 'pub/', 'public/', or '/'."""
@@ -98,7 +98,7 @@ class TestDeployAfterBuild:
         file_tuple = mock_gams_auth_client.put.call_args[1]["files"]["file"]
         filename, _, content_type = file_tuple
 
-        assert filename == f"{TestPollinProject.PROJECT_ABBR}_deploy.zip"
+        assert filename == f"{TestGamsFrogProject.PROJECT_ABBR}_deploy.zip"
         assert content_type == "application/zip"
 
     def test_deploy_targets_correct_api_endpoint(self, mock_gams_frog_env, mock_gams_auth_client):
@@ -106,4 +106,4 @@ class TestDeployAfterBuild:
         self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         endpoint = mock_gams_auth_client.put.call_args[0][0]
-        assert endpoint == f"v1/projects/{TestPollinProject.PROJECT_ABBR}/web"
+        assert endpoint == f"v1/projects/{TestGamsFrogProject.PROJECT_ABBR}/web"

@@ -8,7 +8,7 @@ from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
-from utils.TestGamsFrogProject import TestPollinProject
+from utils.TestGamsFrogProject import TestGamsFrogProject
 from utils.TestProject import TestProject
 from click.testing import CliRunner
 from gams_frog.cli import cli
@@ -17,7 +17,7 @@ from gams_frog.cli import cli
 @pytest.fixture
 def test_gams_frog_project(tmp_path):
     """Creates a basic testing gams_frog project structure."""
-    test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
+    test_project = TestGamsFrogProject(tmp_path)  # Initialize to create the structure
     return test_project
 
 @pytest.fixture

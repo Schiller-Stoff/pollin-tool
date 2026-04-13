@@ -6,7 +6,7 @@ from gams_frog.ssr.init.config.ApplicationConfiguration import ApplicationConfig
 from utils.TestProject import TestProject
 
 
-class TestPollinProject:
+class TestGamsFrogProject:
     """
     A utility class to create a temporary Pollin project structure for testing purposes.
     root_dir: Path - The root directory where the temporary project will be created.
@@ -61,8 +61,8 @@ class TestPollinProject:
         """
 
         test_config = ApplicationConfiguration(
-            project=TestPollinProject.PROJECT_ABBR,
-            gams_host=TestPollinProject.GAMS_API_ORIGIN,
+            project=TestGamsFrogProject.PROJECT_ABBR,
+            gams_host=TestGamsFrogProject.GAMS_API_ORIGIN,
             project_files_root=self.project_dir,
             output_path=None,
             mode="build"
@@ -72,27 +72,27 @@ class TestPollinProject:
         test_config.ENV = AppEnv(
             GAMS_API_ORIGIN=test_config.gams_host,
             PROJECT_ABBR=test_config.project,
-            UI_VERSION=TestPollinProject.POLLIN_TOML_VERSION,
-            UI_TITLE=TestPollinProject.POLLIN_TOML_TITLE,
+            UI_VERSION=TestGamsFrogProject.POLLIN_TOML_VERSION,
+            UI_TITLE=TestGamsFrogProject.POLLIN_TOML_TITLE,
             GAMS_FROG_MODE="build",
-            IIIF_IMAGE_SERVER_ORIGIN=TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN,
-            DANGEROUS_GAMS3_PRODUCTION_ORIGIN=TestPollinProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN,
-            DANGEROUS_GAMS5_PRODUCTION_ORIGIN=TestPollinProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN
+            IIIF_IMAGE_SERVER_ORIGIN=TestGamsFrogProject.IIIF_IMAGE_SERVER_ORIGIN,
+            DANGEROUS_GAMS3_PRODUCTION_ORIGIN=TestGamsFrogProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN,
+            DANGEROUS_GAMS5_PRODUCTION_ORIGIN=TestGamsFrogProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN
         )
 
         test_config.project_external_config = {
             "project": {
-                "projectAbbr": TestPollinProject.PROJECT_ABBR
+                "projectAbbr": TestGamsFrogProject.PROJECT_ABBR
             },
             "dev": {
-                "gamsApiOrigin": TestPollinProject.GAMS_API_ORIGIN
+                "gamsApiOrigin": TestGamsFrogProject.GAMS_API_ORIGIN
             },
             "build": {
-                "gamsApiOrigin": TestPollinProject.GAMS_API_ORIGIN
+                "gamsApiOrigin": TestGamsFrogProject.GAMS_API_ORIGIN
             },
             "ui": {
-                "version": TestPollinProject.POLLIN_TOML_VERSION,
-                "title": TestPollinProject.POLLIN_TOML_TITLE
+                "version": TestGamsFrogProject.POLLIN_TOML_VERSION,
+                "title": TestGamsFrogProject.POLLIN_TOML_TITLE
             }
         }
 
@@ -122,24 +122,24 @@ class TestPollinProject:
             PROJECT_ABBR = "{self.PROJECT_ABBR}"
             
             [dangerous]
-            GAMS3_PRODUCTION_ORIGIN = "{TestPollinProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN}"
-            GAMS5_PRODUCTION_ORIGIN = "{TestPollinProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN}"
+            GAMS3_PRODUCTION_ORIGIN = "{TestGamsFrogProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN}"
+            GAMS5_PRODUCTION_ORIGIN = "{TestGamsFrogProject.DANGEROUS_GAMS5_PRODUCTION_ORIGIN}"
             
             [dev]
-            GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
-            IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
+            GAMS_API_ORIGIN = "{TestGamsFrogProject.GAMS_API_ORIGIN}"
+            IIIF_IMAGE_SERVER_ORIGIN = "{TestGamsFrogProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [stage]
-            GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
-            IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
+            GAMS_API_ORIGIN = "{TestGamsFrogProject.GAMS_API_ORIGIN}"
+            IIIF_IMAGE_SERVER_ORIGIN = "{TestGamsFrogProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [build]
-            GAMS_API_ORIGIN = "{TestPollinProject.GAMS_API_ORIGIN}"
-            IIIF_IMAGE_SERVER_ORIGIN = "{TestPollinProject.IIIF_IMAGE_SERVER_ORIGIN}"
+            GAMS_API_ORIGIN = "{TestGamsFrogProject.GAMS_API_ORIGIN}"
+            IIIF_IMAGE_SERVER_ORIGIN = "{TestGamsFrogProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [ui]
-            VERSION = "{TestPollinProject.POLLIN_TOML_VERSION}"
-            TITLE = "{TestPollinProject.POLLIN_TOML_TITLE}"
+            VERSION = "{TestGamsFrogProject.POLLIN_TOML_VERSION}"
+            TITLE = "{TestGamsFrogProject.POLLIN_TOML_TITLE}"
         """
 
         self._config.project_config_toml.write_text(config)
@@ -165,11 +165,11 @@ class TestPollinProject:
 
         # Create basic static files
         self.get_test_css_path().parent.mkdir(parents=True, exist_ok=True)
-        self.get_test_css_path().write_text(TestPollinProject.TEST_CSS_FILE_CONTENT)
+        self.get_test_css_path().write_text(TestGamsFrogProject.TEST_CSS_FILE_CONTENT)
         self.get_test_js_path().parent.mkdir(parents=True, exist_ok=True)
-        self.get_test_js_path().write_text(TestPollinProject.TEST_JS_FILE_CONTENT)
+        self.get_test_js_path().write_text(TestGamsFrogProject.TEST_JS_FILE_CONTENT)
         self.get_test_logo_path().parent.mkdir(parents=True, exist_ok=True)
-        self.get_test_logo_path().write_bytes(TestPollinProject.TEST_LOGO_FILE_CONTENT)
+        self.get_test_logo_path().write_bytes(TestGamsFrogProject.TEST_LOGO_FILE_CONTENT)
 
     def get_test_css_path(self):
         """
