@@ -1,6 +1,6 @@
 [project]
 name = "gams-frog"
-version = "v0.2.0"
+version = "v0.3.0"
 description = "CLI tool for frontend generation for GAMS5 projects"
 authors = [
     { name = "Sebastian David Schiller-Stoff", email = "sebastian.stoff@uni-graz.at" }
