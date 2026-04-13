@@ -27,7 +27,7 @@ class ApplicationWebServer:
 
             # Check if path is a directory
             if os.path.isdir(full_path):
-                # Pollin-Tool logic: Directory URLs must end with a slash for relative linking to work
+                # gams-frog logic: Directory URLs must end with a slash for relative linking to work
                 if not requested_path.endswith("/"):
                     msg = (f"POLLIN ERROR: The URL path '{requested_path}' points to a directory (trying to resolve the nested index.html) but is missing a trailing slash '/'. "
                            "This hinders relative paths (like 'root_path') in the static site from resolving correctly.")
