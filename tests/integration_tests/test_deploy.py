@@ -12,21 +12,21 @@ from utils.TestGamsFrogProject import TestGamsFrogProject
 class TestDeployAfterBuild:
     """Tests that deploy works correctly with actual build output from mock_gams_frog_env."""
 
-    def _deploy_after_build(self, mock_pollin_env, mock_gams_auth_client):
+    def _deploy_after_build(self, mock_gams_frog_env, mock_gams_auth_client):
         """Helper: sets up app context from a completed build and runs deploy."""
-        cli_result, pollin_project = mock_pollin_env
+        cli_result, gams_frog_project = mock_gams_frog_env
         assert cli_result.exit_code == 0, f"Build failed: {cli_result.output}"
 
         from gams_frog.ssr.init.ApplicationContext import ApplicationContext
         from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 
         app_context = ApplicationContext()
-        app_context.set_config(pollin_project.get_config())
+        app_context.set_config(gams_frog_project.get_config())
         app_context.set_app_data_store(ApplicationDatastore())
 
         service = DeployService(app_context, mock_gams_auth_client)
         service.deploy()
-        return pollin_project
+        return gams_frog_project
 
     def _get_uploaded_zip(self, mock_gams_auth_client) -> zipfile.ZipFile:
         """Helper: extracts the zip from the mocked put call and returns an open ZipFile."""
