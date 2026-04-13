@@ -44,10 +44,10 @@ def test_missing_obj_required_property_should_not_be_none(test_pollin_project):
 
 def test_import_config_applies_overrides(tmp_path):
     """
-    Verifies that values in pollin.override.toml override the base config,
+    Verifies that values in gams_frog.override.toml override the base config,
     while non-overridden values remain intact.
     """
-    # 1. Setup: Create the base 'pollin.toml'
+    # 1. Setup: Create the base 'gams_frog.toml'
     # We write the file manually to avoid dependencies on TOML writers
     base_config_content = """
     [project]
@@ -65,17 +65,17 @@ def test_import_config_applies_overrides(tmp_path):
     GAMS5_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
     """
 
-    config_file = tmp_path / "pollin.toml"
+    config_file = tmp_path / "gams_frog.toml"
     with open(config_file, "w", encoding="utf-8") as f:
         f.write(base_config_content)
 
-    # 2. Setup: Create the 'pollin.override.toml' in the same directory
+    # 2. Setup: Create the 'gams_frog.override.toml' in the same directory
     override_config_content = """
     [dev]
     GAMS_API_ORIGIN = "http://override.example.com"
     """
 
-    override_file = tmp_path / "pollin.override.toml"
+    override_file = tmp_path / "gams_frog.override.toml"
     with open(override_file, "w", encoding="utf-8") as f:
         f.write(override_config_content)
 

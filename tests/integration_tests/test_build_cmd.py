@@ -50,7 +50,7 @@ def test_build_command_should_not_fail_when_no_path_was_given(mock_api, test_pol
     """Test that build works when invoked without a path argument (defaults to CWD)."""
     runner = CliRunner()
     original_dir = os.getcwd()
-    # i need to make sure that the working directory has the pollin.toml from the test files in it
+    # i need to make sure that the working directory has the gams_frog.toml from the test files in it
     try:
         os.chdir(test_pollin_project.project_dir)
         result = runner.invoke(cli, ['build'])

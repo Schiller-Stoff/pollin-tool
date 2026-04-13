@@ -16,7 +16,7 @@ from pollin.cli import cli
 
 @pytest.fixture
 def test_pollin_project(tmp_path):
-    """Creates a basic testing pollin project structure."""
+    """Creates a basic testing gams_frog project structure."""
     test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
     return test_project
 
@@ -40,7 +40,7 @@ def test_application_context(test_pollin_project):
 @pytest.fixture
 def mock_api():
     """Simple mock without actual HTTP server."""
-    with patch('pollin.ssr.init.AppInitializer.Pyrilo') as MockPyrilo:
+    with patch('gams_frog.ssr.init.AppInitializer.Pyrilo') as MockPyrilo:
 
         test_object = TestDigitalObject.generate()
         test_project_dict = TestProject.generate()

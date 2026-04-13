@@ -16,16 +16,16 @@ Meant as replacement for the gams3 "gamsdev" development workflow.
 # 1. install uv
 # mac might need brew to install uv
 
-# 2. install gams-frog via 
+# 2. install gams_frog via 
 # optionally specifiy version tag
-uv tool install gams-frog
+uv tool install gams_frog
 
 # verify installation via
 frog --version
 
-# 3. use the gams-frog
+# 3. use the gams_frog
 cd ./my/working/directory
-frog dev # will use the gams-frog.toml from the current working dir
+frog dev # will use the gams_frog.toml from the current working dir
 # alternatively specifiy a path
 frog dev "C:\path\to\project"
 # check for basic commands
@@ -47,11 +47,11 @@ frog
 # 02a. Install via pypi
 # 02a. uv install / pip install
 
-# 02b. Clone gams-frog
+# 02b. Clone gams_frog
 # 02b. uv sync (uv procedure)
 # 02b. Start virtual environment (venv)
 
-# 03. Configure gams-frog via config file (gams-frog.toml) in template project folder
+# 03. Configure gams_frog via config file (gams_frog.toml) in template project folder
 
 # (point to project folder with config file)
 frog dev "C:\path\to\project"
