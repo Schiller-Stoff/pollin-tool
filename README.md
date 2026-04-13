@@ -1,36 +1,35 @@
-# Poll-In tool
+# gams-frog
 
-CLI tool that polls / pulls-in ("poll-in") digital objects from a GAMS5 project and performs static site rendering.
-(Informatics: polling-concept)
+CLI tool that generates frontends for GAMS5 projects.
 Supplies a development workflow for GAMS5-based web projects.
 
 Meant as replacement for the gams3 "gamsdev" development workflow.
 
 ## Quickstart
 
-1. Setup project files for the pollin tool
+1. Setup project files for gams-frog
 
-2. Install pollin-tool itself
+2. Install gams-frog itself
 
 ```sh
 
 # 1. install uv
 # mac might need brew to install uv
 
-# 2. install pollin-tool via 
+# 2. install gams-frog via 
 # optionally specifiy version tag
-uv tool install pollin-tool
+uv tool install gams-frog
 
 # verify installation via
-pollin --version
+frog --version
 
-# 3. use the pollin-tool
+# 3. use the gams-frog
 cd ./my/working/directory
-pollin dev # will use the pollin.toml from the current working dir
+frog dev # will use the gams-frog.toml from the current working dir
 # alternatively specifiy a path
-pollin dev "C:\path\to\project"
+frog dev "C:\path\to\project"
 # check for basic commands
-pollin 
+frog 
 
 ```
 
@@ -48,24 +47,24 @@ pollin
 # 02a. Install via pypi
 # 02a. uv install / pip install
 
-# 02b. Clone pollin-tool
+# 02b. Clone gams-frog
 # 02b. uv sync (uv procedure)
 # 02b. Start virtual environment (venv)
 
-# 03. Configure pollin tool via config file (pollin.toml) in template project folder
+# 03. Configure gams-frog via config file (gams-frog.toml) in template project folder
 
 # (point to project folder with config file)
-pollin dev "C:\path\to\project"
+frog dev "C:\path\to\project"
 
 # for production use
-pollin build "C:\path\to\project"
+frog build "C:\path\to\project"
 
 ```
 
 ### Staging
 
 ```sh
-pollin stage "/path/to/project"
+frog stage "/path/to/project"
 
 ```
 
@@ -74,7 +73,7 @@ pollin stage "/path/to/project"
 
 ```sh
 # use build command to generate the production files
-pollin build "/path/to/project"
+frog build "/path/to/project"
 
 ```
 
@@ -85,10 +84,10 @@ pollin build "/path/to/project"
 
 ```sh
 # staging deployment
-pollin stage "/path/to/project" -d
+frog stage "/path/to/project" -d
 
 # production deployment
-pollin build "/path/to/project" -d
+frog build "/path/to/project" -d
 
 
 ```
