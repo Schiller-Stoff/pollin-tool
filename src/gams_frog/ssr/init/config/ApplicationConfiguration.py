@@ -43,7 +43,7 @@ class ApplicationConfiguration:
     Stores runtime env variables needed in the templates, e.g. set gams-api host
     """
 
-    CONFIG_FILE_NAME: str = "gams_frog.toml"
+    CONFIG_FILE_NAME: str = "gams-frog.toml"
 
     cache: ApplicationCacheConfig
     """
