@@ -1,5 +1,5 @@
 # tests/test_datastore.py - Data storage testing
-from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
+from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
 
