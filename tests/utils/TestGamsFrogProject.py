@@ -107,7 +107,7 @@ class TestGamsFrogProject:
 
     def _create_file_structure(self):
         """
-        Creates a basic Pollin project file structure in the temporary directory.
+        Creates a basic gams-frog project file structure in the temporary directory.
         """
         if not self._config:
             raise ValueError("Configuration must be set before creating file structure.")
