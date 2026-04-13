@@ -55,7 +55,7 @@ class ApplicationExternalConfigImporter:
 
         # 2. Look for Override Config (gams_frog.local.toml)
         # We assume it sits right next to the main config file
-        local_config_path = config_path.parent / "gams_frog.override.toml"
+        local_config_path = config_path.parent / "gams-frog.override.toml"
 
         if local_config_path.exists() and local_config_path.is_file():
             logging.info(f"Found local override configuration: {local_config_path}")

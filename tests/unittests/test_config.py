@@ -44,7 +44,7 @@ def test_missing_obj_required_property_should_not_be_none(test_gams_frog_project
 
 def test_import_config_applies_overrides(tmp_path):
     """
-    Verifies that values in gams_frog.override.toml override the base config,
+    Verifies that values in gams-frog.override.toml override the base config,
     while non-overridden values remain intact.
     """
     # 1. Setup: Create the base 'gams_frog.toml'
@@ -69,13 +69,13 @@ def test_import_config_applies_overrides(tmp_path):
     with open(config_file, "w", encoding="utf-8") as f:
         f.write(base_config_content)
 
-    # 2. Setup: Create the 'gams_frog.override.toml' in the same directory
+    # 2. Setup: Create the 'gams-frog.override.toml' in the same directory
     override_config_content = """
     [dev]
     GAMS_API_ORIGIN = "http://override.example.com"
     """
 
-    override_file = tmp_path / "gams_frog.override.toml"
+    override_file = tmp_path / "gams-frog.override.toml"
     with open(override_file, "w", encoding="utf-8") as f:
         f.write(override_config_content)
 
