@@ -64,7 +64,7 @@ def mock_api():
 @pytest.fixture
 def mock_gams_frog_env(mock_api, test_gams_frog_project):
     """
-    Sets up a mock Pollin environment with local test project files (as temp files) and mocked GAMS-API.
+    Sets up a mock gams-frog environment with local test project files (as temp files) and mocked GAMS-API.
 
     """
     # ensure that click is run in isolated filesystem
