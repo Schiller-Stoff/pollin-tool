@@ -15,20 +15,20 @@ from gams_frog.cli import cli
 
 
 @pytest.fixture
-def test_pollin_project(tmp_path):
+def test_gams_frog_project(tmp_path):
     """Creates a basic testing gams_frog project structure."""
     test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
     return test_project
 
 @pytest.fixture
-def test_application_context(test_pollin_project):
+def test_application_context(test_gams_frog_project):
     """
     Sets up a test application context with test data.
 
     """
     # Setup mock app context
     app_context = ApplicationContext()
-    app_context.set_config(test_pollin_project.get_config())
+    app_context.set_config(test_gams_frog_project.get_config())
 
     # mock a datastore with one object
     datastore = ApplicationDatastore()
@@ -62,17 +62,17 @@ def mock_api():
         yield mock
 
 @pytest.fixture
-def mock_pollin_env(mock_api, test_pollin_project):
+def mock_pollin_env(mock_api, test_gams_frog_project):
     """
     Sets up a mock Pollin environment with local test project files (as temp files) and mocked GAMS-API.
 
     """
     # ensure that click is run in isolated filesystem
     runner = CliRunner()
-    with runner.isolated_filesystem(test_pollin_project.project_dir):
+    with runner.isolated_filesystem(test_gams_frog_project.project_dir):
         # Run build command
-        cli_result = runner.invoke(cli, ['build', str(test_pollin_project.project_dir)])
-        return cli_result, test_pollin_project
+        cli_result = runner.invoke(cli, ['build', str(test_gams_frog_project.project_dir)])
+        return cli_result, test_gams_frog_project
 
 
 

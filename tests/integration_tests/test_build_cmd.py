@@ -46,13 +46,13 @@ def test_build_command_fails_when_invalid_command_is_given(mock_pollin_env):
     assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate invalid path"
 
 
-def test_build_command_should_not_fail_when_no_path_was_given(mock_api, test_pollin_project):
+def test_build_command_should_not_fail_when_no_path_was_given(mock_api, test_gams_frog_project):
     """Test that build works when invoked without a path argument (defaults to CWD)."""
     runner = CliRunner()
     original_dir = os.getcwd()
     # i need to make sure that the working directory has the gams_frog.toml from the test files in it
     try:
-        os.chdir(test_pollin_project.project_dir)
+        os.chdir(test_gams_frog_project.project_dir)
         result = runner.invoke(cli, ['build'])
     finally:
         os.chdir(original_dir)
