@@ -8,7 +8,7 @@ from utils.TestProject import TestProject
 
 class TestGamsFrogProject:
     """
-    A utility class to create a temporary Pollin project structure for testing purposes.
+    A utility class to create a temporary gams-frog project structure for testing purposes.
     root_dir: Path - The root directory where the temporary project will be created.
     """
 
