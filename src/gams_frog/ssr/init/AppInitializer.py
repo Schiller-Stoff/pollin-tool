@@ -62,7 +62,7 @@ class AppInitializer:
         # set cache config
         cache_enabled = mode == "dev"
         self.app_context.get_config().cache = ApplicationCacheConfig(
-            cache_dir=Path(directory) / ".pollin_cache",
+            cache_dir=Path(directory) / ".gams_frog_cache",
             enabled=cache_enabled
         )
 
