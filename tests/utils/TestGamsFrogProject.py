@@ -24,8 +24,8 @@ class TestGamsFrogProject:
     GAMS_API_ORIGIN = "http://localhost:18085"
     IIIF_IMAGE_SERVER_ORIGIN = "http://localhost:18080"
 
-    POLLIN_TOML_VERSION = "0.0.0"
-    POLLIN_TOML_TITLE = "Test Project"
+    GAMS_FROG_TOML_VERSION = "0.0.0"
+    GAMS_FROG_TOML_TITLE = "Test Project"
 
     TEST_JS_FILE_CONTENT = "console.log('Hello, World!');"
     TEST_CSS_FILE_CONTENT = "body { font-family: Arial; }"
@@ -72,8 +72,8 @@ class TestGamsFrogProject:
         test_config.ENV = AppEnv(
             GAMS_API_ORIGIN=test_config.gams_host,
             PROJECT_ABBR=test_config.project,
-            UI_VERSION=TestGamsFrogProject.POLLIN_TOML_VERSION,
-            UI_TITLE=TestGamsFrogProject.POLLIN_TOML_TITLE,
+            UI_VERSION=TestGamsFrogProject.GAMS_FROG_TOML_VERSION,
+            UI_TITLE=TestGamsFrogProject.GAMS_FROG_TOML_TITLE,
             GAMS_FROG_MODE="build",
             IIIF_IMAGE_SERVER_ORIGIN=TestGamsFrogProject.IIIF_IMAGE_SERVER_ORIGIN,
             DANGEROUS_GAMS3_PRODUCTION_ORIGIN=TestGamsFrogProject.DANGEROUS_GAMS3_PRODUCTION_ORIGIN,
@@ -91,8 +91,8 @@ class TestGamsFrogProject:
                 "gamsApiOrigin": TestGamsFrogProject.GAMS_API_ORIGIN
             },
             "ui": {
-                "version": TestGamsFrogProject.POLLIN_TOML_VERSION,
-                "title": TestGamsFrogProject.POLLIN_TOML_TITLE
+                "version": TestGamsFrogProject.GAMS_FROG_TOML_VERSION,
+                "title": TestGamsFrogProject.GAMS_FROG_TOML_TITLE
             }
         }
 
@@ -138,8 +138,8 @@ class TestGamsFrogProject:
             IIIF_IMAGE_SERVER_ORIGIN = "{TestGamsFrogProject.IIIF_IMAGE_SERVER_ORIGIN}"
             
             [ui]
-            VERSION = "{TestGamsFrogProject.POLLIN_TOML_VERSION}"
-            TITLE = "{TestGamsFrogProject.POLLIN_TOML_TITLE}"
+            VERSION = "{TestGamsFrogProject.GAMS_FROG_TOML_VERSION}"
+            TITLE = "{TestGamsFrogProject.GAMS_FROG_TOML_TITLE}"
         """
 
         self._config.project_config_toml.write_text(config)
