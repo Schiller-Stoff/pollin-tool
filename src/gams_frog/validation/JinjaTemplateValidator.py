@@ -56,7 +56,7 @@ class JinjaTemplateValidator:
                         f"Validation Error in {file_path.name} (Line {error['lineno']}):\n"
                         f"\tReason:  {error['msg']}\n"
                         f"\tContext: \"{error['snippet']}\"\n"
-                        f"\tFix:     Use pollin variables instead of hardcoded paths."
+                        f"\tFix:     Use gams-frog variables instead of hardcoded paths."
                     )
                 return False
 

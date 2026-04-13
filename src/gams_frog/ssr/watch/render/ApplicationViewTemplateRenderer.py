@@ -35,7 +35,7 @@ class ApplicationViewTemplateRenderer:
             os.remove(output_path)
             logging.info(f"Succesfully deleted output file at {output_path}")
         else:
-            msg = f"Failed to delete output render-file at: {output_path} for src file: {src_path}. This might lead to unexpected behaviors of the pollin tool"
+            msg = f"Failed to delete output render-file at: {output_path} for src file: {src_path}. This might lead to unexpected behaviors of the gams-frog tool"
             logging.warning(msg)
 
 
