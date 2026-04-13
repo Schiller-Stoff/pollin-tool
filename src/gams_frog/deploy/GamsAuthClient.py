@@ -17,7 +17,7 @@ class GamsAuthClient:
 
         # 2. Configure Headers (Moved from Pyrilo.py)
         self.session.headers.update({
-            "User-Agent": "Pollin-Tool (Research Software)",
+            "User-Agent": "gams-frog (Research Software)",
             "Accept": "application/json"
         })
 

@@ -32,4 +32,4 @@ def test_template_error_handling(test_gams_frog_project, test_application_contex
 
     # Should create error HTML
     error_html = (test_gams_frog_project.get_config().project_public_dir / "objects" / TestDigitalObject.ID / "index.html").read_text()
-    assert "POLLIN ERROR" in error_html
+    assert "GAMS_FROG ERROR" in error_html
