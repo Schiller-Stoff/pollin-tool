@@ -98,7 +98,7 @@ class TestGamsFrogProject:
 
 
         test_config.cache = ApplicationCacheConfig(
-            cache_dir=Path(self.project_dir) / ".pollin_cache",
+            cache_dir=Path(self.project_dir) / ".gams_frog_cache",
             enabled=False
         )
 
