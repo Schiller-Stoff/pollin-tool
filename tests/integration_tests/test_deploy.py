@@ -6,11 +6,11 @@ from utils.TestGamsFrogProject import TestGamsFrogProject
 
 
 # ---------------------------------------------------------------------------
-# Integration: deploy after a full build via mock_pollin_env
+# Integration: deploy after a full build via mock_gams_frog_env
 # ---------------------------------------------------------------------------
 
 class TestDeployAfterBuild:
-    """Tests that deploy works correctly with actual build output from mock_pollin_env."""
+    """Tests that deploy works correctly with actual build output from mock_gams_frog_env."""
 
     def _deploy_after_build(self, mock_pollin_env, mock_gams_auth_client):
         """Helper: sets up app context from a completed build and runs deploy."""
