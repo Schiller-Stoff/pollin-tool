@@ -51,7 +51,7 @@ class AppInitializer:
             PROJECT_ABBR=app_config.project,
             UI_VERSION=external_config_parsed.get_ui_version(),
             UI_TITLE=external_config_parsed.get_ui_title(),
-            POLLIN_MODE=mode,
+            GAMS_FROG_MODE=mode,
             IIIF_IMAGE_SERVER_ORIGIN=external_config_parsed.get_iiif_image_server_origin(),
             DANGEROUS_GAMS3_PRODUCTION_ORIGIN=external_config_parsed.get_gams3_production_origin(),
             DANGEROUS_GAMS5_PRODUCTION_ORIGIN=external_config_parsed.get_gams5_production_origin()
