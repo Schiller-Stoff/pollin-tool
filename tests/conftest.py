@@ -2,33 +2,33 @@
 import pytest
 from unittest.mock import Mock, patch
 
-from pollin.deploy.GamsAuthClient import GamsAuthClient
-from pollin.ssr.init.ApplicationContext import ApplicationContext
-from pollin.ssr.load.ApplicationDatastore import ApplicationDatastore
+from gams_frog.deploy.GamsAuthClient import GamsAuthClient
+from gams_frog.ssr.init.ApplicationContext import ApplicationContext
+from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
-from utils.TestPollinProject import TestPollinProject
+from utils.TestGamsFrogProject import TestGamsFrogProject
 from utils.TestProject import TestProject
 from click.testing import CliRunner
-from pollin.cli import cli
+from gams_frog.cli import cli
 
 
 @pytest.fixture
-def test_pollin_project(tmp_path):
-    """Creates a basic testing pollin project structure."""
-    test_project = TestPollinProject(tmp_path)  # Initialize to create the structure
+def test_gams_frog_project(tmp_path):
+    """Creates a basic testing gams_frog project structure."""
+    test_project = TestGamsFrogProject(tmp_path)  # Initialize to create the structure
     return test_project
 
 @pytest.fixture
-def test_application_context(test_pollin_project):
+def test_application_context(test_gams_frog_project):
     """
     Sets up a test application context with test data.
 
     """
     # Setup mock app context
     app_context = ApplicationContext()
-    app_context.set_config(test_pollin_project.get_config())
+    app_context.set_config(test_gams_frog_project.get_config())
 
     # mock a datastore with one object
     datastore = ApplicationDatastore()
@@ -40,7 +40,7 @@ def test_application_context(test_pollin_project):
 @pytest.fixture
 def mock_api():
     """Simple mock without actual HTTP server."""
-    with patch('pollin.ssr.init.AppInitializer.Pyrilo') as MockPyrilo:
+    with patch('gams_frog.ssr.init.AppInitializer.Pyrilo') as MockPyrilo:
 
         test_object = TestDigitalObject.generate()
         test_project_dict = TestProject.generate()
@@ -62,17 +62,17 @@ def mock_api():
         yield mock
 
 @pytest.fixture
-def mock_pollin_env(mock_api, test_pollin_project):
+def mock_gams_frog_env(mock_api, test_gams_frog_project):
     """
-    Sets up a mock Pollin environment with local test project files (as temp files) and mocked GAMS-API.
+    Sets up a mock gams-frog environment with local test project files (as temp files) and mocked GAMS-API.
 
     """
     # ensure that click is run in isolated filesystem
     runner = CliRunner()
-    with runner.isolated_filesystem(test_pollin_project.project_dir):
+    with runner.isolated_filesystem(test_gams_frog_project.project_dir):
         # Run build command
-        cli_result = runner.invoke(cli, ['build', str(test_pollin_project.project_dir)])
-        return cli_result, test_pollin_project
+        cli_result = runner.invoke(cli, ['build', str(test_gams_frog_project.project_dir)])
+        return cli_result, test_gams_frog_project
 
 
 

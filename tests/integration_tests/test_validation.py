@@ -1,5 +1,5 @@
-from pollin.validation.JinjaTemplateValidator import JinjaTemplateValidator
-from pollin.validation.StaticFileValidator import StaticFileValidator
+from gams_frog.validation.JinjaTemplateValidator import JinjaTemplateValidator
+from gams_frog.validation.StaticFileValidator import StaticFileValidator
 
 
 def test_jinja_valid_files(test_application_context):
