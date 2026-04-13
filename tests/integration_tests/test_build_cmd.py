@@ -72,32 +72,32 @@ def test_build_command_fails_when_no_config_file_was_found_at_path(tmp_path):
 
 def test_object_template_contains_expected_values(mock_gams_frog_env):
 
-    cli_result, pollin_project = mock_gams_frog_env
+    cli_result, gams_frog_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
-    object_html = (pollin_project.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
+    object_html = (gams_frog_project.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
     assert TestDigitalObject.TITLE in object_html, "Object title not found in object HTML"
 
 
 def test_project_template_contains_expected_values(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_gams_frog_env
+    cli_result, gams_frog_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     # Check that the output files contain expected values
-    index_html = (pollin_project.get_config().project_public_dir / 'index.html').read_text()
-    assert pollin_project.PROJECT_ABBR in index_html, "Project abbreviation not found in index.html"
+    index_html = (gams_frog_project.get_config().project_public_dir / 'index.html').read_text()
+    assert gams_frog_project.PROJECT_ABBR in index_html, "Project abbreviation not found in index.html"
 
 
 def test_object_template_includes_expected_object_to_string(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_gams_frog_env
+    cli_result, gams_frog_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     # Check that the output files contain expected values
-    object_html = (pollin_project.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
+    object_html = (gams_frog_project.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
     test_object_to_string = str(TestDigitalObject.generate())
     assert test_object_to_string in object_html, "Object __str__ value not found in object HTML"
 
@@ -105,12 +105,12 @@ def test_object_template_includes_expected_object_to_string(mock_gams_frog_env):
 def test_object_list_template_contains_expected_values(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_gams_frog_env
+    cli_result, gams_frog_project = mock_gams_frog_env
 
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     # Check that the output files contain expected values
-    object_list_html = (pollin_project.get_config().project_public_dir / 'objects' / 'index.html').read_text()
+    object_list_html = (gams_frog_project.get_config().project_public_dir / 'objects' / 'index.html').read_text()
     assert TestDigitalObject.TITLE in object_list_html, "Object title not found in object list HTML"
     assert TestDigitalObject.ID in object_list_html, "Object ID not found in object list HTML"
 
@@ -118,26 +118,26 @@ def test_object_list_template_contains_expected_values(mock_gams_frog_env):
 def test_object_list_templates_includes_expected_to_string(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_gams_frog_env
+    cli_result, gams_frog_project = mock_gams_frog_env
 
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     # Check that the output files contain expected values
-    object_list_html = (pollin_project.get_config().project_public_dir / 'objects' / 'index.html').read_text()
+    object_list_html = (gams_frog_project.get_config().project_public_dir / 'objects' / 'index.html').read_text()
     test_object_to_string = str(TestDigitalObject.generate())
     assert test_object_to_string in object_list_html, "Object __str__ value not found in object list HTML"
 
 
 def test_build_creates_pub_directory_structure(mock_gams_frog_env):
-    cli_result, pollin_project = mock_gams_frog_env
+    cli_result, gams_frog_project = mock_gams_frog_env
     assert cli_result.exit_code == 0
 
     # public_dir should be just ".../public"
-    public_dir = pollin_project.get_config().public_dir
+    public_dir = gams_frog_project.get_config().public_dir
     assert public_dir.name == "public"
 
     # project_public_dir should be ".../public/pub/test"
-    project_public_dir = pollin_project.get_config().project_public_dir
+    project_public_dir = gams_frog_project.get_config().project_public_dir
 
     assert project_public_dir.exists()
     assert "pub" in project_public_dir.parts[-2]  # Check that 'pub' is the parent of the project folder

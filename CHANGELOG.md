@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- cli commands now default for pollin.toml to the current working directory of the pollin-tool
+- cli commands now default for gams-frog.toml to the current working directory of gams-frog
 - added --version command
 - corrected readme (for deployed tool)
 
