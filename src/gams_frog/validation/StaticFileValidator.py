@@ -90,7 +90,7 @@ class StaticFileValidator:
                         f"\tFound:   ...{origin}...\n"
                         f"\tContext: {snippet}\n"
                         f"\tReason:  Hardcoded paths break deployment flexibility and reuse.\n"
-                        f"\tFix:     Use POLLIN VARIABLES instead of hardcoded paths."
+                        f"\tFix:     Use GAMS_FROG VARIABLES instead of hardcoded paths."
                     )
                     is_valid = False
                     break  # Stop checking other origins for this line
