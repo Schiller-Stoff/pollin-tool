@@ -35,9 +35,9 @@ class TestDeployAfterBuild:
         buffer.seek(0)
         return zipfile.ZipFile(buffer, 'r')
 
-    def test_deploy_after_build_sends_all_output_files(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_after_build_sends_all_output_files(self, mock_gams_frog_env, mock_gams_auth_client):
         """After a successful build, deploy should zip all generated files."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         mock_gams_auth_client.put.assert_called_once()
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
@@ -49,16 +49,16 @@ class TestDeployAfterBuild:
             assert "static/js/scripts.js" in names
             assert "static/images/logo.png" in names
 
-    def test_deploy_zip_contains_no_corrupt_files(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_zip_contains_no_corrupt_files(self, mock_gams_frog_env, mock_gams_auth_client):
         """The uploaded zip should pass integrity checks."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
             assert zf.testzip() is None
 
-    def test_deploy_zip_preserves_html_content(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_zip_preserves_html_content(self, mock_gams_frog_env, mock_gams_auth_client):
         """Rendered HTML in the zip should contain expected template output."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
             object_html = zf.read(f"objects/{TestDigitalObject.ID}/index.html").decode("utf-8")
@@ -67,9 +67,9 @@ class TestDeployAfterBuild:
             index_html = zf.read("index.html").decode("utf-8")
             assert TestPollinProject.PROJECT_ABBR in index_html
 
-    def test_deploy_zip_preserves_static_file_content(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_zip_preserves_static_file_content(self, mock_gams_frog_env, mock_gams_auth_client):
         """Static files in the zip should match original source content."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
             css_content = zf.read("static/css/styles.css").decode("utf-8")
@@ -81,9 +81,9 @@ class TestDeployAfterBuild:
             logo_bytes = zf.read("static/images/logo.png")
             assert logo_bytes == TestPollinProject.TEST_LOGO_FILE_CONTENT
 
-    def test_deploy_zip_has_no_path_prefixes(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_zip_has_no_path_prefixes(self, mock_gams_frog_env, mock_gams_auth_client):
         """No file in the zip should start with 'pub/', 'public/', or '/'."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
             for name in zf.namelist():
@@ -91,9 +91,9 @@ class TestDeployAfterBuild:
                 assert not name.startswith("pub/"), f"'pub/' prefix: {name}"
                 assert not name.startswith("public/"), f"'public/' prefix: {name}"
 
-    def test_deploy_sends_correct_multipart_metadata(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_sends_correct_multipart_metadata(self, mock_gams_frog_env, mock_gams_auth_client):
         """The multipart upload should have the correct filename and content type."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         file_tuple = mock_gams_auth_client.put.call_args[1]["files"]["file"]
         filename, _, content_type = file_tuple
@@ -101,9 +101,9 @@ class TestDeployAfterBuild:
         assert filename == f"{TestPollinProject.PROJECT_ABBR}_deploy.zip"
         assert content_type == "application/zip"
 
-    def test_deploy_targets_correct_api_endpoint(self, mock_pollin_env, mock_gams_auth_client):
+    def test_deploy_targets_correct_api_endpoint(self, mock_gams_frog_env, mock_gams_auth_client):
         """deploy() should PUT to v1/projects/{abbr}/web."""
-        self._deploy_after_build(mock_pollin_env, mock_gams_auth_client)
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         endpoint = mock_gams_auth_client.put.call_args[0][0]
         assert endpoint == f"v1/projects/{TestPollinProject.PROJECT_ABBR}/web"

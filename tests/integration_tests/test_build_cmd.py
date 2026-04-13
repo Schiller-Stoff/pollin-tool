@@ -5,10 +5,10 @@ from gams_frog.cli import cli
 from utils.TestDigitalObject import TestDigitalObject
 
 
-def test_existence_of_expected_html_output_files(mock_pollin_env):
+def test_existence_of_expected_html_output_files(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
 
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
@@ -19,10 +19,10 @@ def test_existence_of_expected_html_output_files(mock_pollin_env):
     assert os.path.exists(pollin_project.get_config().project_public_dir / 'objects'), "Objects directory not found"
     assert os.path.exists(pollin_project.get_config().project_public_dir / 'objects' / 'test.1' / 'index.html'), "Object file not found"
 
-def test_existence_of_expected_static_files(mock_pollin_env):
+def test_existence_of_expected_static_files(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
 
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
@@ -36,7 +36,7 @@ def test_existence_of_expected_static_files(mock_pollin_env):
     assert not os.path.exists(pollin_project.get_config().project_public_dir / 'objects' / 'test.123123' / 'index.html'), "Object file should not exist"
 
 
-def test_build_command_fails_when_invalid_command_is_given(mock_pollin_env):
+def test_build_command_fails_when_invalid_command_is_given(mock_gams_frog_env):
     """Test the build command with an invalid project path."""
     runner = CliRunner()
     result = runner.invoke(cli, ['build', '/invalid/path/to/project'])
@@ -70,19 +70,19 @@ def test_build_command_fails_when_no_config_file_was_found_at_path(tmp_path):
     assert "Cannot find required configuration file" in str(result.exception), "Error message should indicate missing config file"
 
 
-def test_object_template_contains_expected_values(mock_pollin_env):
+def test_object_template_contains_expected_values(mock_gams_frog_env):
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     object_html = (pollin_project.get_config().project_public_dir / 'objects' / TestDigitalObject.ID / 'index.html').read_text()
     assert TestDigitalObject.TITLE in object_html, "Object title not found in object HTML"
 
 
-def test_project_template_contains_expected_values(mock_pollin_env):
+def test_project_template_contains_expected_values(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     # Check that the output files contain expected values
@@ -90,10 +90,10 @@ def test_project_template_contains_expected_values(mock_pollin_env):
     assert pollin_project.PROJECT_ABBR in index_html, "Project abbreviation not found in index.html"
 
 
-def test_object_template_includes_expected_object_to_string(mock_pollin_env):
+def test_object_template_includes_expected_object_to_string(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
     # Check that the output files contain expected values
@@ -102,10 +102,10 @@ def test_object_template_includes_expected_object_to_string(mock_pollin_env):
     assert test_object_to_string in object_html, "Object __str__ value not found in object HTML"
 
 
-def test_object_list_template_contains_expected_values(mock_pollin_env):
+def test_object_list_template_contains_expected_values(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
 
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
@@ -115,10 +115,10 @@ def test_object_list_template_contains_expected_values(mock_pollin_env):
     assert TestDigitalObject.ID in object_list_html, "Object ID not found in object list HTML"
 
 
-def test_object_list_templates_includes_expected_to_string(mock_pollin_env):
+def test_object_list_templates_includes_expected_to_string(mock_gams_frog_env):
     """Integration test for the build command."""
 
-    cli_result, pollin_project = mock_pollin_env
+    cli_result, pollin_project = mock_gams_frog_env
 
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
 
@@ -128,8 +128,8 @@ def test_object_list_templates_includes_expected_to_string(mock_pollin_env):
     assert test_object_to_string in object_list_html, "Object __str__ value not found in object list HTML"
 
 
-def test_build_creates_pub_directory_structure(mock_pollin_env):
-    cli_result, pollin_project = mock_pollin_env
+def test_build_creates_pub_directory_structure(mock_gams_frog_env):
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0
 
     # public_dir should be just ".../public"

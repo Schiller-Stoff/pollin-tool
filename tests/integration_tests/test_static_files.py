@@ -1,6 +1,6 @@
 
-def test_produces_expected_js_file(mock_pollin_env):
-    cli_result, pollin_project = mock_pollin_env
+def test_produces_expected_js_file(mock_gams_frog_env):
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
     # Check that the output files contain expected values
     js_file = pollin_project.get_test_js_path()
@@ -8,8 +8,8 @@ def test_produces_expected_js_file(mock_pollin_env):
     js_content = js_file.read_text()
     assert pollin_project.TEST_JS_FILE_CONTENT in js_content, "JS file does not contain expected content"
 
-def test_produces_expected_css_file(mock_pollin_env):
-    cli_result, pollin_project = mock_pollin_env
+def test_produces_expected_css_file(mock_gams_frog_env):
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
     # Check that the output files contain expected values
     css_file = pollin_project.get_test_css_path()
@@ -17,8 +17,8 @@ def test_produces_expected_css_file(mock_pollin_env):
     css_content = css_file.read_text()
     assert pollin_project.TEST_CSS_FILE_CONTENT in css_content, "CSS file does not contain expected content"
 
-def test_produces_expected_image_file(mock_pollin_env):
-    cli_result, pollin_project = mock_pollin_env
+def test_produces_expected_image_file(mock_gams_frog_env):
+    cli_result, pollin_project = mock_gams_frog_env
     assert cli_result.exit_code == 0, f"Build command failed with exit code {cli_result.exit_code} and output: {cli_result.output}"
     # Check that the output files contain expected values
     image_file = pollin_project.get_test_logo_path()

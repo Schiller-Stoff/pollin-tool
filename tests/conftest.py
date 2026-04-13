@@ -62,7 +62,7 @@ def mock_api():
         yield mock
 
 @pytest.fixture
-def mock_pollin_env(mock_api, test_gams_frog_project):
+def mock_gams_frog_env(mock_api, test_gams_frog_project):
     """
     Sets up a mock Pollin environment with local test project files (as temp files) and mocked GAMS-API.
 
