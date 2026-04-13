@@ -8,7 +8,7 @@ from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
 from utils.TestDigitalObjectViewModel import TestDigitalObjectViewModel
-from utils.TestPollinProject import TestPollinProject
+from utils.TestGamsFrogProject import TestPollinProject
 from utils.TestProject import TestProject
 from click.testing import CliRunner
 from gams_frog.cli import cli

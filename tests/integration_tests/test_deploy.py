@@ -2,7 +2,7 @@ import zipfile
 
 from gams_frog.deploy.DeployService import DeployService
 from utils.TestDigitalObject import TestDigitalObject
-from utils.TestPollinProject import TestPollinProject
+from utils.TestGamsFrogProject import TestPollinProject
 
 
 # ---------------------------------------------------------------------------
