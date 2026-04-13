@@ -1,1 +1,1 @@
-Test project structure for the POLLIN tool
+Test project structure for the gams-frog tool

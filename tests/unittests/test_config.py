@@ -1,18 +1,18 @@
 # tests/test_config.py - Core configuration testing
-from pollin.ssr.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
-from pollin.ssr.init.config.ApplicationExternalConfig import ApplicationExternalConfig
+from gams_frog.ssr.init.config.ApplicationExternalConfigImporter import ApplicationExternalConfigImporter
+from gams_frog.ssr.init.config.ApplicationExternalConfig import ApplicationExternalConfig
 import pytest
 
-def test_config_loads_from_file(test_pollin_project):
+def test_config_loads_from_file(test_gams_frog_project):
     """Test that configuration loads from TOML file."""
     config_dict = ApplicationExternalConfigImporter.import_config(
-        test_pollin_project.get_config().project_config_toml, "dev"
+        test_gams_frog_project.get_config().project_config_toml, "dev"
     )
 
     assert config_dict is not None
-    assert config_dict["project"]["PROJECT_ABBR"] == test_pollin_project.PROJECT_ABBR
-    assert config_dict["dev"]["GAMS_API_ORIGIN"] == test_pollin_project.GAMS_API_ORIGIN
-    assert config_dict["dev"]["IIIF_IMAGE_SERVER_ORIGIN"] == test_pollin_project.IIIF_IMAGE_SERVER_ORIGIN
+    assert config_dict["project"]["PROJECT_ABBR"] == test_gams_frog_project.PROJECT_ABBR
+    assert config_dict["dev"]["GAMS_API_ORIGIN"] == test_gams_frog_project.GAMS_API_ORIGIN
+    assert config_dict["dev"]["IIIF_IMAGE_SERVER_ORIGIN"] == test_gams_frog_project.IIIF_IMAGE_SERVER_ORIGIN
 
 
 def test_config_validates_required_fields():
@@ -21,21 +21,21 @@ def test_config_validates_required_fields():
         ApplicationExternalConfigImporter.import_config("/nonexistent", "dev")
 
 
-def test_external_config_properties(test_pollin_project):
+def test_external_config_properties(test_gams_frog_project):
     """Test ApplicationExternalConfig property access."""
     config_dict = ApplicationExternalConfigImporter.import_config(
-        test_pollin_project.get_config().project_config_toml, "dev"
+        test_gams_frog_project.get_config().project_config_toml, "dev"
     )
     config = ApplicationExternalConfig(config_dict, "dev")
 
-    assert config.get_project_abbr() == test_pollin_project.PROJECT_ABBR
-    assert config.get_gams_api_origin() == test_pollin_project.GAMS_API_ORIGIN
+    assert config.get_project_abbr() == test_gams_frog_project.PROJECT_ABBR
+    assert config.get_gams_api_origin() == test_gams_frog_project.GAMS_API_ORIGIN
 
 
-def test_missing_obj_required_property_should_not_be_none(test_pollin_project):
+def test_missing_obj_required_property_should_not_be_none(test_gams_frog_project):
     """Test behavior when objectsRequired is missing."""
     config_dict = ApplicationExternalConfigImporter.import_config(
-        test_pollin_project.get_config().project_config_toml, "dev"
+        test_gams_frog_project.get_config().project_config_toml, "dev"
     )
     config = ApplicationExternalConfig(config_dict, "dev")
 
@@ -44,10 +44,10 @@ def test_missing_obj_required_property_should_not_be_none(test_pollin_project):
 
 def test_import_config_applies_overrides(tmp_path):
     """
-    Verifies that values in pollin.override.toml override the base config,
+    Verifies that values in gams-frog.override.toml override the base config,
     while non-overridden values remain intact.
     """
-    # 1. Setup: Create the base 'pollin.toml'
+    # 1. Setup: Create the base 'gams_frog.toml'
     # We write the file manually to avoid dependencies on TOML writers
     base_config_content = """
     [project]
@@ -65,17 +65,17 @@ def test_import_config_applies_overrides(tmp_path):
     GAMS5_PRODUCTION_ORIGIN = "https://gams.uni-graz.at"
     """
 
-    config_file = tmp_path / "pollin.toml"
+    config_file = tmp_path / "gams_frog.toml"
     with open(config_file, "w", encoding="utf-8") as f:
         f.write(base_config_content)
 
-    # 2. Setup: Create the 'pollin.override.toml' in the same directory
+    # 2. Setup: Create the 'gams-frog.override.toml' in the same directory
     override_config_content = """
     [dev]
     GAMS_API_ORIGIN = "http://override.example.com"
     """
 
-    override_file = tmp_path / "pollin.override.toml"
+    override_file = tmp_path / "gams-frog.override.toml"
     with open(override_file, "w", encoding="utf-8") as f:
         f.write(override_config_content)
 
