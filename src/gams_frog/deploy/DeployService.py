@@ -15,7 +15,7 @@ class DeployService:
     Handles deployment of the built static site to the GAMS5 API.
 
     Zips the contents of the project's public output directory and uploads
-    it via PUT /api/v1/projects/{projectAbbr}/web.
+    it via PUT /api/curation/v1/projects/{projectAbbr}/web.
 
     The target API host is determined by the current mode's GAMS_API_ORIGIN:
     - 'stage' deploys to the staging GAMS API
