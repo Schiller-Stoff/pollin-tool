@@ -81,12 +81,12 @@ class AppInitializer:
 
         # init pyrilo with default values
         self.app_context.set_pyrilo(
-            Pyrilo("http://localhost:18085", "api/v1")
+            Pyrilo("http://localhost:18085", "api/curation/v1")
         )
         if self.app_context.get_config().gams_host:
             self.app_context.get_pyrilo().configure(
                 self.app_context.get_config().gams_host,
-            "api/v1")
+            "api/curation/v1")
 
         return self
 
