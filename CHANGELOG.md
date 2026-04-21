@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GAMS_API_ORIGIN variable is rewritten internally to use the dev proxy (and not the real gams-staging address - see readme)
 - updated README.md
 
+### Added
+
+- gams-frog-build.json in the output of stage and build command: stores metadata about the metadata (e.g. used version of gams-frog)
+
 ## [0.4.0]
 
 ### Changed
