@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.0.5]
+## [0.5.0]
 
 ### Changed
 
@@ -14,13 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GAMS_API_ORIGIN variable is rewritten internally to use the dev proxy (and not the real gams-staging address - see readme)
 - updated README.md
 
-## [0.0.4]
+## [0.4.0]
 
 ### Changed
 
 - adopted new /api/curation/v1 api instead of just /api/v1
 
-## [0.0.3]
+## [0.3.0]
 
 ### Changed
 
