@@ -2,6 +2,8 @@ import logging
 
 # Change import to PatternMatchingEventHandler
 from watchdog.events import PatternMatchingEventHandler
+
+from gams_frog.ssr.watch.BuildMetadataRenderer import BuildMetadataRenderer
 from gams_frog.ssr.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from gams_frog.ssr.init.ApplicationContext import ApplicationContext
 from gams_frog.ssr.watch.render.ApplicationStaticFileRenderer import ApplicationStaticFileRenderer
@@ -18,6 +20,7 @@ class ApplicationViewFileEventController(PatternMatchingEventHandler):
     digital_object_view_renderer: DigitalObjectViewRenderer
     application_view_template_render: ApplicationViewTemplateRenderer
     application_static_file_refresher: ApplicationStaticFileRenderer
+    build_metadata_renderer: BuildMetadataRenderer
 
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
@@ -36,6 +39,9 @@ class ApplicationViewFileEventController(PatternMatchingEventHandler):
 
         # for static files (remove and add if something changes)
         self.application_static_file_refresher = ApplicationStaticFileRenderer(app_context)
+
+        # for build metadata
+        self.build_metadata_renderer = BuildMetadataRenderer(app_context)
 
     def on_modified(self, event):
         # Ignore directory events to avoid double-triggering (file + folder update)
@@ -71,4 +77,7 @@ class ApplicationViewFileEventController(PatternMatchingEventHandler):
         self.application_view_template_render.render()
         self.digital_object_view_renderer.render()
         self.application_static_file_refresher.refresh()
+        # build metadata only for staging and production
+        if self.app_context.get_config().mode != "dev":
+            self.build_metadata_renderer.render()
         logging.info(f"Successfully rendered views. {self.__class__.__name__}")

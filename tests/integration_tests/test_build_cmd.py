@@ -142,3 +142,14 @@ def test_build_creates_pub_directory_structure(mock_gams_frog_env):
     assert project_public_dir.exists()
     assert "pub" in project_public_dir.parts[-2]  # Check that 'pub' is the parent of the project folder
     assert (project_public_dir / "index.html").exists()
+
+def test_build_produces_metadata_file(mock_gams_frog_env):
+    cli_result, gams_frog_project = mock_gams_frog_env
+    assert cli_result.exit_code == 0
+
+    metadata_path = gams_frog_project.get_config().project_public_dir / "gams-frog-build.json"
+    assert metadata_path.exists(), "Build metadata file not found"
+
+    import json
+    data = json.loads(metadata_path.read_text())
+    assert data["build"]["project_abbr"] == gams_frog_project.PROJECT_ABBR
