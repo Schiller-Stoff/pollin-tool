@@ -20,7 +20,10 @@ class ApplicationConfiguration:
 
     gams_host: str
     """
-    The host of the GAMS5 instance
+    The host of the GAMS5 instance (real upstream). Used server-side by Pyrilo and for
+    cache-key computation. In dev mode this is distinct from what templates see as
+    env.GAMS_API_ORIGIN (which points at the local dev server so browser calls stay
+    same-origin — see proxy_target_origin below).
     """
 
     project_files_root: PathLike
@@ -33,9 +36,9 @@ class ApplicationConfiguration:
     The output path where the build files should be placed.
     """
 
-    mode:  Literal["dev", "build", "stage"] = "dev"
+    mode: Literal["dev", "build", "stage"] = "dev"
     """
-    The mode the gams_frog tool is running in, either 'develop' or 'production'.
+    The mode gams_frog is running on, either 'develop' or 'production'.
     """
 
     ENV: AppEnv
@@ -52,7 +55,15 @@ class ApplicationConfiguration:
 
     PROJECT_DEPLOYMENT_FOLDER: str = "pub"
     """
-    Root path of the gams_frog project on the deployment webserver
+    Root path of the gams-frog project on the deployment webserver
+    """
+
+    proxy_target_origin: str | None = None
+    """
+    Upstream GAMS API origin for the dev proxy to forward /api/* to. Only set in 'dev'
+    mode; None in 'build' and 'stage'. When set, the dev server hosts /api/* as a
+    same-origin endpoint from the browser's perspective and transparently forwards to
+    this origin. See ApiProxyHandler for the forwarding semantics.
     """
 
     def alternative_output_path_set(self) -> bool:
@@ -137,8 +148,8 @@ class ApplicationConfiguration:
     Contains the external configuration of the project or None if not available
     """
 
-
-    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None, mode: Literal["dev", "build", "stage"] = "dev"):
+    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None,
+                 mode: Literal["dev", "build", "stage"] = "dev"):
         self.project = project
         self.gams_host = gams_host
         self.project_files_root = project_files_root

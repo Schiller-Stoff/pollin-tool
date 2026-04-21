@@ -191,10 +191,14 @@ def dev(directory: str, port: int):
     """
 
     # setting up the application context
+    # dev_server_port is passed so the dev proxy can be wired: configured GAMS_API_ORIGIN
+    # becomes the proxy upstream, env.GAMS_API_ORIGIN is rewritten to point at the local
+    # dev server so browser calls stay same-origin.
     (AppInitializer(app_context)
      .configure(
         directory=directory,
-        mode="dev"
+        mode="dev",
+        dev_server_port=port,
     )
      .init_context_beans()
      .setup()
@@ -205,10 +209,14 @@ def dev(directory: str, port: int):
 
     # encapsulates loading of project data and digital objects
     (ApplicationDataLoader(app_context)
-        .load())
+     .load())
 
     web_dir = app_context.get_config().public_dir
-    dev_server_process = multiprocessing.Process(target=ApplicationWebServer.start, args=(web_dir, port,))
+    proxy_target_origin = app_context.get_config().proxy_target_origin
+    dev_server_process = multiprocessing.Process(
+        target=ApplicationWebServer.start,
+        args=(web_dir, port, proxy_target_origin),
+    )
 
     try:
         logging.info(f"*** Starting web server at port {port}")

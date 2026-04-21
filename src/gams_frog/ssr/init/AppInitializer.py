@@ -12,17 +12,30 @@ from gams_frog.ssr.init.config.ApplicationCacheConfig import ApplicationCacheCon
 from gams_frog.ssr.load.utils.Pyrilo import Pyrilo
 from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 
-class AppInitializer:
 
+class AppInitializer:
     app_context: ApplicationContext
 
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
 
-    def configure(self, directory: str, mode: Literal["dev", "build", "stage"] = "dev"):
+    def configure(
+            self,
+            directory: str,
+            mode: Literal["dev", "build", "stage"] = "dev",
+            dev_server_port: int | None = None,
+    ):
         """
-        Sets configuration params on the ApplicationContext
-        :return:
+        Sets configuration params on the ApplicationContext.
+
+        :param directory: Path to the project root containing .toml.
+        :param mode: Active gams-frog mode.
+        :param dev_server_port: Only meaningful in dev mode. When provided, the configured
+            [dev].GAMS_API_ORIGIN is promoted to `proxy_target_origin` (where the dev server
+            forwards /api/* to), and env.GAMS_API_ORIGIN — what templates see — is rewritten
+            to the local dev-server origin so browser calls stay same-origin and avoid CORS.
+            When None in dev mode, the proxy is not activated and templates see the raw
+            configured upstream (legacy behavior).
         """
         if mode not in ["dev", "build", "stage"]:
             raise ValueError("Mode must be either 'dev', 'stage' or 'build'")
@@ -41,13 +54,28 @@ class AppInitializer:
             project=external_config_parsed.get_project_abbr(),
             gams_host=external_config_parsed.get_gams_api_origin(),
             project_files_root=Path(directory),
-            output_path=external_config_parsed.get_output_path(), # returns None if not set in config
+            output_path=external_config_parsed.get_output_path(),  # returns None if not set in config
             mode=mode
         )
 
+        # Dev proxy wiring: the configured GAMS_API_ORIGIN becomes the upstream the proxy
+        # forwards to; templates see the local dev server origin so the browser treats API
+        # calls as same-origin. See ApiProxyHandler.
+        # gams_host stays the real upstream — it's used server-side by Pyrilo and for
+        # stable cache keys across dev-server port changes.
+        if mode == "dev" and dev_server_port is not None:
+            app_config.proxy_target_origin = app_config.gams_host
+            template_visible_gams_origin = f"http://localhost:{dev_server_port}"
+            logging.info(
+                f"*** Dev proxy target: {app_config.proxy_target_origin} "
+                f"(templates will see env.GAMS_API_ORIGIN = {template_visible_gams_origin})"
+            )
+        else:
+            template_visible_gams_origin = app_config.gams_host
+
         # storing same variables in ENV reference (used at runtime in templates)
         app_config.ENV = AppEnv(
-            GAMS_API_ORIGIN=app_config.gams_host,
+            GAMS_API_ORIGIN=template_visible_gams_origin,
             PROJECT_ABBR=app_config.project,
             UI_VERSION=external_config_parsed.get_ui_version(),
             UI_TITLE=external_config_parsed.get_ui_title(),
@@ -73,7 +101,7 @@ class AppInitializer:
 
         :return:
         """
-        logging.basicConfig( encoding='utf-8', level=logging.INFO)
+        logging.basicConfig(encoding='utf-8', level=logging.INFO)
         logging.info("*** Starting poll-in cli in mode: %s ***", self.app_context.get_config().mode)
 
         # init datastore
@@ -86,7 +114,7 @@ class AppInitializer:
         if self.app_context.get_config().gams_host:
             self.app_context.get_pyrilo().configure(
                 self.app_context.get_config().gams_host,
-            "api/curation/v1")
+                "api/curation/v1")
 
         return self
 
