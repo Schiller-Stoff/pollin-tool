@@ -23,6 +23,7 @@ class ApplicationExternalConfig:
     MODE_GAMS_API_ORIGIN_PROPERTY = "GAMS_API_ORIGIN"
     MODE_IIIF_IMAGE_SERVER_PROPERTY = "IIIF_IMAGE_SERVER_ORIGIN"
     MODE_OUTPUT_PATH_PROPERTY = "OUTPUT_PATH"
+    MODE_GAMS_API_PROTECTED_ORIGIN = "GAMS_API_PROTECTED_ORIGIN"
 
     MODE_LOAD_OBJECT_COUNT_RESTRICTION = "OBJECT_COUNT_RESTRICTION"
     MODE_LOAD_OBJECTS_REQUIRED = "OBJECTS_REQUIRED"
@@ -224,3 +225,23 @@ class ApplicationExternalConfig:
             return None
 
         return configured_title
+
+    def get_gams_api_protected_origin(self):
+        """
+        Returns the GAMS API origin URL specifically for deployment/state-changing operations.
+        Falls back to GAMS_API_ORIGIN if not explicitly configured.
+        """
+        configured_origin = self.get(self.mode).get(self.MODE_GAMS_API_PROTECTED_ORIGIN)
+        if configured_origin is None:
+            logging.debug(f"No explicit {self.mode}.{self.MODE_GAMS_API_PROTECTED_ORIGIN} set falling back to {self.mode}.{self.MODE_GAMS_API_ORIGIN_PROPERTY}")
+            return self.get_gams_api_origin()
+
+        if not configured_origin.startswith("http"):
+            raise ValueError(
+                f"Expected {self.mode}.{self.MODE_IIIF_IMAGE_SERVER_PROPERTY} to be a valid URL starting with 'http', but got '{configured_origin}'")
+
+        if configured_origin.endswith("/"):
+            raise ValueError(
+                f"Expected {self.mode}.{self.MODE_IIIF_IMAGE_SERVER_PROPERTY} to not have a trailing slash, but got '{configured_origin}'")
+
+        return configured_origin

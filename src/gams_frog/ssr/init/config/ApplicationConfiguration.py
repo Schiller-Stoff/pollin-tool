@@ -26,6 +26,13 @@ class ApplicationConfiguration:
     same-origin — see proxy_target_origin below).
     """
 
+    gams_protected_host: str
+    """
+    Should default to same value as gams_host
+    The target host specifically used for state changing, protected operations (PUT/POST/PATCH etc.). 
+    May differ from gams_host if deploying via an internal subnet
+    """
+
     project_files_root: PathLike
     """
     The root folder of the project files (views / public etc.)
@@ -148,10 +155,11 @@ class ApplicationConfiguration:
     Contains the external configuration of the project or None if not available
     """
 
-    def __init__(self, project: str, gams_host: str, project_files_root: PathLike, output_path: PathLike | None = None,
+    def __init__(self, project: str, gams_host: str, gams_protected_host: str, project_files_root: PathLike, output_path: PathLike | None = None,
                  mode: Literal["dev", "build", "stage"] = "dev"):
         self.project = project
         self.gams_host = gams_host
+        self.gams_protected_host = gams_protected_host
         self.project_files_root = project_files_root
         self._output_path = output_path
         self.mode = mode
