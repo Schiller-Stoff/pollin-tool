@@ -25,7 +25,7 @@ class DeployService:
     session cookies on the GamsApiClient's requests.Session.
     """
 
-    DEPLOY_API_PATH = "v1/projects/{project_abbr}/web"
+    DEPLOY_API_PATH = "curation/v1/projects/{project_abbr}/web"
 
     def __init__(self, app_context: ApplicationContext, gams_client: GamsAuthClient):
         self.app_context = app_context
