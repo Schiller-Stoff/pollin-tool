@@ -53,6 +53,7 @@ class AppInitializer:
         app_config = ApplicationConfiguration(
             project=external_config_parsed.get_project_abbr(),
             gams_host=external_config_parsed.get_gams_api_origin(),
+            gams_protected_host=external_config_parsed.get_gams_api_protected_origin(),
             project_files_root=Path(directory),
             output_path=external_config_parsed.get_output_path(),  # returns None if not set in config
             mode=mode

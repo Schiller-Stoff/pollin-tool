@@ -95,3 +95,61 @@ def test_import_config_applies_overrides(tmp_path):
 
     # CASE C: Top level sections untouched by override should remain
     assert config_dict["project"]["PROJECT_ABBR"] == "TEST_BASE"
+
+
+def test_gams_api_protected_origin_fallback(test_gams_frog_project):
+    """
+    Test that protected origin falls back to the regular GAMS_API_ORIGIN
+    when not explicitly specified in the config.
+    """
+    config_dict = ApplicationExternalConfigImporter.import_config(
+        test_gams_frog_project.get_config().project_config_toml, "dev"
+    )
+
+    # Ensure the property is NOT in the dictionary
+    if "GAMS_API_PROTECTED_ORIGIN" in config_dict["dev"]:
+        del config_dict["dev"]["GAMS_API_DEPLOY_ORIGIN"]
+
+    config = ApplicationExternalConfig(config_dict, "dev")
+
+    # The protected origin must equal the standard origin
+    assert config.get_gams_api_protected_origin() == config.get_gams_api_origin()
+
+
+def test_gams_api_deploy_origin_explicit():
+    """
+    Test that an explicitly set deploy origin overrides the fallback behavior.
+    """
+    config_dict = {
+        "dev": {
+            "GAMS_API_ORIGIN": "http://standard-read.example.com",
+            "GAMS_API_PROTECTED_ORIGIN": "http://internal-deploy.example.com"
+        }
+    }
+    config = ApplicationExternalConfig(config_dict, "dev")
+
+    # It should return the distinct deploy URL, NOT the standard one
+    assert config.get_gams_api_protected_origin() == "http://internal-deploy.example.com"
+
+
+def test_gams_api_protected_origin_validation():
+    """
+    Test validation rules for deploy origin (must start with http, no trailing slash).
+    """
+    config_dict = {
+        "dev": {
+            "GAMS_API_ORIGIN": "http://standard.example.com",
+            "GAMS_API_PROTECTED_ORIGIN": "http://internal-deploy.example.com/"  # Invalid: trailing slash
+        }
+    }
+    config = ApplicationExternalConfig(config_dict, "dev")
+
+    with pytest.raises(ValueError, match="to not have a trailing slash"):
+        config.get_gams_api_protected_origin()
+
+    # Test missing HTTP schema
+    config_dict["dev"]["GAMS_API_PROTECTED_ORIGIN"] = "ftp://internal-deploy.example.com"
+    config_with_bad_schema = ApplicationExternalConfig(config_dict, "dev")
+
+    with pytest.raises(ValueError, match="valid URL starting with 'http'"):
+        config_with_bad_schema.get_gams_api_protected_origin()
