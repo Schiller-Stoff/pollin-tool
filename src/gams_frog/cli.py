@@ -49,7 +49,7 @@ def run_deploy(context: ApplicationContext, username: str | None, password: str 
     from gams_frog.deploy.DeployService import DeployService
 
     mode = context.get_config().mode
-    target_host = context.get_config().gams_host
+    target_host = context.get_config().gams_protected_host
 
     # Safety confirmation for production deployments
     if mode == "build":

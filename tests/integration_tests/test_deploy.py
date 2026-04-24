@@ -106,7 +106,7 @@ class TestDeployAfterBuild:
         self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         endpoint = mock_gams_auth_client.put.call_args[0][0]
-        assert endpoint == f"v1/projects/{TestGamsFrogProject.PROJECT_ABBR}/web"
+        assert endpoint == f"curation/v1/projects/{TestGamsFrogProject.PROJECT_ABBR}/web"
 
     def test_deploy_zip_includes_build_metadata(self, mock_gams_frog_env, mock_gams_auth_client):
         self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)

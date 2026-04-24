@@ -63,6 +63,7 @@ class TestGamsFrogProject:
         test_config = ApplicationConfiguration(
             project=TestGamsFrogProject.PROJECT_ABBR,
             gams_host=TestGamsFrogProject.GAMS_API_ORIGIN,
+            gams_protected_host=TestGamsFrogProject.GAMS_API_ORIGIN,
             project_files_root=self.project_dir,
             output_path=None,
             mode="build"
