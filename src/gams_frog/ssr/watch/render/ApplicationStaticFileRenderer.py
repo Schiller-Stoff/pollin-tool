@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import os
 import stat
@@ -6,6 +7,7 @@ from pathlib import Path
 
 from gams_frog.ssr.init.ApplicationContext import ApplicationContext
 import time
+
 
 class ApplicationStaticFileRenderer:
     """
@@ -54,7 +56,15 @@ class ApplicationStaticFileRenderer:
                     # 'onexc' is available in Python 3.12+, which matches the project requirements
                     shutil.rmtree(public_static_dir, onexc=self._handle_remove_readonly)
 
-                shutil.copytree(src_static_dir, public_static_dir)
+                # hashing logic
+                manifest = self._copy_and_hash_static_files(src_static_dir, public_static_dir)
+
+                # Attach the manifest to the app_context so the template renderer can access it.
+                # (You don't necessarily need to pre-define this in ApplicationContext,
+                # Python allows dynamic attribute assignment, though defining it is cleaner).
+                self.app_context.get_application_render_context().set_static_file_hash_mapping(manifest)
+
+                # self.app_context.asset_manifest = manifest
                 logging.info(f"Successfully refreshed static files at {public_static_dir}")
                 break  # Success, exit retry loop
 
@@ -70,3 +80,57 @@ class ApplicationStaticFileRenderer:
                         f"Failed to refresh static files after {max_retries} attempts. Please close any programs (IDEs, terminals) that might be using the files in '{public_static_dir}'. Error: {e}")
                     raise
 
+    def _copy_and_hash_static_files(self, src_dir: Path, dest_dir: Path) -> dict:
+        manifest = {}
+
+        mode = self.app_context.get_config().mode
+        is_dev = mode == "dev"
+        dev_timestamp = str(int(time.time()))
+
+        # Define which folders should NEVER be hashed (relative to src/static)
+        # We use a set for fast O(1) lookups
+        excluded_folders = {"vendor", "lib", "external", "raw"}
+
+        for root, _, files in os.walk(src_dir):
+            for file in files:
+                file_path = Path(root) / file
+                rel_path = file_path.relative_to(src_dir)
+                manifest_key = str(rel_path).replace(os.sep, '/')
+
+                # Check if the file is inside one of our excluded folders
+                # rel_path.parts gives us a tuple of the path segments (e.g., ('vendor', 'jquery.js'))
+                is_vendor_file = len(rel_path.parts) > 0 and rel_path.parts[0] in excluded_folders
+
+                if is_vendor_file:
+                # TODO enable again skipping in dev?
+                # if is_dev or is_vendor_file:
+                    # BYPASS HASHING:
+                    # Triggers if we are in dev mode OR if it's a 3rd-party vendor file
+                    target_file_path = dest_dir / rel_path
+                    target_file_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(file_path, target_file_path)
+
+                    if is_dev and not is_vendor_file:
+                        # Append query string for dev-mode cache busting on our own files
+                        manifest[manifest_key] = f"{manifest_key}?v={dev_timestamp}"
+                    else:
+                        # Vendor files get mapped exactly 1:1, no query strings, no hashes
+                        manifest[manifest_key] = manifest_key
+
+                else:
+                    # PRODUCTION HASHING for your actual app code
+                    hasher = hashlib.md5()
+                    with open(file_path, 'rb') as f:
+                        hasher.update(f.read())
+                    file_hash = hasher.hexdigest()[:8]
+
+                    new_filename = f"{file_path.stem}.{file_hash}{file_path.suffix}"
+                    new_rel_path = rel_path.with_name(new_filename)
+
+                    target_file_path = dest_dir / new_rel_path
+                    target_file_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(file_path, target_file_path)
+
+                    manifest[manifest_key] = str(new_rel_path).replace(os.sep, '/')
+
+        return manifest
