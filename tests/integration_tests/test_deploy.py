@@ -45,9 +45,16 @@ class TestDeployAfterBuild:
             assert "index.html" in names
             assert f"objects/{TestDigitalObject.ID}/index.html" in names
             assert "objects/index.html" in names
-            assert "static/css/styles.css" in names
-            assert "static/js/scripts.js" in names
-            assert "static/images/logo.png" in names
+
+            # files names are being hashed - so: those names cannot appear as is
+            assert "static/css/styles.css" not in names
+            assert "static/js/scripts.js" not in names
+            assert "static/images/logo.png" not in names
+
+            # correct hashed filenames
+            assert "static/css/styles.f213ca27.css" in names
+            assert "static/js/scripts.a490be70.js" in names
+            assert "static/images/logo.e9dd2797.png" in names
 
     def test_deploy_zip_contains_no_corrupt_files(self, mock_gams_frog_env, mock_gams_auth_client):
         """The uploaded zip should pass integrity checks."""
@@ -72,14 +79,38 @@ class TestDeployAfterBuild:
         self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
 
         with self._get_uploaded_zip(mock_gams_auth_client) as zf:
-            css_content = zf.read("static/css/styles.css").decode("utf-8")
+            # filenames are being adapted and hashed (original filenames should not be kept)
+            file_paths = zf.namelist()
+            assert "static/css/styles.css" not in file_paths
+            assert "static/js/scripts.js" not in file_paths
+            assert "static/images/logo.png" not in file_paths
+
+            # check if hashed filenames exist
+            css_content = zf.read("static/css/styles.f213ca27.css").decode("utf-8")
             assert TestGamsFrogProject.TEST_CSS_FILE_CONTENT in css_content
 
-            js_content = zf.read("static/js/scripts.js").decode("utf-8")
+            js_content = zf.read("static/js/scripts.a490be70.js").decode("utf-8")
             assert TestGamsFrogProject.TEST_JS_FILE_CONTENT in js_content
 
-            logo_bytes = zf.read("static/images/logo.png")
+            logo_bytes = zf.read("static/images/logo.e9dd2797.png")
             assert logo_bytes == TestGamsFrogProject.TEST_LOGO_FILE_CONTENT
+
+
+    def test_deploy_contains_expected_hashed_static_files_exclusions(self, mock_gams_frog_env, mock_gams_auth_client):
+        """Tests exclusions of the file-name hashing mechanism for certain folders (vendor, lib, raw)."""
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
+
+        with self._get_uploaded_zip(mock_gams_auth_client) as zf:
+            # filenames are being adapted and hashed (original filenames should not be kept)
+            file_paths = zf.namelist()
+            assert "static/css/styles.css" not in file_paths
+            assert "static/js/scripts.js" not in file_paths
+            assert "static/images/logo.png" not in file_paths
+
+            # these files should not be hashed
+            assert "static/lib/bootstrap/bootstrap.min.js" in file_paths
+            assert "static/raw/demo.png" in file_paths
+
 
     def test_deploy_zip_has_no_path_prefixes(self, mock_gams_frog_env, mock_gams_auth_client):
         """No file in the zip should start with 'pub/', 'public/', or '/'."""

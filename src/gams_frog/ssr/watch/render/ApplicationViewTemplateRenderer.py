@@ -17,7 +17,6 @@ class ApplicationViewTemplateRenderer:
     The application context
     """
 
-
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
 
@@ -44,6 +43,32 @@ class ApplicationViewTemplateRenderer:
         Renders the views for application based data
         :param project_data: metadata of the GAMS project
         """
+
+        # Get the manifest we created in the static renderer step.
+        # Fallback to an empty dict if it doesn't exist yet (e.g., during tests).
+        manifest = self.app_context.get_application_render_context().get_static_file_hash_mapping()
+
+        def asset_helper(asset_path: str) -> str:
+            """
+            Resolves the asset hash and automatically prepends the correct root and static path.
+            Bypasses manipulation for absolute external URLs.
+            """
+            # 1. Escape hatch for external URLs (CDNs)
+            if asset_path.startswith(('http://', 'https://', '//')):
+                return asset_path
+
+            # 2. Get the hashed filename (or fallback to original for vendor files/dev mode)
+            resolved_filename = manifest.get(asset_path, asset_path)
+
+            # 3. Cleanly concatenate the paths
+            # .rstrip('/') ensures we don't accidentally create double slashes like //static/
+            base_path = template_relative_path_to_root.rstrip('/')
+
+            # Strip leading slash from asset_path if the dev accidentally added one
+            clean_filename = resolved_filename.lstrip('/')
+
+            return f"{base_path}/static/{clean_filename}"
+
         # accessing information from the application context
         output_dir = self.app_context.get_config().project_public_dir
         template_pages_dir = self.app_context.get_config().project_src_view_template_pages_dir
@@ -79,7 +104,9 @@ class ApplicationViewTemplateRenderer:
                                 'env': self.app_context.get_config().ENV.to_dict(),
                                 '_template_name': template_filename.replace(".j2", ""),
                                 '_template_file_name': template_filename,
-                                '_root_path': template_relative_path_to_root
+                                '_root_path': template_relative_path_to_root,
+                                'asset': asset_helper,
+                                'manifest': manifest
                             }
                         }
                         page_html = template.render(render_context)
@@ -95,7 +122,9 @@ class ApplicationViewTemplateRenderer:
                             'env': self.app_context.get_config().ENV.to_dict(),
                             '_template_name': template_path.replace(".j2", ""),
                             '_template_file_name': template_path,
-                            '_root_path': template_relative_path_to_root
+                            '_root_path': template_relative_path_to_root,
+                            'asset': asset_helper,
+                            'manifest': manifest
                         }
                     }
                     page_html = template.render(render_context)
