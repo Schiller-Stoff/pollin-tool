@@ -3,6 +3,7 @@ import logging
 # Change import to PatternMatchingEventHandler
 from watchdog.events import PatternMatchingEventHandler
 
+from gams_frog.ssr.init.config.ApplicationRenderContext import ApplicationRenderContext
 from gams_frog.ssr.watch.BuildMetadataRenderer import BuildMetadataRenderer
 from gams_frog.ssr.watch.render.DigitalObjectViewRenderer import DigitalObjectViewRenderer
 from gams_frog.ssr.init.ApplicationContext import ApplicationContext
@@ -24,6 +25,9 @@ class ApplicationViewFileEventController(PatternMatchingEventHandler):
 
     def __init__(self, app_context: ApplicationContext):
         self.app_context = app_context
+        self.app_context.set_application_render_context(
+            ApplicationRenderContext()
+        )
 
         # Initialize with ignore patterns to filter out noise
         super().__init__(ignore_patterns=[
@@ -31,14 +35,15 @@ class ApplicationViewFileEventController(PatternMatchingEventHandler):
             "*.swp", "*.tmp", "*.DS_Store", "~*"
         ])
 
+        # for static files (remove and add if something changes)
+        # this must run first!
+        self.application_static_file_refresher = ApplicationStaticFileRenderer(app_context)
+
         # for digital objects
         self.digital_object_view_renderer = DigitalObjectViewRenderer(app_context)
 
         # for about.html etc.
         self.application_view_template_render = ApplicationViewTemplateRenderer(app_context)
-
-        # for static files (remove and add if something changes)
-        self.application_static_file_refresher = ApplicationStaticFileRenderer(app_context)
 
         # for build metadata
         self.build_metadata_renderer = BuildMetadataRenderer(app_context)
@@ -63,20 +68,25 @@ class ApplicationViewFileEventController(PatternMatchingEventHandler):
             return
 
         logging.info(f"File deleted: {event.src_path}")
+
+        self.application_static_file_refresher.refresh()
+
         # deletes correspondent file
         self.application_view_template_render.delete_output_file(event.src_path)
 
         # trigger re-render of dependent components
         self.digital_object_view_renderer.render()
-        self.application_static_file_refresher.refresh()
+
 
     def render_views(self):
         """
         Renders the views
         """
+        # must run always first
+        self.application_static_file_refresher.refresh()
+
         self.application_view_template_render.render()
         self.digital_object_view_renderer.render()
-        self.application_static_file_refresher.refresh()
         # build metadata only for staging and production
         if self.app_context.get_config().mode != "dev":
             self.build_metadata_renderer.render()

@@ -171,6 +171,12 @@ class TestGamsFrogProject:
         self.get_test_js_path().write_text(TestGamsFrogProject.TEST_JS_FILE_CONTENT)
         self.get_test_logo_path().parent.mkdir(parents=True, exist_ok=True)
         self.get_test_logo_path().write_bytes(TestGamsFrogProject.TEST_LOGO_FILE_CONTENT)
+        self.get_test_lib_path().parent.mkdir(parents=True, exist_ok=True)
+        self.get_test_lib_path().write_text(TestGamsFrogProject.TEST_JS_FILE_CONTENT)
+        self.get_test_raw_path().parent.mkdir(parents=True, exist_ok=True)
+        self.get_test_raw_path().write_bytes(TestGamsFrogProject.TEST_LOGO_FILE_CONTENT)
+
+
 
     def get_test_css_path(self):
         """
@@ -189,3 +195,15 @@ class TestGamsFrogProject:
         :return: The path to the test logo file
         """
         return self._config.project_src_static_dir / "images" / "logo.png"
+
+    def get_test_lib_path(self):
+        """
+        :return: The path to test lib files e.g. bootstrap
+        """
+        return self._config.project_src_static_dir / "lib" / "bootstrap" / "bootstrap.min.js"
+
+    def get_test_raw_path(self):
+        """
+        :return: The path to the test raw file
+        """
+        return self._config.project_src_static_dir / "raw" / "demo.png"
