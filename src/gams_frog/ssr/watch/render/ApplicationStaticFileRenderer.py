@@ -89,7 +89,7 @@ class ApplicationStaticFileRenderer:
 
         # Define which folders should NEVER be hashed (relative to src/static)
         # We use a set for fast O(1) lookups
-        excluded_folders = {"vendor", "lib", "external", "raw"}
+        excluded_folders = {"lib", "raw"}
 
         for root, _, files in os.walk(src_dir):
             for file in files:

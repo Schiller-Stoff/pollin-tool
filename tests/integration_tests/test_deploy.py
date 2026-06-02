@@ -96,18 +96,20 @@ class TestDeployAfterBuild:
             assert logo_bytes == TestGamsFrogProject.TEST_LOGO_FILE_CONTENT
 
 
-    # def test_deploy_contains_expected_hashed_static_files_exclusions(self, mock_gams_frog_env, mock_gams_auth_client):
-    #     """Static files in the zip should match original source content."""
-    #     self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
-    #
-    #     with self._get_uploaded_zip(mock_gams_auth_client) as zf:
-    #         # filenames are being adapted and hashed (original filenames should not be kept)
-    #         file_paths = zf.namelist()
-    #         assert "static/css/styles.css" not in file_paths
-    #         assert "static/js/scripts.js" not in file_paths
-    #         assert "static/images/logo.png" not in file_paths
-    #
-    #         # TODO test if exclusions from hashing works
+    def test_deploy_contains_expected_hashed_static_files_exclusions(self, mock_gams_frog_env, mock_gams_auth_client):
+        """Tests exclusions of the file-name hashing mechanism for certain folders (vendor, lib, raw)."""
+        self._deploy_after_build(mock_gams_frog_env, mock_gams_auth_client)
+
+        with self._get_uploaded_zip(mock_gams_auth_client) as zf:
+            # filenames are being adapted and hashed (original filenames should not be kept)
+            file_paths = zf.namelist()
+            assert "static/css/styles.css" not in file_paths
+            assert "static/js/scripts.js" not in file_paths
+            assert "static/images/logo.png" not in file_paths
+
+            # these files should not be hashed
+            assert "static/lib/bootstrap/bootstrap.min.js" in file_paths
+            assert "static/raw/demo.png" in file_paths
 
 
     def test_deploy_zip_has_no_path_prefixes(self, mock_gams_frog_env, mock_gams_auth_client):
