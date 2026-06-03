@@ -4,6 +4,7 @@ from pathlib import Path
 import jinja2
 from gams_frog.ssr.init.ApplicationContext import ApplicationContext
 from gams_frog.ssr.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+from gams_frog.ssr.watch.render.ApplicationTemplateContextBuilder import ApplicationTemplateContextBuilder
 from gams_frog.ssr.watch.utils.RenderUtils import RenderUtils
 
 class ApplicationViewTemplateRenderer:
@@ -44,36 +45,12 @@ class ApplicationViewTemplateRenderer:
         :param project_data: metadata of the GAMS project
         """
 
-        # Get the manifest we created in the static renderer step.
-        # Fallback to an empty dict if it doesn't exist yet (e.g., during tests).
-        manifest = self.app_context.get_application_render_context().get_static_file_hash_mapping()
-
-        def asset_helper(asset_path: str) -> str:
-            """
-            Resolves the asset hash and automatically prepends the correct root and static path.
-            Bypasses manipulation for absolute external URLs.
-            """
-            # 1. Escape hatch for external URLs (CDNs)
-            if asset_path.startswith(('http://', 'https://', '//')):
-                return asset_path
-
-            # 2. Get the hashed filename (or fallback to original for vendor files/dev mode)
-            resolved_filename = manifest.get(asset_path, asset_path)
-
-            # 3. Cleanly concatenate the paths
-            # .rstrip('/') ensures we don't accidentally create double slashes like //static/
-            base_path = template_relative_path_to_root.rstrip('/')
-
-            # Strip leading slash from asset_path if the dev accidentally added one
-            clean_filename = resolved_filename.lstrip('/')
-
-            return f"{base_path}/static/{clean_filename}"
+        app_template_context_builder = ApplicationTemplateContextBuilder(self.app_context)
 
         # accessing information from the application context
         output_dir = self.app_context.get_config().project_public_dir
         template_pages_dir = self.app_context.get_config().project_src_view_template_pages_dir
         view_template_dir = self.app_context.get_config().project_src_view_template_dir
-        project_data = self.app_context.get_app_data_store().get_project_data()
 
         # template names = relative path to the view template directory
         environment = jinja2.Environment(loader=jinja2.FileSystemLoader(view_template_dir))
@@ -98,17 +75,10 @@ class ApplicationViewTemplateRenderer:
                     expected_object_id = template_filename
                     object_to_bind = self.app_context.get_app_data_store().find_object(expected_object_id)
                     if object_to_bind:
-                        render_context = {
-                            "context": {
-                                'project': project_data,
-                                'env': self.app_context.get_config().ENV.to_dict(),
-                                '_template_name': template_filename.replace(".j2", ""),
-                                '_template_file_name': template_filename,
-                                '_root_path': template_relative_path_to_root,
-                                'asset': asset_helper,
-                                'manifest': manifest
-                            }
-                        }
+                        render_context = app_template_context_builder.create(
+                            template_name=template_filename,
+                            root_path=template_relative_path_to_root
+                        )
                         page_html = template.render(render_context)
                     else:
                         msg = f"Cannot find object {expected_object_id} to bind to jinja template with name {template_filename}"
@@ -116,17 +86,10 @@ class ApplicationViewTemplateRenderer:
                         raise LookupError(msg)
                 else:
                     # just render page if not following template name convention.
-                    render_context = {
-                        "context": {
-                            'project': project_data,
-                            'env': self.app_context.get_config().ENV.to_dict(),
-                            '_template_name': template_path.replace(".j2", ""),
-                            '_template_file_name': template_path,
-                            '_root_path': template_relative_path_to_root,
-                            'asset': asset_helper,
-                            'manifest': manifest
-                        }
-                    }
+                    render_context = app_template_context_builder.create(
+                        template_name=template_path,
+                        root_path=template_relative_path_to_root
+                    )
                     page_html = template.render(render_context)
 
             except Exception as e:
