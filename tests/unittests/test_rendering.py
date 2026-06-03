@@ -72,3 +72,35 @@ def test_asset_helper_rendering(test_gams_frog_project, test_application_context
     # Note: Depending on your RenderUtils, the relative path from
     # /objects/{TestDigitalObject.ID}/index.html to the root will likely be "../../"
     assert "../../static/js/scripts.ab12c3.js" in object_html or "../static/js/scripts.ab12c3.js" in object_html
+
+
+def test_context_serialization_tojson(test_gams_frog_project, test_application_context):
+    """
+    Test that the 'context' dictionary contains purely serializable data
+    and does not crash Jinja2's tojson filter.
+    """
+    # 1. Setup: Create a template that dumps the context to JSON
+    template_dir = test_gams_frog_project.get_config().project_src_view_template_dir
+    (template_dir / "object.j2").write_text(
+        "<pre id='json-dump'>{{ context | tojson(indent=2) }}</pre>"
+    )
+
+    # 2. Execute: Render the digital objects
+    renderer = DigitalObjectViewRenderer(test_application_context)
+    renderer.render()
+
+    # 3. Verify
+    output_dir = test_gams_frog_project.get_config().project_public_dir
+    output_file = output_dir / "objects" / TestDigitalObject.ID / "index.html"
+
+    assert output_file.exists(), "Output file was not generated"
+    object_html = output_file.read_text(encoding='utf-8')
+
+    # Assertion A: The renderer should not have caught a TypeError and dumped an error page
+    assert "GAMS_FROG ERROR" not in object_html, "Template rendering crashed, likely due to a serialization error"
+
+    # Assertion B: The output should actually contain the serialized JSON of our context
+    # We check for fundamental keys we know MUST be in the context dictionary
+    assert '"_template_name":' in object_html, "JSON dump missing _template_name"
+    assert '"_root_path":' in object_html, "JSON dump missing _root_path"
+    assert '"project":' in object_html, "JSON dump missing project metadata"
