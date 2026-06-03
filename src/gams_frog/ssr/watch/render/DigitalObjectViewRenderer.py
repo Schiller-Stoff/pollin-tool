@@ -6,6 +6,7 @@ from jinja2 import Environment, Template
 
 from gams_frog.ssr.init.ApplicationContext import ApplicationContext
 from gams_frog.ssr.watch.render.ApplicationErrorHtmlBuilder import ApplicationErrorHtmlBuilder
+from gams_frog.ssr.watch.render.ApplicationTemplateContextBuilder import ApplicationTemplateContextBuilder
 from gams_frog.ssr.watch.utils.RenderUtils import RenderUtils
 
 
@@ -53,9 +54,8 @@ class DigitalObjectViewRenderer:
         project_metadata = self.app_context.get_app_data_store().project_data
         project_abbr = self.app_context.get_config().project
 
-        # Get the manifest we created in the static renderer step.
-        # Fallback to an empty dict if it doesn't exist yet (e.g., during tests).
-        manifest = self.app_context.get_application_render_context().get_static_file_hash_mapping()
+        # TODO
+        app_template_context_builder = ApplicationTemplateContextBuilder(self.app_context)
 
         for digital_object in data:
             object_id = digital_object["id"]
@@ -65,43 +65,13 @@ class DigitalObjectViewRenderer:
             obj_template_target_output_path = Path(output_dir).joinpath("objects").joinpath(object_id)
             obj_template_relative_path_to_root = RenderUtils.calc_relative_path(output_dir, obj_template_target_output_path)
 
-            def asset_helper(asset_path: str) -> str:
-                """
-                Resolves the asset hash and automatically prepends the correct root and static path.
-                Bypasses manipulation for absolute external URLs.
-                """
-                # 1. Escape hatch for external URLs (CDNs)
-                if asset_path.startswith(('http://', 'https://', '//')):
-                    return asset_path
-
-                # 2. Get the hashed filename (or fallback to original for vendor files/dev mode)
-                resolved_filename = manifest.get(asset_path, asset_path)
-
-                # 3. Cleanly concatenate the paths
-                # .rstrip('/') ensures we don't accidentally create double slashes like //static/
-                base_path = obj_template_relative_path_to_root.rstrip('/')
-
-                # Strip leading slash from asset_path if the dev accidentally added one
-                clean_filename = resolved_filename.lstrip('/')
-
-                return f"{base_path}/static/{clean_filename}"
-
             try:
                 object_template = self.environment.get_template(object_template_name)
-                render_context = {
-                    "context": {
-                        'object': digital_object,
-                        'project': project_metadata,
-                        'env': self.app_context.get_config().ENV.to_dict(),
-                        '_template_name': object_template_name.replace(".j2", ""),
-                        '_template_file_name': object_template_name,
-                        '_root_path': obj_template_relative_path_to_root,
-                        'manifest': manifest
-                    },
-                    "fn": {
-                        'asset': asset_helper,
-                    }
-                }
+                render_context = app_template_context_builder.create(
+                    template_name=object_template_name,
+                    root_path=obj_template_relative_path_to_root,
+                    extra_context={'object': digital_object}
+                )
                 object_html = object_template.render(render_context)
             except Exception as e:
                 msg = f"Failed to render template {object_template_name} for object {digital_object['id']}. Original error: {e}"
@@ -123,41 +93,10 @@ class DigitalObjectViewRenderer:
 
         try:
             project_template = self.environment.get_template(project_template_name)
-
-            def asset_helper(asset_path: str) -> str:
-                """
-                Resolves the asset hash and automatically prepends the correct root and static path.
-                Bypasses manipulation for absolute external URLs.
-                """
-                # 1. Escape hatch for external URLs (CDNs)
-                if asset_path.startswith(('http://', 'https://', '//')):
-                    return asset_path
-
-                # 2. Get the hashed filename (or fallback to original for vendor files/dev mode)
-                resolved_filename = manifest.get(asset_path, asset_path)
-
-                # 3. Cleanly concatenate the paths
-                # .rstrip('/') ensures we don't accidentally create double slashes like //static/
-                base_path = project_template_relative_path_to_root.rstrip('/')
-
-                # Strip leading slash from asset_path if the dev accidentally added one
-                clean_filename = resolved_filename.lstrip('/')
-
-                return f"{base_path}/static/{clean_filename}"
-
-            render_context = {
-                "context": {
-                    'project': project_metadata,
-                    'env': self.app_context.get_config().ENV.to_dict(),
-                    '_template_name': project_template_name.replace(".j2", ""),
-                    '_template_file_name': project_template_name,
-                    '_root_path': project_template_relative_path_to_root,
-                    'manifest': manifest
-                },
-                "fn": {
-                    'asset': asset_helper,
-                }
-            }
+            render_context = app_template_context_builder.create(
+                template_name=project_template_name,
+                root_path=project_template_relative_path_to_root
+            )
             project_html = project_template.render(render_context)
         except Exception as e:
             msg = f"Failed to render template {project_template_name} for project {project_abbr}. Original error: {e}"
@@ -179,42 +118,11 @@ class DigitalObjectViewRenderer:
 
         try:
             object_list_template = self.environment.get_template(object_list_template_name)
-
-            def asset_helper(asset_path: str) -> str:
-                """
-                Resolves the asset hash and automatically prepends the correct root and static path.
-                Bypasses manipulation for absolute external URLs.
-                """
-                # 1. Escape hatch for external URLs (CDNs)
-                if asset_path.startswith(('http://', 'https://', '//')):
-                    return asset_path
-
-                # 2. Get the hashed filename (or fallback to original for vendor files/dev mode)
-                resolved_filename = manifest.get(asset_path, asset_path)
-
-                # 3. Cleanly concatenate the paths
-                # .rstrip('/') ensures we don't accidentally create double slashes like //static/
-                base_path = object_list_template_relative_path_to_root.rstrip('/')
-
-                # Strip leading slash from asset_path if the dev accidentally added one
-                clean_filename = resolved_filename.lstrip('/')
-
-                return f"{base_path}/static/{clean_filename}"
-
-            render_context = {
-                "context": {
-                    'objects': data,
-                    'project': project_metadata,
-                    'env': self.app_context.get_config().ENV.to_dict(),
-                    '_template_name': object_list_template_name.replace(".j2", ""),
-                    '_template_file_name': object_list_template_name,
-                    '_root_path': object_list_template_relative_path_to_root,
-                    'manifest': manifest
-                },
-                "fn": {
-                    'asset': asset_helper,
-                }
-            }
+            render_context = app_template_context_builder.create(
+                template_name=object_list_template_name,
+                root_path=object_list_template_relative_path_to_root,
+                extra_context={'objects': data}
+            )
             object_list_html = object_list_template.render(render_context)
         except Exception as e:
             msg = f"Failed to render template {object_list_template_name} for object-list for project {project_abbr}. Original error: {e}"
