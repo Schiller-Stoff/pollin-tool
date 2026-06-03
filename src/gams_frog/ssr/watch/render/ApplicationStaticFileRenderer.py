@@ -83,10 +83,6 @@ class ApplicationStaticFileRenderer:
     def _copy_and_hash_static_files(self, src_dir: Path, dest_dir: Path) -> dict:
         manifest = {}
 
-        mode = self.app_context.get_config().mode
-        is_dev = mode == "dev"
-        dev_timestamp = str(int(time.time()))
-
         # Define which folders should NEVER be hashed (relative to src/static)
         # We use a set for fast O(1) lookups
         excluded_folders = {"lib", "raw"}
@@ -102,23 +98,17 @@ class ApplicationStaticFileRenderer:
                 is_vendor_file = len(rel_path.parts) > 0 and rel_path.parts[0] in excluded_folders
 
                 if is_vendor_file:
-                # TODO enable again skipping in dev?
-                # if is_dev or is_vendor_file:
                     # BYPASS HASHING:
                     # Triggers if we are in dev mode OR if it's a 3rd-party vendor file
                     target_file_path = dest_dir / rel_path
                     target_file_path.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(file_path, target_file_path)
 
-                    if is_dev and not is_vendor_file:
-                        # Append query string for dev-mode cache busting on our own files
-                        manifest[manifest_key] = f"{manifest_key}?v={dev_timestamp}"
-                    else:
-                        # Vendor files get mapped exactly 1:1, no query strings, no hashes
-                        manifest[manifest_key] = manifest_key
+                    # Vendor files get mapped exactly 1:1, no query strings, no hashes
+                    manifest[manifest_key] = manifest_key
 
                 else:
-                    # PRODUCTION HASHING for your actual app code
+                    # PRODUCTION HASHING for the actual app code
                     hasher = hashlib.md5()
                     with open(file_path, 'rb') as f:
                         hasher.update(f.read())

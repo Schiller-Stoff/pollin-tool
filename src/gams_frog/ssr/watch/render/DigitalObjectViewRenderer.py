@@ -50,11 +50,9 @@ class DigitalObjectViewRenderer:
 
         # digital objects
         data = self.app_context.get_app_data_store().get_objects()
-        # metadata about the project
-        project_metadata = self.app_context.get_app_data_store().project_data
         project_abbr = self.app_context.get_config().project
 
-        # TODO
+        # responsible for building the context dictionary during template rendering
         app_template_context_builder = ApplicationTemplateContextBuilder(self.app_context)
 
         for digital_object in data:

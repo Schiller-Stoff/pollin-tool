@@ -51,7 +51,6 @@ class ApplicationViewTemplateRenderer:
         output_dir = self.app_context.get_config().project_public_dir
         template_pages_dir = self.app_context.get_config().project_src_view_template_pages_dir
         view_template_dir = self.app_context.get_config().project_src_view_template_dir
-        project_data = self.app_context.get_app_data_store().get_project_data()
 
         # template names = relative path to the view template directory
         environment = jinja2.Environment(loader=jinja2.FileSystemLoader(view_template_dir))
