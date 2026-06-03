@@ -105,9 +105,12 @@ class ApplicationViewTemplateRenderer:
                                 '_template_name': template_filename.replace(".j2", ""),
                                 '_template_file_name': template_filename,
                                 '_root_path': template_relative_path_to_root,
-                                'asset': asset_helper,
                                 'manifest': manifest
+                            },
+                            "fn": {
+                                'asset': asset_helper,
                             }
+
                         }
                         page_html = template.render(render_context)
                     else:
@@ -123,8 +126,10 @@ class ApplicationViewTemplateRenderer:
                             '_template_name': template_path.replace(".j2", ""),
                             '_template_file_name': template_path,
                             '_root_path': template_relative_path_to_root,
-                            'asset': asset_helper,
                             'manifest': manifest
+                        },
+                        "fn": {
+                            'asset': asset_helper,
                         }
                     }
                     page_html = template.render(render_context)

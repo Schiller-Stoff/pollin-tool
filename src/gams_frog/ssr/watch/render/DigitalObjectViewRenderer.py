@@ -96,8 +96,10 @@ class DigitalObjectViewRenderer:
                         '_template_name': object_template_name.replace(".j2", ""),
                         '_template_file_name': object_template_name,
                         '_root_path': obj_template_relative_path_to_root,
-                        'asset': asset_helper,
                         'manifest': manifest
+                    },
+                    "fn": {
+                        'asset': asset_helper,
                     }
                 }
                 object_html = object_template.render(render_context)
@@ -150,8 +152,10 @@ class DigitalObjectViewRenderer:
                     '_template_name': project_template_name.replace(".j2", ""),
                     '_template_file_name': project_template_name,
                     '_root_path': project_template_relative_path_to_root,
-                    'asset': asset_helper,
                     'manifest': manifest
+                },
+                "fn": {
+                    'asset': asset_helper,
                 }
             }
             project_html = project_template.render(render_context)
@@ -205,8 +209,10 @@ class DigitalObjectViewRenderer:
                     '_template_name': object_list_template_name.replace(".j2", ""),
                     '_template_file_name': object_list_template_name,
                     '_root_path': object_list_template_relative_path_to_root,
-                    'asset': asset_helper,
                     'manifest': manifest
+                },
+                "fn": {
+                    'asset': asset_helper,
                 }
             }
             object_list_html = object_list_template.render(render_context)
