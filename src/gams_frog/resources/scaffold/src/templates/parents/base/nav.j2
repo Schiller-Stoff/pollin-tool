@@ -1,0 +1,117 @@
+<nav class="navbar bd-navbar navbar-expand-lg mb-3 sticky-top bg-light border border-3 border-start-0 border-end-0 d-print-none">
+  <div class="container-fluid px-4">
+    <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon text-light"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a data-active-template="project" class="nav-link" aria-current="page" href="{{context._root_path}}">{{context.project.projectAbbr | upper}}</a>
+        </li>
+        <li class="nav-item">
+          <a data-active-template="object-list" class="nav-link" aria-current="page" href="{{context._root_path}}/objects/">Objects</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Project
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{context._root_path}}/about.html">About</a></li>
+            <li><a class="dropdown-item" href="{{context._root_path}}/imprint.html">Imprint</a></li>
+            <li><a class="dropdown-item" href="{{context._root_path}}/data_protection.html">Data protection</a></li>
+            <li><a class="dropdown-item" href="{{context._root_path}}/help.html">Help</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{{context._root_path}}/datamodel.html">Research &amp; Data model</a></li>
+            <li><a class="dropdown-item" href="{{context._root_path}}/ontology.html">Ontology</a></li>
+            <li><a class="dropdown-item" href="{{context._root_path}}/citation.html">How to cite</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="navbar-nav me-2">
+        <li class="nav-item">
+          <a class="nav-link lang-switch" data-lang="de" href="#">DE</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link lang-switch" data-lang="en" href="#">EN</a>
+        </li>
+      </ul>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-outline-dark d-flex me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <span>Cite</span>
+        <svg class="ms-1 mb-1" width="15px" height="15px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M3 20.2895V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15C21 16.1046 20.1046 17 19 17H7.96125C7.35368 17 6.77906 17.2762 6.39951 17.7506L4.06852 20.6643C3.71421 21.1072 3 20.8567 3 20.2895Z" stroke="#000000" stroke-width="1.5"></path><path d="M10.5 10H8.5C7.94772 10 7.5 9.55228 7.5 9V8C7.5 7.44772 7.94772 7 8.5 7H9.5C10.0523 7 10.5 7.44772 10.5 8V10ZM10.5 10C10.5 11 9.5 12 8.5 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path><path d="M16.5 10H14.5C13.9477 10 13.5 9.55228 13.5 9V8C13.5 7.44772 13.9477 7 14.5 7H15.5C16.0523 7 16.5 7.44772 16.5 8V10ZM16.5 10C16.5 11 15.5 12 14.5 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path></svg>
+      </button>
+      <div class="d-flex" role="search" method="get" action="{{context._root_path}}/search.html">
+        <a class="btn btn-outline-dark" href="{{context._root_path}}/objects/" disabled><span>Search</span></a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+
+  // set active nav link
+  (() => {
+    let selector = `nav a[data-active-template='${gams_frog._template_name}']`
+    let navLink = document.querySelector(selector);
+
+    // Debugging information only if in development using jinja2 conditionals
+    {% if "dev" in context.env.GAMS_FROG_MODE %}
+      console.debug("Setting active nav a element to selection: ", selector, " Selected element: ", navLink);
+    {% endif %}
+
+    if(!navLink){
+      return;
+    }
+    document.querySelector(selector).classList.add("active");
+  })();
+
+  // set active language
+  (() => {
+    const currentLang = new URLSearchParams(window.location.search).get('lang')
+                        || '{{ defaultISOLanguage | default("de") }}';
+
+    document.querySelectorAll('.lang-switch').forEach(link => {
+      const targetLang = link.dataset.lang;
+
+      // build href preserving current path and other params
+      const params = new URLSearchParams(window.location.search);
+      params.set('lang', targetLang);
+      link.href = window.location.pathname + '?' + params.toString();
+
+      // mark the active language
+      if (targetLang === currentLang) {
+        link.classList.add('active', 'fw-bold');
+        link.setAttribute('aria-current', 'true');
+      }
+    });
+  })();
+</script>
+
+<!-- Zitierhilfe -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h3 class="h5">Zitat <svg class="mb-3" width="20px" height="20px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M3 20.2895V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15C21 16.1046 20.1046 17 19 17H7.96125C7.35368 17 6.77906 17.2762 6.39951 17.7506L4.06852 20.6643C3.71421 21.1072 3 20.8567 3 20.2895Z" stroke="#000000" stroke-width="1.5"></path><path d="M10.5 10H8.5C7.94772 10 7.5 9.55228 7.5 9V8C7.5 7.44772 7.94772 7 8.5 7H9.5C10.0523 7 10.5 7.44772 10.5 8V10ZM10.5 10C10.5 11 9.5 12 8.5 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path><path d="M16.5 10H14.5C13.9477 10 13.5 9.55228 13.5 9V8C13.5 7.44772 13.9477 7 14.5 7H15.5C16.0523 7 16.5 7.44772 16.5 8V10ZM16.5 10C16.5 11 15.5 12 14.5 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path></svg></h3>
+        <p style="border-radius: 1px; padding: 25px; align-items: center;">Schiller-Stofff Sebastian David; GAMS5 Projekttemplate; 2026 Graz; GAMS-Geisteswissenschaftliches Asset Management System | Universität Graz; URL: <span id="citation_help">https://www.ns-opfer-graz.at</span>;  DOI/Permalink zu den Forschungsdaten: <a class="text-dark" href="#" target="_blank">-</a></p>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+  (() => {
+
+    const myModalEl = document.getElementById('staticBackdrop')
+    myModalEl.addEventListener('show.bs.modal', event => {
+      document.querySelector('#citation_help').textContent = window.location.href;
+    })
+
+  })();
+
+</script>

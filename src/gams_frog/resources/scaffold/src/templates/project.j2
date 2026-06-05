@@ -1,0 +1,11 @@
+{% extends "parents/base.j2" %}
+{% block content %}
+    <h1>{{ context.project.projectAbbr | upper }}</h1>
+    <h2 class="h3 fw-light">{{ context.project.projectSubTitle }}</h2>
+    <p>{{context.project.description}}</p>
+    <hr/>
+    <pre>
+        {{context.project.statistics | tojson(indent=2)}}
+    </pre>
+    {# <pre>{{ context | tojson(indent=2) }}</pre> #}
+{% endblock %}

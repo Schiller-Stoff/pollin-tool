@@ -1,0 +1,53 @@
+[project]
+PROJECT_ABBR = "gams" # id of the project to be loaded from the gams-api
+
+[ui]
+VERSION = "0.0.0" # required version of the web app
+TITLE = "GAMS WebUI" # (optional) title of the application
+
+# dangerous variables that point always to production adresses.
+# values are needed in some situations (e.g. rewrites for manifest.json / rdf files using production adresses during development / staging)
+# shouldn't be used regularly
+[dangerous]
+GAMS3_PRODUCTION_ORIGIN = "https://gams.uni-graz.at" # gams3 potential unstable production address
+GAMS5_PRODUCTION_ORIGIN = "https://gams-staging.uni-graz.at" # gams5 potential unstable production address
+
+
+#
+# Following properties are directly connected to gams-frog commands
+# (handles environment specific configuration: development / staging / production etc.)
+#
+
+[dev]
+# in dev mode this url is being accessed by a local proxy (using localhost:18090 -> GAMS_API_ORIGIN)
+GAMS_API_ORIGIN = "https://gams-staging.uni-graz.at" # origin of the gams-api (might be somewhere else)
+IIIF_IMAGE_SERVER_ORIGIN = "https://gams-staging.uni-graz.at/services" # adress of the IIIF server to be used (might be somewhere else)
+# allows to configure a path to where gams-frog produces it's files
+# OUTPUT_PATH = "C:\\Users\\sebas\\Documents\\programming\\gams\\gams-frog\\1"
+
+[stage]
+GAMS_API_ORIGIN = "https://gams-staging.uni-graz.at"
+# GAMS_API_PROTECTED_ORIGIN = "https://it030021.uni-graz.at" # optional: gams-frog will use this endpoint instead for all api endpoints that are behind auth
+IIIF_IMAGE_SERVER_ORIGIN = "https://gams-staging.uni-graz.at/services"
+
+[build]
+GAMS_API_ORIGIN = "https://gams.uni-graz.at"
+# GAMS_API_PROTECTED_ORIGIN = "https://it030021.uni-graz.at" # optional: gams-frog will use this endpoint instead for all api endpoints that are behind auth
+IIIF_IMAGE_SERVER_ORIGIN = "https://gams.uni-graz.at/services"
+
+[dev.load]
+OBJECT_COUNT_RESTRICTION = 10 # limits the number of objects loaded (+ used for rendering)
+OBJECTS_REQUIRED = [
+] # defines which objects are required to be loaded (ignoring the count restriction)
+
+[stage.load]
+OBJECT_COUNT_RESTRICTION = 2000000 # limits the number of objects loaded (+ used for rendering)
+OBJECTS_REQUIRED = [
+] # defines which objects are required to be loaded (ignoring the count restriction)
+
+[build.load]
+OBJECT_COUNT_RESTRICTION = 10000000
+OBJECTS_REQUIRED = [
+]
+
+

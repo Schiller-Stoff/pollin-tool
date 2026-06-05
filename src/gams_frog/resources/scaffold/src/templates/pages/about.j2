@@ -1,0 +1,73 @@
+{% extends "parents/base.j2" %}
+{% block content %}
+    <h1 class="h3 fw-light">Über das Projekt</h1>
+    <div class="row mt-3">
+        <div class="col-md-8">
+            <h2 class="h4">Hintergrund</h2>
+            <p>MEMOR Graz ist das digitale Denkmal für die Grazer Opfer des Nationalsozialismus. Es dokumentiert die Biographien aller Grazer NS-Opfer zwischen 1938 und 1945 und verortet sie an ihren letzten freiwilligen Wohnadressen in der Stadt Graz.</p>
+            <p>MEMOR Graz dient sowohl als historisches Archiv als auch als Bildungsinstrument und schafft eine interaktive Plattform, die individuelle Opfergeschichten würdigt und gleichzeitig breitere Verfolgungsmuster sichtbar macht. Durch die Digitalisierung der Geschichte der Opfer sowie durch die lokale Verortung der einzelnen Verfolgungsgeschichten im Grazer Stadtraum ist es für alle jederzeit möglich, mehr über einzelne Personen, Personengruppen aber auch über einzelne Bezirke oder Straßen zu erfahren.</p>
+            <br>
+            <h2 class="h4">Wer wird in MEMOR Graz aufgenommen</h2>
+            <p>In MEMOR Graz sind alle Opfer des Nationalsozialismus verzeichnet, die zum Zeitpunkt der NS-Machtübernahme im Jahr 1938 im Grazer Stadtgebiet ihren Lebensmittelpunkt hatten. Sie werden in MEMOR Graz an ihren letzten freiwilligen Wohnadresse erfasst und biographisch vorgestellt. Weiters werden sie entsprechend der Gründe ihrer Verfolgung in Gruppen unterteilt. Auf Grund der Tatsache, dass Menschen teils mehrfach vom nationalsozialistischen Terror betroffen waren, werden manche NS-Opfer mehreren Kategorien zugeordnet.</p>
+            <p><a href="{{context._root_path}}/datamodel.html">Datenmodell</a> (Beschreibung der verwendeten NS-Opferkategorien)</p>
+            <br>
+            <h2 class="h4">Zielsetzung</h2>
+            <p>Ziel von MEMOR Graz ist es, an alle Grazer NS-Opfer zu erinnern, ihre Geschichte zu erzählen und ihnen ein „Gesicht“ geben. Wir haben in zahlreichen Archiven sowie von Angehörigen Dokumente und Fotos bekommen. Zu vielen Grazer NS-Opfern gibt es jedoch kein „Gesicht“. Um ihnen ihre Geschichte und ihr „Gesicht“ zurück zu geben, sind wir auf ihre Mitarbeit angewiesen. Sollten Sie weiterführende Informationen zu den hier verzeichneten Opfern wie auch uns bislang nicht bekannten Opfern haben, so bitten wir Sie um Kontaktaufnahme mit unserem Team.</p>
+            <br>
+            <h2 class="h4">Zur Recherche</h2>
+            <p>Die Daten von MEMOR stützen sich auf umfangreiche Recherchen in Archiven, Opfer-Datenbanken und Publikationen. Das Team vom MEMOR bedankt sich bei allen Archivmitarbeiter:innen, der genannten Archive.</p>
+            <p>Folgenden Archive und Datenbanken wurden für die Recherche herangezogen:</p>
+            <h3 class="h5">Archive</h3>
+            <ul>
+                <li>Steiermärkisches Landesarchiv</li>
+                <li>Stadtarchiv Graz</li>
+                <li>Archiv des Dokumentationsarchivs des österreichischen Widerstandes</li>
+                <li>Arolsen Archive</li>
+                <li>Central Archiv of the History of the Jewish People</li>
+                <li>Archiv der IKG Wien</li>
+                <li>Bundesarchiv Berlin</li>
+                <li>National Library of Israel</li>
+                <li>Archiv des KZ-Verbandes Steiermark</li>
+                <li>Archiv des Dokumentations- und Informationszentrums des Kulturvereins Österreichischer Roma</li>
+            </ul>
+            <h3 class="h5">Datenbanken</h3>
+            <ul>
+                <li>The Central Database of Shoah Victims Names, Yad Vashem (<a href="https://collections.yadvashem.org/en/names" target="_blank">https://collections.yadvashem.org/en/names</a>)</li>
+                <li>Namentliche Erfassung der österreichischen Holocaustopfer, DÖW (<a href="https://www.doew.at/personensuche" target="_blank">https://www.doew.at/personensuche</a>)</li>
+                <li><a href="www.geni.com" target="_blank">www.geni.com</a></li>
+            </ul>
+            <br>
+            <h2 class="h4">Kontakt</h2>
+            <p>memor.graz@uni-graz.at</p>
+            <br>
+            <h2 class="h4">Team</h2>
+            <p>MEMOR Graz ist ein Projekt des Centrums für Jüdische Studien der Universität Graz und von CLIO. Verein für Geschichts- und Bildungsarbeit</p>
+            <p>Für die Inhalte verantwortlich:</p>
+            <p>Gerald Lamprecht, Centrum für Jüdische Studien der Universität Graz</p>
+            <p>Heimo Halbrainer, CLIO. Verein für Geschichts- und Bildungsarbeit</p>
+            <p>Paul Ulrich, Centrum für Jüdische Studien der Universität Graz</p>
+            <p>Heribert Macher-Kroisenbrunner, Universalmuseum Joanneum</p>
+            <br>
+            <h2 class="h4">Technische Umsetzung</h2>
+            <p>Sebastian David Schiller-Stoff</p>
+            <p>DH-Craft OG</p>
+            <br>
+            <h2 class="h4">Fördergeber</h2>
+            <p>Stadt Graz</p>
+            <p>Nationalfonds der Republik Österreich</p>
+            <p>Zukunftsfonds der Republik Österreich</p>
+            <p>Bundeskanzleramt</p>
+            <br>
+            <h2 class="h4">Dank</h2>
+            <p>MEMOR Graz bedankt sich bei allen Fördergebern sowie folgenden Institutionen für die inhaltliche Zusammenarbeit</p>
+            <p>Dokumentationsarchiv des österreichischen Widerstandes</p>
+            <p>Lern- und Gedenkort Schloss Hartheim</p>
+        </div>
+
+
+    </div>
+
+
+    {# <pre>{{ context | tojson(indent=2) }}</pre> #}
+
+{% endblock %}
