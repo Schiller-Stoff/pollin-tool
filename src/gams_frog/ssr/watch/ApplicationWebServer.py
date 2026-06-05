@@ -78,4 +78,5 @@ class ApplicationWebServer:
     def start(web_dir: str, port: int, proxy_target_origin: str | None = None):
         """Starts the development web server."""
         app = ApplicationWebServer.build_app(web_dir, proxy_target_origin)
-        web.run_app(app, port=port)
+        # Pass print=None to silence the default aiohttp stdout banner.
+        web.run_app(app, port=port, print=None)
