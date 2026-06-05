@@ -132,3 +132,58 @@ def test_static_ignores_binary_files(test_application_context):
     validator = StaticFileValidator(test_application_context)
     # Should simply pass (return True) and not crash
     assert validator.validate() is True
+
+
+def test_static_ignores_excluded_directories(test_application_context):
+    """Ensure the validator skips directories like 'lib', 'vendor', and 'node_modules'."""
+    static_dir = test_application_context.get_config().project_src_static_dir
+
+    # Create an excluded directory
+    lib_dir = static_dir / "lib"
+    lib_dir.mkdir(parents=True, exist_ok=True)
+
+    # Plant a normally forbidden hardcoded API URL
+    (lib_dir / "heavy_library.js").write_text(
+        "const api = 'https://gams.uni-graz.at/archive';",
+        encoding="utf-8"
+    )
+
+    validator = StaticFileValidator(test_application_context)
+    # Should pass because 'lib' is in the exclude_dirs set
+    assert validator.validate() is True
+
+
+def test_static_ignores_large_files(test_application_context):
+    """Ensure files over the 500KB size limit are skipped entirely."""
+    static_dir = test_application_context.get_config().project_src_static_dir
+
+    large_file = static_dir / "massive_dataset.js"
+
+    # Generate 600KB of padding to exceed the 500 * 1024 limit
+    padding = "x" * (600 * 1024)
+
+    # Append a forbidden path at the very end
+    large_file.write_text(
+        f"{padding}\nconst api = 'https://gams.uni-graz.at/archive';",
+        encoding="utf-8"
+    )
+
+    validator = StaticFileValidator(test_application_context)
+    # Should pass because the file size aborts the check before reading
+    assert validator.validate() is True
+
+
+def test_static_ignores_long_lines(test_application_context):
+    """Ensure minified code lines (> 5000 chars) are skipped without memory locking."""
+    static_dir = test_application_context.get_config().project_src_static_dir
+
+    minified_file = static_dir / "app.min.js"
+
+    # Create a single line longer than 5000 characters containing a forbidden string
+    long_line = ("a" * 5001) + " const api = 'https://gams.uni-graz.at/archive'; " + ("b" * 100)
+
+    minified_file.write_text(long_line, encoding="utf-8")
+
+    validator = StaticFileValidator(test_application_context)
+    # Should pass because the stream reader skips the abnormally long line
+    assert validator.validate() is True
