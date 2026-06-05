@@ -8,26 +8,26 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a data-active-template="project" class="nav-link" aria-current="page" href="{{context._root_path}}">{{context.project.projectAbbr | upper}}</a>
+          <a data-active-template="project" class="nav-link" aria-current="page" href="{{fn.root()}}">{{context.project.projectAbbr | upper}}</a>
         </li>
         <li class="nav-item">
-          <a data-active-template="object-list" class="nav-link" aria-current="page" href="{{context._root_path}}/objects/">Objects</a>
+          <a data-active-template="object-list" class="nav-link" aria-current="page" href="{{fn.root('/objects/')}}">Objects</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Project
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{context._root_path}}/about.html">About</a></li>
-            <li><a class="dropdown-item" href="{{context._root_path}}/imprint.html">Imprint</a></li>
-            <li><a class="dropdown-item" href="{{context._root_path}}/data_protection.html">Data protection</a></li>
-            <li><a class="dropdown-item" href="{{context._root_path}}/help.html">Help</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('about.html')}}">About</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('imprint.html')}}">Imprint</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('data_protection.html')}}">Data protection</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('help.html')}}">Help</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="{{context._root_path}}/datamodel.html">Research &amp; Data model</a></li>
-            <li><a class="dropdown-item" href="{{context._root_path}}/ontology.html">Ontology</a></li>
-            <li><a class="dropdown-item" href="{{context._root_path}}/citation.html">How to cite</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('datamodel.html')}}">Research &amp; Data model</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('ontology.html')}}">Ontology</a></li>
+            <li><a class="dropdown-item" href="{{fn.root('citation.html')}}">How to cite</a></li>
           </ul>
         </li>
       </ul>
@@ -44,8 +44,8 @@
         <span>Cite</span>
         <svg class="ms-1 mb-1" width="15px" height="15px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M3 20.2895V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15C21 16.1046 20.1046 17 19 17H7.96125C7.35368 17 6.77906 17.2762 6.39951 17.7506L4.06852 20.6643C3.71421 21.1072 3 20.8567 3 20.2895Z" stroke="#000000" stroke-width="1.5"></path><path d="M10.5 10H8.5C7.94772 10 7.5 9.55228 7.5 9V8C7.5 7.44772 7.94772 7 8.5 7H9.5C10.0523 7 10.5 7.44772 10.5 8V10ZM10.5 10C10.5 11 9.5 12 8.5 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path><path d="M16.5 10H14.5C13.9477 10 13.5 9.55228 13.5 9V8C13.5 7.44772 13.9477 7 14.5 7H15.5C16.0523 7 16.5 7.44772 16.5 8V10ZM16.5 10C16.5 11 15.5 12 14.5 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path></svg>
       </button>
-      <div class="d-flex" role="search" method="get" action="{{context._root_path}}/search.html">
-        <a class="btn btn-outline-dark" href="{{context._root_path}}/objects/" disabled><span>Search</span></a>
+      <div class="d-flex" role="search" method="get" action="{{fn.root('search.html')}}">
+        <a class="btn btn-outline-dark" href="{{fn.root('/objects/')}}" disabled><span>Search</span></a>
       </div>
     </div>
   </div>
