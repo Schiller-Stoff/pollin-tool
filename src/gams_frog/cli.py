@@ -1,5 +1,8 @@
 import logging
+import os
 import sys
+import threading
+import webbrowser
 
 import click
 import multiprocessing
@@ -221,6 +224,23 @@ def dev(directory: str, port: int):
     try:
         logging.info(f"*** Starting web server at port {port}")
         dev_server_process.start()
+
+        # open webserver with default browser
+        # Delay opening the browser so the server has time to bind to the socket.
+        # 1.0 to 1.5 seconds is usually the sweet spot for a local Python dev server.
+        def open_browser():
+            url = f"http://localhost:{port}/pub/{app_context.get_config().project}/"
+            logging.info(f"*** Opening now dev server via default browser at {url}")
+            try:
+                webbrowser.open(url)
+            except Exception as e:
+                logging.warning(f"Could not open browser automatically: {e}")
+
+        # Starts a background thread that waits 1.2 seconds, then calls open_browser
+        # Only open browser if not running in CI
+        if not os.environ.get("CI"):
+            threading.Timer(1.2, open_browser).start()
+
         logging.info("*** Starting view file watcher now")
         ApplicationViewFileWatcher.start(
             app_context

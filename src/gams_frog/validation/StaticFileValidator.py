@@ -18,6 +18,8 @@ class StaticFileValidator:
         self.app_context = app_context
         # Define which extensions to check
         self.extensions: Set[str] = {'.js', '.css', '.html', '.xsl', '.sef.json'}
+        # excluded folders from validation:
+        self.exclude_dirs: Set[str] = {'lib', 'raw'}
 
     def validate(self) -> bool:
         logging.info("Starting static file validation...")
@@ -44,6 +46,10 @@ class StaticFileValidator:
         has_errors = False
 
         for file_path in static_dir.rglob("*"):
+            # Skip excluded directories
+            if any(excluded in file_path.parts for excluded in self.exclude_dirs):
+                continue
+            # skip excluded suffixes
             if file_path.suffix in self.extensions and file_path.is_file():
                 if not self._check_file(file_path, pattern):
                     has_errors = True
@@ -56,43 +62,53 @@ class StaticFileValidator:
         return True
 
     def _check_file(self, file_path: Path, pattern: re.Pattern) -> bool:
-        try:
-            # Read line by line to give precise error locations
-            content = file_path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            logging.warning(f"Skipping binary or non-utf8 file: {file_path.name}")
+        is_valid = True
+
+        # Fast exit for files over a certain size (e.g., 500KB)
+        # Large files are almost certainly datasets or minified bundles.
+        if file_path.stat().st_size > 500 * 1024:
+            logging.warning(f"StaticFileValidation: Skipping {file_path.name} - file exceeds 500KB size limit.")
             return True
 
-        is_valid = True
-        lines = content.splitlines()
+        try:
+            # Stream the file instead of file_path.read_text().splitlines()
+            with file_path.open("r", encoding="utf-8") as f:
+                for i, line in enumerate(f, 1):
+                    # Skip massive minified lines
+                    if len(line) > 5000:
+                        logging.warning(f"StaticFileValidation: Skipping line {i} in file {file_path.name} because it exceeds 5000 line.")
+                        continue
 
-        for i, line in enumerate(lines, 1):
-            match = pattern.search(line)
-            snippet = line.strip()
-            if len(snippet) > 60:
-                snippet = snippet[:50] + "..."
+                    match = pattern.search(line)
 
-            if match:
-                logging.warning(
-                    f"Static Violation in {file_path.name} (Line {i}):\n"
-                    f"\tFound:   ...{match.group(0)}...\n"
-                    f"\tContext: {snippet}\n"
-                    f"\tReason:  Hardcoded paths break deployment flexibility and reuse.\n"
-                    f"\tFix:     Use GAMS_FROG VARIABLES instead of hardcoded paths."
-                )
-                is_valid = False
+                    if match:
+                        snippet = line.strip()
+                        if len(snippet) > 60:
+                            snippet = snippet[:50] + "..."
 
-            # Check 2: Forbidden Origins
-            for origin in ValidationStatics.FORBIDDEN_ORIGINS:
-                if origin in line:
-                    logging.warning(
-                        f"Static Violation in {file_path.name} (Line {i}):\n"
-                        f"\tFound:   ...{origin}...\n"
-                        f"\tContext: {snippet}\n"
-                        f"\tReason:  Hardcoded paths break deployment flexibility and reuse.\n"
-                        f"\tFix:     Use GAMS_FROG VARIABLES instead of hardcoded paths."
-                    )
-                    is_valid = False
-                    break  # Stop checking other origins for this line
+                        logging.warning(
+                            f"Static Violation in {file_path.name} (Line {i}):\n"
+                            f"\tFound:   ...{match.group(0)}...\n"
+                            f"\tContext: {snippet}\n"
+                            f"\tReason:  Hardcoded paths break deployment flexibility and reuse.\n"
+                            f"\tFix:     Use GAMS_FROG VARIABLES instead of hardcoded paths."
+                        )
+                        is_valid = False
+
+                    # Check 2: Forbidden Origins
+                    for origin in ValidationStatics.FORBIDDEN_ORIGINS:
+                        if origin in line:
+                            logging.warning(
+                                f"Static Violation in {file_path.name} (Line {i}):\n"
+                                f"\tFound:   ...{origin}...\n"
+                                f"\tReason:  Hardcoded paths break deployment flexibility and reuse.\n"
+                                f"\tFix:     Use GAMS_FROG VARIABLES instead of hardcoded paths."
+                            )
+                            is_valid = False
+                            break
+
+        except UnicodeDecodeError:
+            logging.warning(f"Skipping binary or non-utf8 file for validation: {file_path.name}")
+            return True
 
         return is_valid

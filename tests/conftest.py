@@ -4,6 +4,7 @@ from unittest.mock import Mock, patch
 
 from gams_frog.deploy.GamsAuthClient import GamsAuthClient
 from gams_frog.ssr.init.ApplicationContext import ApplicationContext
+from gams_frog.ssr.init.config.ApplicationRenderContext import ApplicationRenderContext
 from gams_frog.ssr.load.ApplicationDatastore import ApplicationDatastore
 from utils.TestDatastream import TestDatastream
 from utils.TestDigitalObject import TestDigitalObject
@@ -35,6 +36,10 @@ def test_application_context(test_gams_frog_project):
     datastore.add_object(TestDigitalObjectViewModel.generate())
     datastore.set_project_data({"projectAbbr": "test"})
     app_context.set_app_data_store(datastore)
+
+    # mock application render context
+    app_context.set_application_render_context(ApplicationRenderContext())
+
     return app_context
 
 @pytest.fixture
