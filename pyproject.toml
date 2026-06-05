@@ -1,6 +1,6 @@
 [project]
 name = "gams-frog"
-version = "v0.6.0"
+version = "v1.0.0"
 description = "CLI tool for frontend generation for GAMS5 projects"
 authors = [
     { name = "Sebastian David Schiller-Stoff", email = "sebastian.stoff@uni-graz.at" }
@@ -8,10 +8,10 @@ authors = [
 license = { text = "MIT" }
 dependencies = [
     "jinja2==3.1.6",
-    "click>=8.3.1",
+    "click>=8.4.1",
     "watchdog>=6.0.0",
-    "aiohttp>=3.13.3",
-    "requests>=2.32.4"
+    "aiohttp>=3.13.4",
+    "requests>=2.33.0"
 ]
 readme = "README.md"
 requires-python = ">= 3.12"
