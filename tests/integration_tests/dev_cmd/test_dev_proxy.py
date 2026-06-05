@@ -48,7 +48,6 @@ def test_api_requests_hit_proxy_when_enabled(tmp_path):
         async with TestServer(upstream) as upstream_server:
             app = ApplicationWebServer.build_app(
                 web_dir=str(tmp_path),
-                port=18090,
                 proxy_target_origin=_upstream_origin(upstream_server),
             )
             async with TestServer(app) as gams_frog_server:
@@ -71,7 +70,6 @@ def test_static_files_still_served_when_proxy_enabled(tmp_path):
         async with TestServer(upstream) as upstream_server:
             app = ApplicationWebServer.build_app(
                 web_dir=str(tmp_path),
-                port=18090,
                 proxy_target_origin=_upstream_origin(upstream_server),
             )
             async with TestServer(app) as gams_frog_server:
@@ -98,7 +96,6 @@ def test_proxy_disabled_when_target_origin_is_none(tmp_path):
     async def run():
         app = ApplicationWebServer.build_app(
             web_dir=str(tmp_path),
-            port=18090,
             proxy_target_origin=None,
         )
         async with TestServer(app) as gams_frog_server:
@@ -130,7 +127,6 @@ def test_proxy_route_matches_before_static_catchall(tmp_path):
         async with TestServer(upstream) as upstream_server:
             app = ApplicationWebServer.build_app(
                 web_dir=str(tmp_path),
-                port=18090,
                 proxy_target_origin=_upstream_origin(upstream_server),
             )
             async with TestServer(app) as gams_frog_server:
@@ -151,14 +147,13 @@ def test_proxy_registers_startup_and_cleanup_hooks_when_enabled(tmp_path):
     (tmp_path / "index.html").write_text("<h1>root</h1>")
 
     baseline_app = ApplicationWebServer.build_app(
-        web_dir=str(tmp_path), port=18090, proxy_target_origin=None
+        web_dir=str(tmp_path), proxy_target_origin=None
     )
     baseline_startup = len(baseline_app.on_startup)
     baseline_cleanup = len(baseline_app.on_cleanup)
 
     app = ApplicationWebServer.build_app(
         web_dir=str(tmp_path),
-        port=18090,
         proxy_target_origin="http://example.invalid",
     )
     assert len(app.on_startup) == baseline_startup + 1
@@ -173,10 +168,10 @@ def test_no_proxy_hooks_when_disabled(tmp_path):
     (tmp_path / "index.html").write_text("<h1>root</h1>")
 
     app_a = ApplicationWebServer.build_app(
-        web_dir=str(tmp_path), port=18090, proxy_target_origin=None
+        web_dir=str(tmp_path), proxy_target_origin=None
     )
     app_b = ApplicationWebServer.build_app(
-        web_dir=str(tmp_path), port=18090, proxy_target_origin=None
+        web_dir=str(tmp_path), proxy_target_origin=None
     )
     assert len(app_a.on_startup) == len(app_b.on_startup)
     assert len(app_a.on_cleanup) == len(app_b.on_cleanup)
