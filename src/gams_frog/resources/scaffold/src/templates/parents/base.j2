@@ -21,27 +21,7 @@
   </head>
 
   <body>
-    <header class="bg-light">
-      <div class="container-fluid px-4">
-        <div class="d-flex align-items-center justify-content-between py-1 gap-3">
-          <div href="{{context._root_path}}" class="flex-shrink-0 bg-warning p-5">
-
-          </div>
-
-          <div class="flex-grow-1 d-none d-md-block">
-            <div class="mt-xl-4 ps-3 ps-md-4">
-              <h1 class="h1">
-               GAMS-Frog
-              </h1>
-              <small>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eu nunc vitae metus aliquet sollicitudin vitae et urna. Nam accumsan metus ut pharetra consequat.
-              </small>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </header>
+    {% include "parents/base/header.j2" %}
     {% include "parents/base/nav.j2" %}
     {% include "parents/base/sidebar.j2" %}
     <main class="container-fluid px-3" id="main-container" style="min-height: 80vh;">

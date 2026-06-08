@@ -4,8 +4,42 @@
     <h2 class="h3 fw-light">{{ context.project.projectSubTitle }}</h2>
     <p>{{context.project.description}}</p>
     <hr/>
-    <pre>
+    <h3 class="h6">Projektstatistik</h3>
+    <pre class="bg-light border p-2">
         {{context.project.statistics | tojson(indent=2)}}
     </pre>
     {# <pre>{{ context | tojson(indent=2) }}</pre> #}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="p-2" style="background: lightblue;">
+                <h2 class="h4">Über {{ context.project.projectAbbr | upper }}</h2>
+                <p>Suspendisse a eros vitae nisl venenatis elementum. Etiam venenatis consequat dui, sed porttitor lectus dictum eu. Integer ut sapien justo. Curabitur non justo et risus gravida mollis. Maecenas sed est ut neque vehicula congue vitae ornare eros. Quisque viverra leo libero. Ut libero ante, venenatis eu euismod at, viverra sed lacus. Sed congue, nibh at congue faucibus, sapien quam ullamcorper erat, in sollicitudin dui velit id turpis. Proin lacus felis, ultrices vel lacus eget, laoreet facilisis libero. Pellentesque scelerisque est ac facilisis interdum. Sed sit amet ex eget dolor malesuada interdum at sed nulla.</p>
+                <p>Duis aliquam, mi eget hendrerit rutrum, ex augue ornare nibh, eu hendrerit ligula eros egestas ante. Sed sollicitudin orci ac ultrices consectetur. Duis risus leo, venenatis a felis id, congue finibus purus. Vestibulum purus tellus, gravida eget maximus eu, porttitor eget purus. Praesent id vehicula ligula.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-2">
+                <h2 class="h4">Lorem ipsum</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras luctus sit amet nulla quis iaculis. Vivamus imperdiet risus lacus, eu varius ligula rhoncus nec. Aliquam felis purus, feugiat nec sapien sit amet, placerat congue massa. Nunc nec diam vehicula, mollis est vitae, fringilla mauris. Morbi massa justo, bibendum quis maximus in, auctor quis leo.</p>
+                <p>Ut aliquam pulvinar enim, quis venenatis risus facilisis quis. Fusce sit amet elit ut nisi lobortis pellentesque vel ut nibh. Duis non finibus risus. Sed mollis urna et gravida consectetur. Suspendisse at finibus odio. In blandit leo eu ultrices dictum.</p>
+                <p>Rückmeldungen: {{ context.project.projectAbbr | lower }}.graz@uni-graz.at</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="p-2">
+                <h2 class="h5">{{ context.project.projectAbbr | upper }} als digitale Edition</h2>
+                <a href="{{fn.root('datamodel.html')}}" class="text-dark text-decoration-none" data-bs-toggle="tooltip" data-bs-title="MEMOR wurde als digitale Edition mit Hilfe des Geisteswissenschaftlichen Asset Management Systems GAMS umgesetzt">
+                    <div class="border">
+                        <img class="bg-dark" height="70" alt="GAMS" loading="lazy" src="https://gams.uni-graz.at/templates/img/gamslogo_weiss.gif"/><span class="ps-md-2">Digitale Infrastruktur GAMS</span>
+                    </div>
+                </a>
+
+                <ul class="mt-2" style="">
+                    <li><a class="text-dark" href="{{fn.root('datamodel.html')}}">FAIR Forschungsdaten</a>: <small>MEMOR stellt erschlossene Forschungsdaten nach den Prinzipien von FAIR und Open Science bereit.</small></li>
+                    <li><a class="text-dark" href="https://digital-humanities.uni-graz.at/" target="_blank">DDH</a> Institut für Digitale Geisteswissenschaften</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
