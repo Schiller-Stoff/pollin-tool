@@ -92,7 +92,7 @@
             if (translationPromise) return translationPromise;
 
             // reads
-            let fileName = `i18n/${language}.json`;
+            let fileName = `js/i18n/${language}.json`;
 
             let mappedAssetPath = gams_frog.utils.mapAsset(fileName);
             // returns empty string on error
