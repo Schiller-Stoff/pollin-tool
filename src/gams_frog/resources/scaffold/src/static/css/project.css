@@ -1,0 +1,10 @@
+
+body {
+  min-height: 100vh;
+}
+
+@media (min-width: 720px) {
+  #main-container {
+    width: 90%;
+  }
+}

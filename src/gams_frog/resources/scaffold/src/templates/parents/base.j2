@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="de" prefix="og: https://ogp.me/ns# dc: http://purl.org/dc/terms schema_org: https://schema.org/">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{context.project.projectAbbr}} project</title>
+
+    {# SEO #}
+    {% include "parents/base/seo.j2" %}
+
+    {# Definition of global variables / gams_frog variable / i18n #}
+    {% include "parents/base/gams_frog_setup.j2" %}
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link href="{{fn.asset('css/project.css')}}" rel="stylesheet"/>
+
+  </head>
+
+  <body>
+    {% include "parents/base/header.j2" %}
+    {% include "parents/base/nav.j2" %}
+    {% include "parents/base/sidebar.j2" %}
+    <main class="container-fluid px-3" id="main-container" style="min-height: 80vh;">
+        {% block content %}
+        {% endblock %}
+    </main>
+    {% include "parents/base/footer.j2" %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+
+    <script>
+
+      (async () => {
+
+        // i18n (follow up code must wait for the translations)
+        await window.gams_frog.i18n.translate();
+
+        // bootstrap tooltips needs the translations available
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+      })();
+    </script>
+
+
+  </body>
+</html>

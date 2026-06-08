@@ -1,0 +1,1 @@
+images, logos etc. (no icons! should be placed in raw)

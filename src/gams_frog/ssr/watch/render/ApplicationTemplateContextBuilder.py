@@ -19,6 +19,20 @@ class ApplicationTemplateContextBuilder:
         manifest = self.app_context.get_application_render_context().get_static_file_hash_mapping()
         project_data = self.app_context.get_app_data_store().get_project_data()
 
+        def resolve_path(file_path: str | None = None) -> str:
+            """
+            Builds the relative path from the project's web root for given file_path.
+            """
+            base_path = root_path.rstrip('/')
+
+            if file_path is None:
+                return base_path + "/"
+
+            if file_path.startswith("/"):
+                return f"{base_path}{file_path}"
+
+            return f"{base_path}/{file_path}"
+
         def asset_helper(asset_path: str) -> str:
             """
             Resolves the asset hash and automatically prepends the correct root and static path.
@@ -56,6 +70,7 @@ class ApplicationTemplateContextBuilder:
             "context": base_context,
             "fn": {
                 'asset': asset_helper,
+                'root': resolve_path
             }
         }
 
