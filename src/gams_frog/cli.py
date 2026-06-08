@@ -252,6 +252,16 @@ def dev(directory: str, port: int):
         dev_server_process.join()
 
 
+@cli.command(name="init", help="Initializes a new gams-frog project template.")
+@click.argument("directory", default=".", required=False)
+def init(directory: str):
+    """
+    Scaffolds a new gams-frog project with the required folder structure and base Jinja templates.
+    """
+    from gams_frog.scaffold import initialize_project
+    initialize_project(directory)
+
 cli.add_command(dev)
 cli.add_command(build)
 cli.add_command(stage)
+cli.add_command(init)

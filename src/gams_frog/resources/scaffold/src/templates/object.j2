@@ -1,0 +1,8 @@
+{% extends "parents/base.j2" %}
+{% block content %}
+    <h1>{{ context.object.baseMetadata.title }}</h1>
+    <h2 class="h3 fw-light mb-0">{{ context.object.id }}</h1>
+    <br/>
+    <p>{{context.object.baseMetadata.description}}</p>
+    {# <pre>{{ context | tojson(indent=2) }}</pre> #}
+{% endblock %}

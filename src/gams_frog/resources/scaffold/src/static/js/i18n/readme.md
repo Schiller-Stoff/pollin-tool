@@ -1,0 +1,1 @@
+i18n files: de.json, en.json etc.

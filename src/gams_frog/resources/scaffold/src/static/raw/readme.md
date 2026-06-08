@@ -1,0 +1,1 @@
+files that should be on the webserver 'as-is': icons, favicon, pwa related files
