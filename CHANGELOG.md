@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0]
+
+### Added
+
+- introduced initialization mechanism  ('frog init')
+- added fn.root('') method to traverse to web root
+
+## [1.0.0]
+
+### Added
+
+- introduced hashing of static assets
+- improved performance of web server
+- improved performance of validation system
+
 ## [0.6.0]
 
 - added GAMS_API_PROTECTED_ORIGIN variable to gams-frog.toml that allows to setu a different server origin for authenticated requests.
