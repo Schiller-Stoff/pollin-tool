@@ -33,4 +33,13 @@
         return mappedFilePath;
     }
 
+
+    // init of i18n variables
+    window.gams_frog.i18n = {};
+    window.gams_frog.i18n.defaultISOLanguage = 'de';
 </script>
+
+{#
+  i18n logic of gams_frog
+#}
+<script src="{{fn.asset('js/i18n/i18n.js')}}"></script>
